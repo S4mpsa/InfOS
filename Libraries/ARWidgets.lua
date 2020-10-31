@@ -413,7 +413,7 @@ function ARWidgets.displayTPS(glasses, x, y)
         local stripe4 = ARG.hudRectangle(glasses, x+1, y+2, 1, 19, workingColour)
         TPSText = ARG.hudText(glasses, "", x+42, y+6, workingColour, 1)
     end
-    local tps = get.tps()
+    local tps = math.min(20.00, get.tps())
     if tps > 15 then
         TPSText.setText("TPS: "..string.sub(tps, 1, 5))
         TPSText.setColor(ARG.hexToRGB(positiveEUColour))
