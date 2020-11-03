@@ -220,6 +220,7 @@ end
 local function refreshDatabase(itemList)
     filteredList = {}
     for i = 1, #itemList, 1 do
+        if i % 200 == 0 then os.sleep() end
         if itemList[i].size >= 100 then filteredList[itemList[i].label] = itemList[i].size end
         itemList[i] = nil
     end
@@ -289,6 +290,7 @@ function ARWidgets.itemTicker(glasses, x, y, w)
     local function getTotalItemCount(items)
         local sum = 0
         for i = 1, #items, 1 do
+            if i % 200 == 0 then os.sleep() end
             sum = sum + items[i].size
         end
         return sum

@@ -13,7 +13,7 @@ function checkCollision(x, y)
             end
         end
     end
-    return "None                "
+    return nil
 end
 
 local contextMenus = 0

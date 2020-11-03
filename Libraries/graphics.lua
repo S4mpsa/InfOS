@@ -69,10 +69,33 @@ function graphics.border(GPU, w, h, color)
     draw.rect(GPU, 1, 1, 1, h*2, color)
     draw.rect(GPU, w, 1, 1, h*2, color)
 end
-
-function copyWindow(GPU, x, y, page, destination)
+currentWindows = {}
+function graphics.checkCollision(GPU, x, y)
+    for window, params in pairs(currentWindows) do
+        if x >= params.x and x <= params.x+params.w-1 then
+            if y >= params.y and y <= params.y+math.ceil(params.h/2)-1 then
+                return window
+            end
+        end
+    end
+    return nil
+end
+function graphics.createWindow(GPU, width, height, name)
+    local pageNumber = GPU.allocateBuffer(width, math.ceil(height/2))
+    currentWindows[name] = {page=pageNumber, x=1, y=1, w=width, h=height, GPU = GPU}
+    return pageNumber
+end
+local function copyWindow(GPU, x, y, page, destination)
     destination = 0 or destination
-    GPU.bitblt(destination, x, math.ceil(y/2), 160, 46, page, 1, 1)
+    GPU.bitblt(destination, x, y, 160, 50, page, 1, 1)
+end
+function graphics.refresh(GPU)
+    for window, params in pairs(currentWindows) do
+        if params.w > 0 then
+            copyWindow(GPU, params.x, params.y, params.page)
+        end
+    end
+    GPU.setActiveBuffer(0)
 end
 windows = {}
 function graphics.update()
@@ -88,6 +111,9 @@ function graphics.update()
     end
     redraw()
     os.sleep()
+end
+function graphics.clear()
+    currentWindows = {}
 end
 
 return graphics

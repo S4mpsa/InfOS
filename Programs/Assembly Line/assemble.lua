@@ -15,7 +15,9 @@ fluidMap = {["fluid.molten.solderingalloy"] = {index = 81, size = 144},
     ["IC2 Coolant"] = {index = 79, size = 1000},
     ["fluid.molten.styrenebutadienerubber"] = {index = 78, size = 720},
     ["fluid.molten.niobiumtitanium"] = {index = 77, size = 144},
-    ["fluid.molten.tritanium"] = {index = 76, size = 144}
+    ["fluid.molten.tritanium"] = {index = 76, size = 144},
+    ["fluid.Neon"] = {index = 75, size = 1000}
+
 }
 local function addRecipe(slot, source, sourceSide)
     if source.getStackInSlot(sourceSide, slot) ~= nil then
