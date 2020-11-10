@@ -1,41 +1,38 @@
-local comp=require("component"); local event=require("event"); local screen=require("term"); local computer = require("computer")
+comp=require("component"); event=require("event"); screen=require("term"); computer = require("computer"); thread = require("thread")
 
 local transport = {}
 
-function transport.waitForAssemblyline(time, assemblyController)
-    local startTime = computer.uptime()
-    --Wait for assembling to start
-    while not assemblyController.hasWork() and computer.uptime() < startTime + 10 do
-        os.sleep(0.3)
+function transport.set(interface, database, databaseSlot, amount)
+    interface.setInterfaceConfiguration(1, database.address, databaseSlot, amount)
+end
+function transport.move(transposer, amount, slot)
+    transposer.transferItem(0, 1, amount, 1, slot)
+end
+function transport.empty(transposer)
+    transposer.transferItem(1, 0, 64, 2, 9)
+end
+function transport.clear(interface)
+    interface.setInterfaceConfiguration(1, comp.database.address, 1, 0)
+end
+function transport.check(transposer, item, amount)
+    local itemstack = transposer.getStackInSlot(0, 1)
+    if itemstack == nil then return false else
+    if itemstack.label == item and itemstack.size >= amount then return true else return false end end
+end
+function transport.isEmpty(transposer, slot)
+   local itemstack = transposer.getStackInSlot(1, slot)
+   if itemstack == nil then return true else return false end
+end
+function transport.clearAll(assemblydata)
+    for i = 1, 15, 1 do
+        if assemblydata["input"..i].getInterfaceConfiguration(1) ~= nil then
+            transport.clear(assemblydata["input"..i])
+        end
     end
-    if not assemblyController.hasWork() then
-        screen.write(" Error with starting assembly!")
-    else
-        screen.write(" Process started ...")
-        local progress = assemblyController.getWorkMaxProgress() - assemblyController.getWorkProgress()
-        while computer.uptime() < (startTime + (time / 20)) and progress > 100 and assemblyController.hasWork() do
-            os.sleep(0.1)
-            progress = assemblyController.getWorkMaxProgress() - assemblyController.getWorkProgress()
+    for i = 1, 4, 1 do
+        if assemblydata["fluid"..i].getInterfaceConfiguration(1) ~= nil then
+            transport.clear(assemblydata["fluid"..i])
         end
     end
 end
-
-function transport.clearInterfaces(assemblyData, itemFrom, itemTo, fluidFrom, fluidTo)
-    itemFrom = itemFrom or 1
-    itemTo = itemTo or 15
-    fluidFrom = fluidFrom or 1
-    fluidTo = fluidTo or 4
-    local database = assemblyData["database"]
-    if itemFrom > 0 then
-        for i = itemFrom, itemTo, 1 do
-            if assemblyData["input"..i].getInterfaceConfiguration(1) ~= nil then assemblyData["input"..i].setInterfaceConfiguration(1, database.address, 1, 0) end
-        end
-    end
-    if fluidFrom > 0 then
-        for i = fluidFrom, fluidTo, 1 do
-            if assemblyData["fluid"..i].getInterfaceConfiguration(1) ~= nil then assemblyData["fluid"..i].setInterfaceConfiguration(1, database.address, 1, 0) end
-        end
-    end
-end
-
 return transport

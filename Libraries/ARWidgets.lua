@@ -218,7 +218,7 @@ function ARWidgets.fluidMonitor(glasses, x, y, fluidMap)
     end
 end
 local function refreshDatabase(itemList)
-    filteredList = {}
+    local filteredList = {}
     for i = 1, #itemList, 1 do
         if i % 200 == 0 then os.sleep() end
         if itemList[i].size >= 100 then filteredList[itemList[i].label] = itemList[i].size end
@@ -310,9 +310,9 @@ function ARWidgets.itemTicker(glasses, x, y, w)
         local divisor1 = ARG.hudRectangle(glasses, x+w - 118, y+20, 2, 12, hudColour)
         local divisor2 = ARG.hudRectangle(glasses, x+w - 64, y+20, 2, 12, hudColour)
         local bottomDataStripe = ARG.hudRectangle(glasses, x+w - 168, y+30, 168, 1, workingColour)
-        uniqueItems = ARG.hudText(glasses, "", x, y, workingColour, 0.75)
-        totalItems = ARG.hudText(glasses, "", x, y, workingColour, 0.75)
-        patterns = ARG.hudText(glasses, "", x, y, workingColour, 0.75)
+        local uniqueItems = ARG.hudText(glasses, "", x, y, workingColour, 0.75)
+        local totalItems = ARG.hudText(glasses, "", x, y, workingColour, 0.75)
+        local patterns = ARG.hudText(glasses, "", x, y, workingColour, 0.75)
         uniqueItems.setPosition((x+w-114)*1.33333, (y+22)*1.33333)
         totalItems.setPosition((x+w-168)*1.33333, (y+22)*1.33333)
         patterns.setPosition((x+w-60)*1.33333, (y+22)*1.33333)
