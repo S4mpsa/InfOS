@@ -34,6 +34,9 @@ end
 function sUtil.getAmount(itemLabel)
     if cachedAmounts[itemLabel] == nil then return 0 else return cachedAmounts[itemLabel] end
 end
+function sUtil.uniques()
+    return #cachedAmounts
+end
 function sUtil.update(label, oldAmount, newAmount)
     local file = io.open("configured", 'r')
     local fileContent = {}

@@ -174,31 +174,33 @@ function craftableBox(GPU, x, y)
         local stockedAmount = S.getAmount(label)
         local stockedString = string.sub(stockedAmount.."", 1, #(stockedAmount.."")-2)
         local toStock = amount+0.0
-        if toStock > 0 then
-            if drawerItem == label then
-                G.text(GPU, 4, 3+2*i, workingColour, label);
-            elseif craftables[label] == nil then
-                G.text(GPU, 4, 3+2*i, negativeEUColour, label);
-            else
-                G.text(GPU, 4, 3+2*i, 0xFFFFFF, label);
-            end
-            if stockedAmount >= toStock then --In stock
-                G.text(GPU, 59 - (#stockedString + 1), 3+2*i, 0xFFFFFF, stockedString)
-            elseif stockedAmount >= toStock * 0.85 then --Edit hysteresis here, slightly below stock
-                G.text(GPU, 59 - (#stockedString + 1), 3+2*i, workingColour,  stockedString)
-            else --Needs to be ordered
-                --Add crafting request loop here
-                if craftables[label] ~= nil then
-                    if currentlyCrafting[label] == nil then            
-                        currentlyCrafting[label] = craftables[label](toStock - stockedAmount)
-                    elseif currentlyCrafting[label].isDone() or currentlyCrafting[label].isCanceled() then
-                        currentlyCrafting[label] = nil
-                    end
+        if S.uniques() > 2500 then --Check against rebooted system
+            if toStock > 0 then
+                if drawerItem == label then
+                    G.text(GPU, 4, 3+2*i, workingColour, label);
+                elseif craftables[label] == nil then
+                    G.text(GPU, 4, 3+2*i, negativeEUColour, label);
+                else
+                    G.text(GPU, 4, 3+2*i, 0xFFFFFF, label);
                 end
-                G.text(GPU, 59 - (#stockedString + 1), 3+2*i, negativeEUColour,  stockedString)
+                if stockedAmount >= toStock then --In stock
+                    G.text(GPU, 59 - (#stockedString + 1), 3+2*i, 0xFFFFFF, stockedString)
+                elseif stockedAmount >= toStock * 0.85 then --Edit hysteresis here, slightly below stock
+                    G.text(GPU, 59 - (#stockedString + 1), 3+2*i, workingColour,  stockedString)
+                else --Needs to be ordered
+                    --Add crafting request loop here
+                    if craftables[label] ~= nil then
+                        if currentlyCrafting[label] == nil then            
+                            currentlyCrafting[label] = craftables[label](toStock - stockedAmount)
+                        elseif currentlyCrafting[label].isDone() or currentlyCrafting[label].isCanceled() then
+                            currentlyCrafting[label] = nil
+                        end
+                    end
+                    G.text(GPU, 59 - (#stockedString + 1), 3+2*i, negativeEUColour,  stockedString)
+                end
+                G.text(GPU, 59, 3+2*i, 0xFFFFFF,  "| "..amount)
+                i = math.min(i + 1, 43)
             end
-            G.text(GPU, 59, 3+2*i, 0xFFFFFF,  "| "..amount)
-            i = math.min(i + 1, 43)
         end
     end
     GPU.setActiveBuffer(0)

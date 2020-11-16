@@ -226,12 +226,14 @@ local function refreshDatabase(itemList)
     end
     return filteredList
 end
+local rollingTextObjects = {}
 local function rollingText(glasses, text, start, stop, y, color)
     local textObject = ARG.hudText(glasses, "", start, y, color)
     textObject.setAlpha(0.8)
     local backgroundEndWedge = ARG.hudTriangle(glasses, {stop, y-2},{stop, y+10},{stop+12, y+10}, hudColour)
     local backgroundStartWedge = ARG.hudTriangle(glasses, {start-12, y-2},{start, y+10},{start+12, y-2}, hudColour)
     local startWedge = ARG.hudQuad(glasses, {start, y-2},{start, y+8},{start+30, y+8}, {start+30, y-2}, hudColour)
+    rollingTextObjects[#rollingTextObjects+1] = {t = textObject, bew = backgroundEndWedge, bsw = backgroundStartWedge, sw = startWedge}
     local stepSize = 1
     local steps = start - stop / stepSize
     local step = 0
@@ -261,6 +263,15 @@ local function rollingText(glasses, text, start, stop, y, color)
     end
     event.timer(0.10, generate, #text + 1)
     event.timer(0.02, roll, steps + 1)
+end
+local function clearTicker(glasses)
+    for i = 1, #rollingTextObjects do
+        if rollingTextObjects[i].t ~= nil then glasses.removeObject(rollingTextObjects[i].t.getID()) end
+        if rollingTextObjects[i].bew ~= nil then glasses.removeObject(rollingTextObjects[i].bew.getID()) end
+        if rollingTextObjects[i].bsw ~= nil then glasses.removeObject(rollingTextObjects[i].bsw.getID()) end
+        if rollingTextObjects[i].sw ~= nil then glasses.removeObject(rollingTextObjects[i].sw.getID()) end
+    end
+    rollingTextObjects = {}
 end
 local cachedAmounts = refreshDatabase(comp.me_interface.getItemsInNetwork())
 function difference(new)
@@ -310,9 +321,9 @@ function ARWidgets.itemTicker(glasses, x, y, w)
         local divisor1 = ARG.hudRectangle(glasses, x+w - 118, y+20, 2, 12, hudColour)
         local divisor2 = ARG.hudRectangle(glasses, x+w - 64, y+20, 2, 12, hudColour)
         local bottomDataStripe = ARG.hudRectangle(glasses, x+w - 168, y+30, 168, 1, workingColour)
-        local uniqueItems = ARG.hudText(glasses, "", x, y, workingColour, 0.75)
-        local totalItems = ARG.hudText(glasses, "", x, y, workingColour, 0.75)
-        local patterns = ARG.hudText(glasses, "", x, y, workingColour, 0.75)
+        uniqueItems = ARG.hudText(glasses, "", x, y, workingColour, 0.75)
+        totalItems = ARG.hudText(glasses, "", x, y, workingColour, 0.75)
+        patterns = ARG.hudText(glasses, "", x, y, workingColour, 0.75)
         uniqueItems.setPosition((x+w-114)*1.33333, (y+22)*1.33333)
         totalItems.setPosition((x+w-168)*1.33333, (y+22)*1.33333)
         patterns.setPosition((x+w-60)*1.33333, (y+22)*1.33333)
@@ -345,6 +356,7 @@ function ARWidgets.itemTicker(glasses, x, y, w)
         uniqueItems.setText("Unique: "..itemsInNetwork)
         changedItems = difference(refreshDatabase(allItems))
         i = 1
+        clearTicker(glasses)
         event.timer(5, processQueue, #changedItems)
     end
 end

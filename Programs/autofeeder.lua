@@ -3,17 +3,19 @@ local transposer = Comp.transposer
 local players = {["Sampsa"] = 3, ["Dark"]   = 2}
 local function findEmptyCans(player)
     local allItems = transposer.getAllStacks(players[player]).getAll()
-    for i = 0, 39, 1 do if allItems[i].label == "Tin Can" then return i + 1 end end
+    if #allItems > 30 then
+        for i = 0, 39, 1 do if allItems[i].label == "Tin Can" then return i + 1 end end
+    end
     return nil
 end
 
 local function checkLevel(player)
-    local itemStack = transposer.getStackInSlot(players[player], 19)
+    local itemStack = transposer.getStackInSlot(players[player], 28)
     if itemStack ~= nil then return itemStack.size else return nil end
 end
 
 local function transferFood(player)
-    transposer.transferItem(0, players[player], 64, 1, 19)
+    transposer.transferItem(0, players[player], 64, 1, 28)
 end
 local function transferEmpty(player)
     local slot = findEmptyCans(player)
