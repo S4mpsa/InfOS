@@ -5,6 +5,12 @@ event = require("event")
 draw = require("graphics")
 util = require("utility")
 
+local mainColor = color.purple
+local background = color.black
+local accentA = color.cyan
+local accentB = color.red
+local barColor = color.blue
+
 local widgets = {}
 
 function widgets.gtMachineInit(GPU, name, address)

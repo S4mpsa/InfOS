@@ -8,7 +8,8 @@ color = {
     lightGreen = 0x00CC00,
     lightGray = 0x272c2e,
     darkGray = 0x121010,
-    white = 0x000000
+    white = 0x000000,
+    black = 0x000000
 }
 local graphics = {}
 

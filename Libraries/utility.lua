@@ -3,6 +3,7 @@ local event = require("event")
 local thread = require("thread")
 local uc = require("unicode")
 local utility = {}
+local modem = comp.modem
 
 function utility.machine(address)
     machineAddress = comp.get(address)

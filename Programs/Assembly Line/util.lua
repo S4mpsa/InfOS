@@ -88,6 +88,7 @@ local function voltageToTier(voltage)
     end
     return tier + 1
 end
+--[[
 function copyPattern(interface, slot, recipe, database)
     for i = 1, recipe.inputs, 1 do
         local item = recipe["input" .. i]
@@ -98,6 +99,7 @@ function copyPattern(interface, slot, recipe, database)
         interface.setInterfacePatternInput(slot, database, databaseMap[name], item.amount, i)
     end
 end
+--]]
 function getControllerTier(assemblyData)
     local controller = assemblyData["controller"]
     return voltageToTier(

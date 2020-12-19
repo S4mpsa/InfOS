@@ -36,20 +36,20 @@ function ARWidgets.powerDisplay(glasses, data, x, y, w, h)
     maxEU = math.floor(string.gsub(data.getSensorInformation()[3], "([^0-9]+)", "") + 0)
     percentage = currentEU / maxEU
     if initializePowerDisplay then
-        ARG.hudRectangle(glasses, x, y, w, h, hudColour)
-        ARG.hudRectangle(glasses, x, y + h, w, 12, hudColour, 0.6)
-        ARG.hudTriangle(glasses, {x + 2, y + 3}, {x + 2, y + 3 + h - 6}, {x + 2 + h - 6, y + 3 + h - 6}, hudColour)
+        ARG.hudRectangle(glasses, x, y, w, h, hudColor)
+        ARG.hudRectangle(glasses, x, y + h, w, 12, hudColor, 0.6)
+        ARG.hudTriangle(glasses, {x + 2, y + 3}, {x + 2, y + 3 + h - 6}, {x + 2 + h - 6, y + 3 + h - 6}, hudColor)
         ARG.hudTriangle(
             glasses,
             {x + 2 + w - 4, y + 3},
             {x + 2 + w - 4 - (h - 6), y + 3},
             {x + 2 + w - 4, y + 3 + h - 6},
-            hudColour
+            hudColor
         )
-        ARG.hudRectangle(glasses, x, y + h, 25, 12, hudColour)
-        ARG.hudTriangle(glasses, {x + 25, y + h}, {x + 25, y + h + 12}, {x + 37, y + h + 12}, hudColour)
-        ARG.hudRectangle(glasses, x + w - 25, y + h, 25, 12, hudColour)
-        ARG.hudTriangle(glasses, {x + w - 37, y + h}, {x + w - 25, y + h + 12}, {x + w - 25, y + h}, hudColour)
+        ARG.hudRectangle(glasses, x, y + h, 25, 12, hudColor)
+        ARG.hudTriangle(glasses, {x + 25, y + h}, {x + 25, y + h + 12}, {x + 37, y + h + 12}, hudColor)
+        ARG.hudRectangle(glasses, x + w - 25, y + h, 25, 12, hudColor)
+        ARG.hudTriangle(glasses, {x + w - 37, y + h}, {x + w - 25, y + h + 12}, {x + w - 25, y + h}, hudColor)
         powerFill =
             ARG.hudQuad(
             glasses,
@@ -57,7 +57,7 @@ function ARWidgets.powerDisplay(glasses, data, x, y, w, h)
             {x + 2 + h - 6, y + 3 + h - 6},
             {math.min(x + 2 + w - 5, (w - 4) * percentage), y + 3 + (h - 6)},
             {math.min(x + 2 + w - 5 - (h - 6), (w - 4) * percentage - (h - 6)), y + 3},
-            workingColour
+            workingColor
         )
         powerEmpty =
             ARG.hudQuad(
@@ -69,11 +69,11 @@ function ARWidgets.powerDisplay(glasses, data, x, y, w, h)
             machineBackground
         )
 
-        maxEnergyObj = ARG.hudText(glasses, "", x + w - 88, y - 8, idleColour)
-        currentEnergyObj = ARG.hudText(glasses, "", x + 2, y - 8, workingColour)
+        maxEnergyObj = ARG.hudText(glasses, "", x + w - 88, y - 8, idleColor)
+        currentEnergyObj = ARG.hudText(glasses, "", x + 2, y - 8, workingColor)
         currentFillrateObj = ARG.hudText(glasses, "", x + w / 2 - 20, y + h + 1, 0xFFFFFF)
-        percentageObj = ARG.hudText(glasses, "", x + w / 2 - 5, y - 8, labelColour)
-        timeObj = ARG.hudText(glasses, "", x + 35, y + h + 1, labelColour)
+        percentageObj = ARG.hudText(glasses, "", x + w / 2 - 5, y - 8, labelColor)
+        timeObj = ARG.hudText(glasses, "", x + 35, y + h + 1, labelColor)
         initializePowerDisplay = false
     end
     if currentIO >= 0 then
@@ -114,53 +114,53 @@ function ARWidgets.powerDisplay(glasses, data, x, y, w, h)
 end
 function ARWidgets.minimapOverlay(glasses)
     --Minimap Borders
-    ARG.hudRectangle(glasses, 728, 10, 123, 3, hudColour)
-    ARG.hudRectangle(glasses, 728, 130, 123, 3, hudColour)
-    ARG.hudRectangle(glasses, 728, 10, 3, 123, hudColour)
-    ARG.hudRectangle(glasses, 848, 10, 3, 123, hudColour)
+    ARG.hudRectangle(glasses, 728, 10, 123, 3, hudColor)
+    ARG.hudRectangle(glasses, 728, 130, 123, 3, hudColor)
+    ARG.hudRectangle(glasses, 728, 10, 3, 123, hudColor)
+    ARG.hudRectangle(glasses, 848, 10, 3, 123, hudColor)
     --Coordinate Borders
-    ARG.hudTriangle(glasses, {743, 133}, {728, 133}, {743, 143}, hudColour)
-    ARG.hudRectangle(glasses, 743, 133, 8, 10, hudColour)
-    ARG.hudRectangle(glasses, 751, 140, 170, 3, hudColour)
+    ARG.hudTriangle(glasses, {743, 133}, {728, 133}, {743, 143}, hudColor)
+    ARG.hudRectangle(glasses, 743, 133, 8, 10, hudColor)
+    ARG.hudRectangle(glasses, 751, 140, 170, 3, hudColor)
     --Biome Borders
-    ARG.hudTriangle(glasses, {768, 143}, {753, 143}, {768, 153}, hudColour)
-    ARG.hudRectangle(glasses, 768, 150, 170, 3, hudColour)
+    ARG.hudTriangle(glasses, {768, 143}, {753, 143}, {768, 153}, hudColor)
+    ARG.hudRectangle(glasses, 768, 150, 170, 3, hudColor)
     ARG.hudRectangle(glasses, 829, 133, 50, 7, 0, 0.8)
     ARG.hudRectangle(glasses, 811, 143, 50, 7, 0, 0.8)
     --FPS Borders
-    ARG.hudRectangle(glasses, 728, 0, 150, 2, hudColour)
-    ARG.hudRectangle(glasses, 728, 0, 22, 12, hudColour)
+    ARG.hudRectangle(glasses, 728, 0, 150, 2, hudColor)
+    ARG.hudRectangle(glasses, 728, 0, 22, 12, hudColor)
     ARG.hudRectangle(glasses, 750, 2, 28, 8, 0, 0.8)
-    ARG.hudTriangle(glasses, {758, 2}, {750, 2}, {750, 10}, hudColour)
+    ARG.hudTriangle(glasses, {758, 2}, {750, 2}, {750, 10}, hudColor)
     ARG.hudRectangle(glasses, 801, 2, 70, 8, 0, 0.8)
     ARG.hudRectangle(glasses, 851, 10, 5, 123, 0, 0.8)
 end
 function ARWidgets.hudOverlayBase(glasses, x, y)
-    local hotbarSplitter = ARG.hudRectangle(glasses, x, y, 183, 2, hudColour)
-    local expSplitter = ARG.hudRectangle(glasses, x, y - 6, 183, 2, hudColour)
-    local expOverlay = ARG.hudRectangle(glasses, x, y - 4, 183, 4, workingColour, 0.5)
-    local leftBorder = ARG.hudRectangle(glasses, x - 1, y - 13, 3, 38, hudColour)
-    local rightBorder = ARG.hudRectangle(glasses, x + 182, y - 5, 3, 30, hudColour)
-    local armorBox = ARG.hudRectangle(glasses, x, y - 27, 90, 15, hudColour, 0.0)
-    local hpBox = ARG.hudRectangle(glasses, x + 1, y - 15, 94, 10, hudColour, 0.7)
+    local hotbarSplitter = ARG.hudRectangle(glasses, x, y, 183, 2, hudColor)
+    local expSplitter = ARG.hudRectangle(glasses, x, y - 6, 183, 2, hudColor)
+    local expOverlay = ARG.hudRectangle(glasses, x, y - 4, 183, 4, workingColor, 0.5)
+    local leftBorder = ARG.hudRectangle(glasses, x - 1, y - 13, 3, 38, hudColor)
+    local rightBorder = ARG.hudRectangle(glasses, x + 182, y - 5, 3, 30, hudColor)
+    local armorBox = ARG.hudRectangle(glasses, x, y - 27, 90, 15, hudColor, 0.0)
+    local hpBox = ARG.hudRectangle(glasses, x + 1, y - 15, 94, 10, hudColor, 0.7)
     local hpStopper =
-        ARG.hudQuad(glasses, {x + 88, y - 16}, {x + 77, y - 5}, {x + 108, y - 5}, {x + 97, y - 16}, hudColour)
-    local topBorder = ARG.hudRectangle(glasses, x + 4, y - 18, 178, 3, hudColour)
-    local topWedge = ARG.hudTriangle(glasses, {x + 4, y - 18}, {x - 1, y - 13}, {x + 4, y - 13}, hudColour)
-    local connector = ARG.hudTriangle(glasses, {x + 182, y - 18}, {x + 182, y}, {x + 200, y}, hudColour)
-    local topStrip = ARG.hudRectangle(glasses, x + 4, y - 17, 178, 1, workingColour)
-    local expWedge1 = ARG.hudTriangle(glasses, {x + 179, y - 4}, {x + 183, y}, {x + 183, y - 4}, hudColour)
-    local expWedge2 = ARG.hudTriangle(glasses, {x + 2, y - 5}, {x + 2, y}, {x + 6, y}, hudColour)
+        ARG.hudQuad(glasses, {x + 88, y - 16}, {x + 77, y - 5}, {x + 108, y - 5}, {x + 97, y - 16}, hudColor)
+    local topBorder = ARG.hudRectangle(glasses, x + 4, y - 18, 178, 3, hudColor)
+    local topWedge = ARG.hudTriangle(glasses, {x + 4, y - 18}, {x - 1, y - 13}, {x + 4, y - 13}, hudColor)
+    local connector = ARG.hudTriangle(glasses, {x + 182, y - 18}, {x + 182, y}, {x + 200, y}, hudColor)
+    local topStrip = ARG.hudRectangle(glasses, x + 4, y - 17, 178, 1, workingColor)
+    local expWedge1 = ARG.hudTriangle(glasses, {x + 179, y - 4}, {x + 183, y}, {x + 183, y - 4}, hudColor)
+    local expWedge2 = ARG.hudTriangle(glasses, {x + 2, y - 5}, {x + 2, y}, {x + 6, y}, hudColor)
     --CPU Monitor
-    local base = ARG.hudRectangle(glasses, x + 185, y, 28, 24, hudColour)
-    local cpuStrip = ARG.hudRectangle(glasses, x + 185, y, 500, 3, hudColour)
-    local itemBorder1 = ARG.hudRectangle(glasses, x + 28 + 185, y + 3, 1, 21, workingColour, 0.8)
-    local itemBorder2 = ARG.hudRectangle(glasses, x + 28 + 185, y + 3, 61, 1, workingColour, 0.8)
-    local itemBorder3 = ARG.hudRectangle(glasses, x + 88 + 185, y + 3, 1, 21, workingColour, 0.8)
-    local itemBorder4 = ARG.hudRectangle(glasses, x + 28 + 185, y + 23, 61, 1, workingColour, 0.8)
-    local cpuBase1 = ARG.hudRectangle(glasses, x + 89 + 185, y, 5, 24, hudColour)
+    local base = ARG.hudRectangle(glasses, x + 185, y, 28, 24, hudColor)
+    local cpuStrip = ARG.hudRectangle(glasses, x + 185, y, 500, 3, hudColor)
+    local itemBorder1 = ARG.hudRectangle(glasses, x + 28 + 185, y + 3, 1, 21, workingColor, 0.8)
+    local itemBorder2 = ARG.hudRectangle(glasses, x + 28 + 185, y + 3, 61, 1, workingColor, 0.8)
+    local itemBorder3 = ARG.hudRectangle(glasses, x + 88 + 185, y + 3, 1, 21, workingColor, 0.8)
+    local itemBorder4 = ARG.hudRectangle(glasses, x + 28 + 185, y + 23, 61, 1, workingColor, 0.8)
+    local cpuBase1 = ARG.hudRectangle(glasses, x + 89 + 185, y, 5, 24, hudColor)
     local connectorStrip =
-        ARG.hudQuad(glasses, {x + 182, y - 17}, {x + 182, y - 16}, {x + 213, y + 15}, {x + 213, y + 14}, workingColour)
+        ARG.hudQuad(glasses, {x + 182, y - 17}, {x + 182, y - 16}, {x + 213, y + 15}, {x + 213, y + 14}, workingColor)
 end
 function popupText(glasses, text, x, y, color)
     local substringLength = 1
@@ -236,7 +236,7 @@ function ARWidgets.fluidMonitor(glasses, x, y, fluidMap)
                 {x - 8, y + 8 + i * h},
                 {x + w, y + 8 + i * h},
                 {x + w, y + i * h},
-                hudColour,
+                hudColor,
                 0.5
             )
             local top =
@@ -246,7 +246,7 @@ function ARWidgets.fluidMonitor(glasses, x, y, fluidMap)
                 {x - 10, y + i * h},
                 {x + w, y + i * h},
                 {x + w, y - 1 + i * h},
-                hudColour
+                hudColor
             )
             local bottom =
                 ARG.hudQuad(
@@ -255,7 +255,7 @@ function ARWidgets.fluidMonitor(glasses, x, y, fluidMap)
                 {x - 8, y + 9 + i * h},
                 {x + w, y + 9 + i * h},
                 {x + w, y + 8 + i * h},
-                hudColour
+                hudColor
             )
             local fill =
                 ARG.hudQuad(
@@ -278,7 +278,7 @@ function ARWidgets.fluidMonitor(glasses, x, y, fluidMap)
                     {x - 10, y + 9 + i * h},
                     {x - 6, y + 9 + i * h},
                     {x + 3, y + i * h},
-                    hudColour
+                    hudColor
                 )
             else
                 local wedge =
@@ -288,7 +288,7 @@ function ARWidgets.fluidMonitor(glasses, x, y, fluidMap)
                     {x - 10, y + 9 + i * h},
                     {x + 3, y + 9 + i * h},
                     {x - 6, y + i * h},
-                    hudColour
+                    hudColor
                 )
             end
             entries = i
@@ -301,7 +301,7 @@ function ARWidgets.fluidMonitor(glasses, x, y, fluidMap)
             {x - 2, y + 8 + entries * h},
             {x + w, y + 8 + entries * h},
             {x + w, y + entries * h},
-            hudColour
+            hudColor
         )
         local verticalStrip =
             ARG.hudQuad(
@@ -310,7 +310,7 @@ function ARWidgets.fluidMonitor(glasses, x, y, fluidMap)
             {x - 8, y - 2 + entries * h},
             {x - 7, y - 2 + entries * h},
             {x - 7, y},
-            workingColour
+            workingColor
         )
         local diagonalStrip =
             ARG.hudQuad(
@@ -319,7 +319,7 @@ function ARWidgets.fluidMonitor(glasses, x, y, fluidMap)
             {x, y + 6 + entries * h},
             {x, y + 5 + entries * h},
             {x - 7, y - 2 + entries * h},
-            workingColour
+            workingColor
         )
         local horizontalStrip =
             ARG.hudQuad(
@@ -328,7 +328,7 @@ function ARWidgets.fluidMonitor(glasses, x, y, fluidMap)
             {x, y + 6 + entries * h},
             {x + w, y + 6 + entries * h},
             {x + w, y + 5 + entries * h},
-            workingColour
+            workingColor
         )
         initFluidMap = false
     elseif computer.uptime() - lastRefresh > 30 then
@@ -364,11 +364,11 @@ local rollingTextObjects = {}
 local function rollingText(glasses, text, start, stop, y, color)
     local textObject = ARG.hudText(glasses, "", start, y, color)
     textObject.setAlpha(0.8)
-    local backgroundEndWedge = ARG.hudTriangle(glasses, {stop, y - 2}, {stop, y + 10}, {stop + 12, y + 10}, hudColour)
+    local backgroundEndWedge = ARG.hudTriangle(glasses, {stop, y - 2}, {stop, y + 10}, {stop + 12, y + 10}, hudColor)
     local backgroundStartWedge =
-        ARG.hudTriangle(glasses, {start - 12, y - 2}, {start, y + 10}, {start + 12, y - 2}, hudColour)
+        ARG.hudTriangle(glasses, {start - 12, y - 2}, {start, y + 10}, {start + 12, y - 2}, hudColor)
     local startWedge =
-        ARG.hudQuad(glasses, {start, y - 2}, {start, y + 8}, {start + 30, y + 8}, {start + 30, y - 2}, hudColour)
+        ARG.hudQuad(glasses, {start, y - 2}, {start, y + 8}, {start + 30, y + 8}, {start + 30, y - 2}, hudColor)
     rollingTextObjects[#rollingTextObjects + 1] = {
         t = textObject,
         bew = backgroundEndWedge,
@@ -460,26 +460,26 @@ function ARWidgets.itemTicker(glasses, x, y, w)
     if initializeTicker then
         local background =
             ARG.hudQuad(glasses, {x, y + 2}, {x, y + 14}, {x + w, y + 14}, {x + w, y + 2}, machineBackground, 0.5)
-        local top = ARG.hudQuad(glasses, {x, y}, {x, y + 2}, {x + w, y + 2}, {x + w, y}, hudColour)
-        local bottom = ARG.hudQuad(glasses, {x, y + 14}, {x, y + 20}, {x + w, y + 20}, {x + w, y + 14}, hudColour)
+        local top = ARG.hudQuad(glasses, {x, y}, {x, y + 2}, {x + w, y + 2}, {x + w, y}, hudColor)
+        local bottom = ARG.hudQuad(glasses, {x, y + 14}, {x, y + 20}, {x + w, y + 20}, {x + w, y + 14}, hudColor)
         local bottomStripe =
-            ARG.hudQuad(glasses, {x, y + 17}, {x, y + 18}, {x + w, y + 18}, {x + w, y + 17}, workingColour)
-        local wedge = ARG.hudTriangle(glasses, {x - 20, y}, {x, y + 20}, {x, y}, hudColour)
-        local backgroundEndWedge = ARG.hudTriangle(glasses, {x, y + 2}, {x, y + 14}, {x + 12, y + 14}, hudColour)
+            ARG.hudQuad(glasses, {x, y + 17}, {x, y + 18}, {x + w, y + 18}, {x + w, y + 17}, workingColor)
+        local wedge = ARG.hudTriangle(glasses, {x - 20, y}, {x, y + 20}, {x, y}, hudColor)
+        local backgroundEndWedge = ARG.hudTriangle(glasses, {x, y + 2}, {x, y + 14}, {x + 12, y + 14}, hudColor)
         local backgroundStartWedge =
-            ARG.hudTriangle(glasses, {x + w - 12, y + 2}, {x + w, y + 14}, {x + w + 12, y + 2}, hudColour)
+            ARG.hudTriangle(glasses, {x + w - 12, y + 2}, {x + w, y + 14}, {x + w + 12, y + 2}, hudColor)
         local diagonalStripe =
-            ARG.hudQuad(glasses, {x - 16, y + 2}, {x, y + 18}, {x, y + 17}, {x - 15, y + 2}, workingColour)
-        local bottomBorder = ARG.hudRectangle(glasses, x + w - 170, y + 28, 170, 4, hudColour)
-        local dataBorder = ARG.hudRectangle(glasses, x + w - 170, 20, 170, 12, hudColour, 0.5)
+            ARG.hudQuad(glasses, {x - 16, y + 2}, {x, y + 18}, {x, y + 17}, {x - 15, y + 2}, workingColor)
+        local bottomBorder = ARG.hudRectangle(glasses, x + w - 170, y + 28, 170, 4, hudColor)
+        local dataBorder = ARG.hudRectangle(glasses, x + w - 170, 20, 170, 12, hudColor, 0.5)
         local endWedge =
-            ARG.hudTriangle(glasses, {x + w - 182, y + 20}, {x + w - 170, y + 32}, {x + w - 170, y + 20}, hudColour)
-        local divisor1 = ARG.hudRectangle(glasses, x + w - 118, y + 20, 2, 12, hudColour)
-        local divisor2 = ARG.hudRectangle(glasses, x + w - 64, y + 20, 2, 12, hudColour)
-        local bottomDataStripe = ARG.hudRectangle(glasses, x + w - 168, y + 30, 168, 1, workingColour)
-        uniqueItems = ARG.hudText(glasses, "", x, y, workingColour, 0.75)
-        totalItems = ARG.hudText(glasses, "", x, y, workingColour, 0.75)
-        patterns = ARG.hudText(glasses, "", x, y, workingColour, 0.75)
+            ARG.hudTriangle(glasses, {x + w - 182, y + 20}, {x + w - 170, y + 32}, {x + w - 170, y + 20}, hudColor)
+        local divisor1 = ARG.hudRectangle(glasses, x + w - 118, y + 20, 2, 12, hudColor)
+        local divisor2 = ARG.hudRectangle(glasses, x + w - 64, y + 20, 2, 12, hudColor)
+        local bottomDataStripe = ARG.hudRectangle(glasses, x + w - 168, y + 30, 168, 1, workingColor)
+        uniqueItems = ARG.hudText(glasses, "", x, y, workingColor, 0.75)
+        totalItems = ARG.hudText(glasses, "", x, y, workingColor, 0.75)
+        patterns = ARG.hudText(glasses, "", x, y, workingColor, 0.75)
         uniqueItems.setPosition((x + w - 114) * 1.33333, (y + 22) * 1.33333)
         totalItems.setPosition((x + w - 168) * 1.33333, (y + 22) * 1.33333)
         patterns.setPosition((x + w - 60) * 1.33333, (y + 22) * 1.33333)
@@ -489,9 +489,9 @@ function ARWidgets.itemTicker(glasses, x, y, w)
         rollingText(glasses, name, x + w, x, y + 4, 0xAAAAAA)
         local function showChange()
             if amount > 0 then
-                rollingText(glasses, "+" .. amount, x + w, x, y + 4, positiveEUColour)
+                rollingText(glasses, "+" .. amount, x + w, x, y + 4, positiveEUColor)
             else
-                rollingText(glasses, "" .. amount, x + w, x, y + 4, negativeEUColour)
+                rollingText(glasses, "" .. amount, x + w, x, y + 4, negativeEUColor)
             end
         end
         event.timer(#name * 0.12, showChange, 1)
@@ -517,20 +517,20 @@ function ARWidgets.itemTicker(glasses, x, y, w)
     end
 end
 function ARWidgets.crossHair(glasses, x, y)
-    local horizontal = ARG.hudRectangle(glasses, x, y + 5, 4, 1, workingColour, 0.5)
-    local vertical = ARG.hudRectangle(glasses, x + 5, y, 1, 4, workingColour, 0.5)
-    local horizontal2 = ARG.hudRectangle(glasses, x + 7, y + 5, 4, 1, workingColour, 0.5)
-    local vertical2 = ARG.hudRectangle(glasses, x + 5, y + 7, 1, 4, workingColour, 0.5)
-    local middle = ARG.hudRectangle(glasses, x + 4, y + 4, 3, 3, hudColour, 0.0)
-    local center = ARG.hudRectangle(glasses, x + 5, y + 5, 1, 1, hudColour, 0.7)
+    local horizontal = ARG.hudRectangle(glasses, x, y + 5, 4, 1, workingColor, 0.5)
+    local vertical = ARG.hudRectangle(glasses, x + 5, y, 1, 4, workingColor, 0.5)
+    local horizontal2 = ARG.hudRectangle(glasses, x + 7, y + 5, 4, 1, workingColor, 0.5)
+    local vertical2 = ARG.hudRectangle(glasses, x + 5, y + 7, 1, 4, workingColor, 0.5)
+    local middle = ARG.hudRectangle(glasses, x + 4, y + 4, 3, 3, hudColor, 0.0)
+    local center = ARG.hudRectangle(glasses, x + 5, y + 5, 1, 1, hudColor, 0.7)
 end
 local initializeCpuMonitor = true
 local cpuLights = {}
 function ARWidgets.cpuMonitor(glasses, x, y)
     if initializeCpuMonitor then
-        local cpuBase2 = ARG.hudRectangle(glasses, x + 94, y + 12, 8, 12, hudColour)
-        local cpuSplitter = ARG.hudRectangle(glasses, x + 89, y + 9, 400, 3, hudColour)
-        local cpuSplitter2 = ARG.hudRectangle(glasses, x + 102, y + 18, 380, 6, hudColour)
+        local cpuBase2 = ARG.hudRectangle(glasses, x + 94, y + 12, 8, 12, hudColor)
+        local cpuSplitter = ARG.hudRectangle(glasses, x + 89, y + 9, 400, 3, hudColor)
+        local cpuSplitter2 = ARG.hudRectangle(glasses, x + 102, y + 18, 380, 6, hudColor)
         local function createCpuIndicator(cpuX, cpuY)
             local status =
                 ARG.hudQuad(
@@ -539,11 +539,11 @@ function ARWidgets.cpuMonitor(glasses, x, y)
                 {cpuX + 6, cpuY + 6},
                 {cpuX + 16, cpuY + 6},
                 {cpuX + 10, cpuY},
-                hudColour,
+                hudColor,
                 1.0
             )
             local leftTriangle =
-                ARG.hudTriangle(glasses, {cpuX, cpuY}, {cpuX, cpuY + 6}, {cpuX + 6, cpuY + 6}, hudColour)
+                ARG.hudTriangle(glasses, {cpuX, cpuY}, {cpuX, cpuY + 6}, {cpuX + 6, cpuY + 6}, hudColor)
             local rightTriangle =
                 ARG.hudQuad(
                 glasses,
@@ -551,7 +551,7 @@ function ARWidgets.cpuMonitor(glasses, x, y)
                 {cpuX + 16, cpuY + 6},
                 {cpuX + 18, cpuY + 6},
                 {cpuX + 18, cpuY},
-                hudColour
+                hudColor
             )
             return status
         end
@@ -568,9 +568,9 @@ function ARWidgets.cpuMonitor(glasses, x, y)
             end
             cpuNumber = cpuNumber + 1
         end
-        local rowStop1 = ARG.hudRectangle(glasses, x + 94 + i * 17, y + 3, 300, 6, hudColour)
-        local rowStop2 = ARG.hudRectangle(glasses, x + 102 + j * 17, y + 12, 300, 6, hudColour)
-        local horizontalStrip = ARG.hudRectangle(glasses, x + 100, y + 22, 210, 1, workingColour)
+        local rowStop1 = ARG.hudRectangle(glasses, x + 94 + i * 17, y + 3, 300, 6, hudColor)
+        local rowStop2 = ARG.hudRectangle(glasses, x + 102 + j * 17, y + 12, 300, 6, hudColor)
+        local horizontalStrip = ARG.hudRectangle(glasses, x + 100, y + 22, 210, 1, workingColor)
         local diagonalStrip =
             ARG.hudQuad(
             glasses,
@@ -578,17 +578,17 @@ function ARWidgets.cpuMonitor(glasses, x, y)
             {x + 89, y + 12},
             {x + 100, y + 23},
             {x + 100, y + 22},
-            workingColour
+            workingColor
         )
         initializeCpuMonitor = false
     end
     local cpus = comp.me_interface.getCpus()
     for i = 1, #cpus, 1 do
         if cpus[i].busy then
-            cpuLights[i].setColor(ARG.hexToRGB(positiveEUColour))
+            cpuLights[i].setColor(ARG.hexToRGB(positiveEUColor))
         else
             cpuLights[i].setAlpha(0.7)
-            cpuLights[i].setColor(ARG.hexToRGB(workingColour))
+            cpuLights[i].setColor(ARG.hexToRGB(workingColor))
         end
     end
 end
@@ -598,30 +598,30 @@ function ARWidgets.displayTPS(glasses, x, y)
     if initializeTPS then
         initializeTPS = false
         local background =
-            ARG.hudQuad(glasses, {x + 40, y + 4}, {x + 40, y + 15}, {x + 93, y + 15}, {x + 105, y + 4}, hudColour, 0.6)
-        local startBlock = ARG.hudRectangle(glasses, x, y, 40, 23, hudColour)
-        local top = ARG.hudRectangle(glasses, x + 40, y, 65, 4, hudColour)
-        local bottom = ARG.hudRectangle(glasses, x + 40, y + 14, 50, 5, hudColour)
+            ARG.hudQuad(glasses, {x + 40, y + 4}, {x + 40, y + 15}, {x + 93, y + 15}, {x + 105, y + 4}, hudColor, 0.6)
+        local startBlock = ARG.hudRectangle(glasses, x, y, 40, 23, hudColor)
+        local top = ARG.hudRectangle(glasses, x + 40, y, 65, 4, hudColor)
+        local bottom = ARG.hudRectangle(glasses, x + 40, y + 14, 50, 5, hudColor)
         local wedge1 =
-            ARG.hudQuad(glasses, {x + 40, y + 19}, {x + 40, y + 23}, {x + 42, y + 23}, {x + 46, y + 19}, hudColour)
-        local wedge2 = ARG.hudQuad(glasses, {x + 105, y}, {x + 86, y + 19}, {x + 93, y + 19}, {x + 112, y}, hudColour)
-        local stripe1 = ARG.hudRectangle(glasses, x + 2, y + 20, 39, 1, workingColour)
-        local stripe2 = ARG.hudRectangle(glasses, x + 45, y + 16, 48, 1, workingColour)
+            ARG.hudQuad(glasses, {x + 40, y + 19}, {x + 40, y + 23}, {x + 42, y + 23}, {x + 46, y + 19}, hudColor)
+        local wedge2 = ARG.hudQuad(glasses, {x + 105, y}, {x + 86, y + 19}, {x + 93, y + 19}, {x + 112, y}, hudColor)
+        local stripe1 = ARG.hudRectangle(glasses, x + 2, y + 20, 39, 1, workingColor)
+        local stripe2 = ARG.hudRectangle(glasses, x + 45, y + 16, 48, 1, workingColor)
         local stripe3 =
-            ARG.hudQuad(glasses, {x + 41, y + 20}, {x + 41, y + 21}, {x + 45, y + 17}, {x + 45, y + 16}, workingColour)
-        local stripe4 = ARG.hudRectangle(glasses, x + 1, y + 2, 1, 19, workingColour)
-        TPSText = ARG.hudText(glasses, "", x + 42, y + 6, workingColour, 1)
+            ARG.hudQuad(glasses, {x + 41, y + 20}, {x + 41, y + 21}, {x + 45, y + 17}, {x + 45, y + 16}, workingColor)
+        local stripe4 = ARG.hudRectangle(glasses, x + 1, y + 2, 1, 19, workingColor)
+        TPSText = ARG.hudText(glasses, "", x + 42, y + 6, workingColor, 1)
     end
     local tps = math.min(20.00, get.tps())
     if tps > 15 then
         TPSText.setText("TPS: " .. string.sub(tps, 1, 5))
-        TPSText.setColor(ARG.hexToRGB(positiveEUColour))
+        TPSText.setColor(ARG.hexToRGB(positiveEUColor))
     elseif tps >= 10 then
         TPSText.setText("TPS: " .. string.sub(tps, 1, 5))
-        TPSText.setColor(ARG.hexToRGB(workingColour))
+        TPSText.setColor(ARG.hexToRGB(workingColor))
     else
         TPSText.setText("TPS: " .. string.sub(tps, 1, 4))
-        TPSText.setColor(ARG.hexToRGB(negativeEUColour))
+        TPSText.setColor(ARG.hexToRGB(negativeEUColor))
     end
 end
 function ARWidgets.clear()
