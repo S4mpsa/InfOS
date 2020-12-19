@@ -1,4 +1,5 @@
-comp = require("component"); event = require("event")
+comp = require("component")
+event = require("event")
 
 local transposer = comp.transposer
 local dark = 2

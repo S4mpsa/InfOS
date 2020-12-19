@@ -1,4 +1,5 @@
-comp = require("component"); event = require("event")
+comp = require("component")
+event = require("event")
 AR = require("ARWidgets")
 
 while true do

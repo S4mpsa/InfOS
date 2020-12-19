@@ -1,19 +1,16 @@
-local path = "/lib"
 local shell = require("shell")
-local download_list = 
-{
-    "https://raw.githubusercontent.com/S4mpsa/InfOS/master/Libraries/ARWidgets.lua",
-    "https://raw.githubusercontent.com/S4mpsa/InfOS/master/Libraries/config.lua",
-    "https://raw.githubusercontent.com/S4mpsa/InfOS/master/Libraries/graphics.lua",
-    "https://raw.githubusercontent.com/S4mpsa/InfOS/master/Libraries/utility.lua",
-    "https://raw.githubusercontent.com/S4mpsa/InfOS/master/Libraries/widgets.lua",
-    "https://raw.githubusercontent.com/S4mpsa/InfOS/master/Libraries/ARGraphics.lua"
-}
-shell.setWorkingDirectory(path)
-print("Updating Files")
-for k,v in pairs(download_list) do
-    print("Fetching ",v)
-    local command = "wget "..v.." -f"
-    shell.execute(command)
-end
+
+local tarMan = "https://raw.githubusercontent.com/mpmxyz/ocprograms/master/usr/man/tar.man"
+local tarBin = "https://raw.githubusercontent.com/mpmxyz/ocprograms/master/home/bin/tar.lua"
+local InfOS = "https://github.com/gordominossi/InfOS/releases/download/v0/InfOS.tar"
+
+shell.setWorkingDirectory("/usr/man")
+shell.execute("wget " .. tarMan .. " -f")
+
+shell.setWorkingDirectory("/bin")
+shell.execute("wget " .. tarBin .. " -f")
+
 shell.setWorkingDirectory("/home")
+print("Updating InfOS")
+shell.execute("wget " .. InfOS .. " -f")
+shell.execute("tar -xf InfOS.tar")

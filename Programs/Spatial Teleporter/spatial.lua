@@ -1,4 +1,7 @@
-local comp=require("component"); local event=require("event"); local screen=require("term"); local computer = require("computer")
+local comp = require("component")
+local event = require("event")
+local screen = require("term")
+local computer = require("computer")
 
 function cycle()
     comp.redstone.setOutput(2, 15)
@@ -20,7 +23,6 @@ local ticket = 1
 --end
 
 function setDestination(destination)
-
 end
 
 function unload(index)
@@ -56,8 +58,9 @@ function doStartupSequence()
     local gpu = comp.gpu
     gpu.freeAllBuffers()
     local colors = {
-    [0] = 0x00a6ff,
-    [1] = 0x000000}
+        [0] = 0x00a6ff,
+        [1] = 0x000000
+    }
     local buffer = gpu.allocateBuffer()
     gpu.setActiveBuffer(buffer)
     for i = 2, 20, 1 do
@@ -65,11 +68,7 @@ function doStartupSequence()
             copyWindow(gpu, 0, 0, buffer, 0)
         end
         gpu.setForeground(colors[i % 2])
-        comp.gpu.fill(2 + i * 2,
-        1 + i,
-        80 - i * 4,
-        40 - i * 2,
-        "█")
+        comp.gpu.fill(2 + i * 2, 1 + i, 80 - i * 4, 40 - i * 2, "█")
         os.sleep(0.1)
     end
     gpu.setActiveBuffer(0)
@@ -80,8 +79,8 @@ function doStartupSequence()
 end
 local starting = false
 function send()
-    local transposer = comp.transposer 
-    if transposer.getStackInSlot(controller, 1) == nil then 
+    local transposer = comp.transposer
+    if transposer.getStackInSlot(controller, 1) == nil then
         --screen.write("The operating cell is missing!\n")
     else
         doStartupSequence()

@@ -1,17 +1,25 @@
-Comp=require("component")
+Comp = require("component")
 local transposer = Comp.transposer
-local players = {["Sampsa"] = 3, ["Dark"]   = 2}
+local players = {["Sampsa"] = 3, ["Dark"] = 2}
 local function findEmptyCans(player)
     local allItems = transposer.getAllStacks(players[player]).getAll()
     if #allItems > 30 then
-        for i = 0, 39, 1 do if allItems[i].label == "Tin Can" then return i + 1 end end
+        for i = 0, 39, 1 do
+            if allItems[i].label == "Tin Can" then
+                return i + 1
+            end
+        end
     end
     return nil
 end
 
 local function checkLevel(player)
     local itemStack = transposer.getStackInSlot(players[player], 28)
-    if itemStack ~= nil then return itemStack.size else return nil end
+    if itemStack ~= nil then
+        return itemStack.size
+    else
+        return nil
+    end
 end
 
 local function transferFood(player)
@@ -19,14 +27,18 @@ local function transferFood(player)
 end
 local function transferEmpty(player)
     local slot = findEmptyCans(player)
-    if slot ~= nil then transposer.transferItem(players[player], 0, 64, slot, 2) end
+    if slot ~= nil then
+        transposer.transferItem(players[player], 0, 64, slot, 2)
+    end
 end
 
 local function check(player)
     if transposer.getInventorySize(players[player]) == 40 then
         local inInventory = checkLevel(player)
         if inInventory ~= nil then
-            if inInventory < 40 then transferFood(player) end
+            if inInventory < 40 then
+                transferFood(player)
+            end
             os.sleep(0.2)
             transferEmpty(player)
         end

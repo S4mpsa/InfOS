@@ -1,4 +1,8 @@
-comp=require("component"); event=require("event"); screen=require("term"); computer = require("computer"); thread = require("thread")
+comp = require("component")
+event = require("event")
+screen = require("term")
+computer = require("computer")
+thread = require("thread")
 
 local GPU = comp.gpu
 GPU.setResolution(54, 26)
@@ -14,8 +18,10 @@ function checkHeatLevels()
     local i = 1
     for address, type in pairs(comp.list()) do
         if type == "reactor_chamber" then
-            screen.write("Reactor "..i)
-            if i < 10 then screen.write(" ") end
+            screen.write("Reactor " .. i)
+            if i < 10 then
+                screen.write(" ")
+            end
             local reactor = comp.proxy(address)
             if reactor.getHeat() > 0 then
                 GPU.setForeground(0xFF0000)

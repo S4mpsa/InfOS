@@ -1,4 +1,7 @@
-local comp=require("component"); local event=require("event"); local screen=require("term"); local computer = require("computer")
+local comp = require("component")
+local event = require("event")
+local screen = require("term")
+local computer = require("computer")
 
 local transposers = {}
 function configureTransposers()
@@ -22,7 +25,7 @@ function configureTransposers()
             end
         end
     end
-    screen.write("Found "..countTransposers().." output hatches to keep at 50%\n")
+    screen.write("Found " .. countTransposers() .. " output hatches to keep at 50%\n")
 end
 function countTransposers()
     local count = 0

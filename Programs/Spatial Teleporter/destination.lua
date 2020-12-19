@@ -7,22 +7,25 @@ destinations = {
     [6] = {name = "Test", id = 3004}
 }
 
-local comp=require("component"); local event=require("event"); local screen=require("term"); local computer = require("computer")
-local util = require("utility"); local draw=require("graphics")
+local comp = require("component")
+local event = require("event")
+local screen = require("term")
+local computer = require("computer")
+local util = require("utility")
+local draw = require("graphics")
 local GPU = comp.gpu
 GPU.setResolution(80, 25)
 
-local boundingBoxes = {
-}
+local boundingBoxes = {}
 function createDestination(x, y, index)
     local width, height = 18, 6
-    local page = GPU.allocateBuffer(width, math.ceil(height/2))
+    local page = GPU.allocateBuffer(width, math.ceil(height / 2))
     GPU.setActiveBuffer(page)
     draw.rect(GPU, 1, 1, 18, 6, 0x111111)
     local destinationColor = destinations[index].color or 0x0055FF
     draw.rect(GPU, 3, 3, 14, 2, 0x000000)
-    draw.centeredText(GPU, 10, 3, destinationColor ,destinations[index].name)
-    windows[index] = {GPU = GPU, page=page, address = "", x=x, y=y, w=width, h=height}
+    draw.centeredText(GPU, 10, 3, destinationColor, destinations[index].name)
+    windows[index] = {GPU = GPU, page = page, address = "", x = x, y = y, w = width, h = height}
     GPU.setActiveBuffer(0)
 end
 function setDestination(code)
@@ -36,7 +39,7 @@ function checkClick(_, address, x, y, button, name)
     for i = 1, #boundingBoxes, 1 do
         local xb, yb = boundingBoxes[i].x, math.ceil(boundingBoxes[i].y / 2)
         if x >= xb and x < xb + 21 and y >= yb and y < yb + 3 then
-            draw.rect(GPU, boundingBoxes[i].x+2, boundingBoxes[i].y+2, 14, 2, 0x00CC00)
+            draw.rect(GPU, boundingBoxes[i].x + 2, boundingBoxes[i].y + 2, 14, 2, 0x00CC00)
             local destinationColor = destinations[i].color or 0x0055FF
             setDestination(destinations[i].id)
             draw.rect(GPU, 30, 43, 22, 2, 0x000000)
@@ -62,7 +65,7 @@ GPU.fill(0, 0, 100, 100, " ")
 draw.rect(GPU, 28, 41, 26, 6, 0x111111)
 draw.rect(GPU, 30, 43, 22, 2, 0x000000)
 draw.text(GPU, 31, 39, 0xFFFFFF, "Current  Destination")
-for i = 1 , #destinations, 1 do
+for i = 1, #destinations, 1 do
     addBoundingBox(i)
     createDestination(boundingBoxes[i].x, boundingBoxes[i].y, i)
     draw.update()
