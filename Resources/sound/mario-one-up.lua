@@ -1,5 +1,5 @@
 -- Import section
-local playTune = require("api.sound.play-tune")
+local playTune = require("play-tune")
 --
 
 local tune = {

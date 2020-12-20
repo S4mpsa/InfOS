@@ -4,6 +4,7 @@ local thread = require("thread")
 local uc = require("unicode")
 local comp = require("component")
 GPU = comp.proxy(comp.get("f26678f4"))
+local colors = require("colors")
 
 local gui, quit, editing = {}, false, false
 local currentWindows = {}
@@ -36,9 +37,9 @@ function contextMenu(GPU, x, y, data)
     end
     local contextWindow = createWindow(GPU, longestData, #data * 2, "ContextMenu" .. contextMenus)
     GPU.setActiveBuffer(contextWindow)
-    draw.rect(GPU, 1, 1, longestData, #data * 2, color.lightGray)
+    draw.rect(GPU, 1, 1, longestData, #data * 2, colors.lightGray)
     for i = 1, #data do
-        draw.text(GPU, 1, 1 + i * 2 - 2, color.cyan, data[i])
+        draw.text(GPU, 1, 1 + i * 2 - 2, colors.cyan, data[i])
     end
     currentWindows["ContextMenu" .. contextMenus].x = x
     currentWindows["ContextMenu" .. contextMenus].y = y
@@ -71,13 +72,13 @@ function processCommand(GPU, window, option)
     end
     GPU.setActiveBuffer(currentWindows["ColorBox"].page)
     if option == 1 then
-        draw.rect(GPU, 1, 1, 10, 10, color.red)
+        draw.rect(GPU, 1, 1, 10, 10, colors.red)
     end
     if option == 2 then
-        draw.rect(GPU, 1, 1, 10, 10, color.blue)
+        draw.rect(GPU, 1, 1, 10, 10, colors.blue)
     end
     if option == 3 then
-        draw.rect(GPU, 1, 1, 10, 10, color.green)
+        draw.rect(GPU, 1, 1, 10, 10, colors.green)
     end
     GPU.setActiveBuffer(0)
 end
@@ -86,7 +87,7 @@ local i, xOffset, yOffset = 1, 0, 0
 function mouseListener()
     function processClick(event, address, x, y, key, player)
         activeWindow = checkCollision(x, y)
-        draw.text(GPU, 1, 1, color.cyan, "Active window: " .. activeWindow)
+        draw.text(GPU, 1, 1, colors.cyan, "Active window: " .. activeWindow)
         if key == 1.0 and editing then
             if inContextMenu then
                 contextMenus = 0

@@ -1,5 +1,5 @@
 -- Import section
-local computer = require("computer")
+computer = require("computer")
 --
 
 local notes = {

@@ -9,13 +9,11 @@ local function exec(energyProducers, energyBuffer)
     local consumption = energyBuffer:getAverageInput()
     local production = energyBuffer:getAverageOutput()
     local energyCapacity = energyBuffer:getTotalEnergy().maximum
-    local timeToFull = energyCapacity / (production - consumption)
-    local timetoEmpty = -timeToFull
+    local timeToFull = (production - consumption) ~= 0 and energyCapacity / (production - consumption) or "-"
     return {
         consumption = consumption,
         production = production,
         timeToFull = timeToFull,
-        timetoEmpty = timetoEmpty
     }
 end
 

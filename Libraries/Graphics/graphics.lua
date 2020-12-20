@@ -1,16 +1,5 @@
 comp = require("component")
-color = {
-    red = 0xFF0000,
-    green = 0x00FF00,
-    blue = 0x0000FF,
-    purple = 0x5500FF,
-    cyan = 0x00A6FF,
-    lightGreen = 0x00CC00,
-    lightGray = 0x272c2e,
-    darkGray = 0x121010,
-    white = 0x000000,
-    black = 0x000000
-}
+colors = require("colors")
 local graphics = {}
 
 function pixel(GPU, x, y, color)

@@ -32,7 +32,7 @@ function mouseListener()
                         currentWindows["Button"].y * 2 + 1,
                         6,
                         6,
-                        negativeEUColor
+                        colors.negativeEUColor
                     )
                 else
                     G.rect(
@@ -41,7 +41,7 @@ function mouseListener()
                         currentWindows["Button"].y * 2 + 1,
                         6,
                         6,
-                        positiveEUColor
+                        colors.positiveEUColor
                     )
                     if itemsToStock[drawerItem] ~= nil then
                         S.update(drawerItem, itemsToStock[drawerItem], number)
@@ -97,7 +97,7 @@ function keyboardListener()
                 number = number .. value
             end
             G.rect(GPU, currentWindows["Number"].x + 2, currentWindows["Number"].y * 2 + 1, 46, 6, 0x333333)
-            G.text(GPU, currentWindows["Number"].x + 4, currentWindows["Number"].y * 2 + 3, workingColor, number)
+            G.text(GPU, currentWindows["Number"].x + 4, currentWindows["Number"].y * 2 + 3, colors.workingColor, number)
         end
     end
     return event.listen("key_down", processKey)
@@ -108,25 +108,25 @@ function getNewItem(GPU, x, y)
         currentWindows["Item"].x = x
         currentWindows["Item"].y = y
         GPU.setActiveBuffer(itemWindow)
-        G.rect(GPU, 2, 2, 58, 4, hudColor)
+        G.rect(GPU, 2, 2, 58, 4, colors.hudColor)
         G.rect(GPU, 3, 3, 56, 2, 0x000000)
         GPU.setActiveBuffer(0)
     end
     local newDrawerItem = transposer.getStackInSlot(sides.top, 2)
     if newDrawerItem ~= nil then
         if craftables[newDrawerItem] ~= nil then
-            GPU.setForeground(workingColor)
+            GPU.setForeground(colors.workingColor)
         else
-            GPU.setActiveBuffer(negativeEUColor)
+            GPU.setActiveBuffer(colors.negativeEUColor)
         end
         if drawerItem == nil then
             drawerItem = newDrawerItem.label
             GPU.setActiveBuffer(currentWindows["Item"].page)
             G.rect(GPU, 3, 3, 56, 2, 0x000000)
             if craftables[drawerItem] ~= nil then
-                G.centeredText(GPU, 30, 3, positiveEUColor, drawerItem)
+                G.centeredText(GPU, 30, 3, colors.positiveEUColor, drawerItem)
             else
-                G.centeredText(GPU, 30, 3, negativeEUColor, drawerItem)
+                G.centeredText(GPU, 30, 3, colors.negativeEUColor, drawerItem)
             end
             GPU.setActiveBuffer(0)
             if itemsToStock[drawerItem] ~= nil then
@@ -146,9 +146,9 @@ function getNewItem(GPU, x, y)
                 GPU.setActiveBuffer(currentWindows["Item"].page)
                 G.rect(GPU, 3, 3, 56, 2, 0x000000)
                 if craftables[drawerItem] ~= nil then
-                    G.centeredText(GPU, 30, 3, positiveEUColor, drawerItem)
+                    G.centeredText(GPU, 30, 3, colors.positiveEUColor, drawerItem)
                 else
-                    G.centeredText(GPU, 30, 3, negativeEUColor, drawerItem)
+                    G.centeredText(GPU, 30, 3, colors.negativeEUColor, drawerItem)
                 end
                 GPU.setActiveBuffer(0)
                 if itemsToStock[drawerItem] ~= nil then
@@ -182,7 +182,7 @@ function numberBox(GPU, x, y)
         currentWindows["Number"].x = x
         currentWindows["Number"].y = y
         GPU.setActiveBuffer(itemWindow)
-        G.rect(GPU, 2, 2, 48, 8, hudColor)
+        G.rect(GPU, 2, 2, 48, 8, colors.hudColor)
         G.rect(GPU, 3, 3, 46, 6, 0x000000)
         GPU.setActiveBuffer(0)
     end
@@ -193,8 +193,8 @@ function button(GPU, x, y)
         currentWindows["Button"].x = x
         currentWindows["Button"].y = y
         GPU.setActiveBuffer(button)
-        G.rect(GPU, 2, 2, 8, 8, hudColor)
-        G.rect(GPU, 3, 3, 6, 6, workingColor)
+        G.rect(GPU, 2, 2, 8, 8, colors.hudColor)
+        G.rect(GPU, 3, 3, 6, 6, colors.workingColor)
         GPU.setActiveBuffer(0)
     end
 end
@@ -204,12 +204,12 @@ function craftableBox(GPU, x, y)
         currentWindows["Craft"].x = x
         currentWindows["Craft"].y = y
         GPU.setActiveBuffer(crafts)
-        G.rect(GPU, 2, 2, 70, 94, hudColor)
+        G.rect(GPU, 2, 2, 70, 94, colors.hudColor)
         GPU.setActiveBuffer(0)
     end
     GPU.setActiveBuffer(currentWindows["Craft"].page)
     G.rect(GPU, 3, 4, 68, 90, 0x000000)
-    G.rect(GPU, 48, 2, 1, 94, hudColor)
+    G.rect(GPU, 48, 2, 1, 94, colors.hudColor)
     local i = 1
     S.updateCache()
     for label, amount in pairs(itemsToStock) do
@@ -219,16 +219,16 @@ function craftableBox(GPU, x, y)
         if S.uniques() > 2500 then --Check against rebooted system
             if toStock > 0 then
                 if drawerItem == label then
-                    G.text(GPU, 4, 3 + 2 * i, workingColor, label)
+                    G.text(GPU, 4, 3 + 2 * i, colors.workingColor, label)
                 elseif craftables[label] == nil then
-                    G.text(GPU, 4, 3 + 2 * i, negativeEUColor, label)
+                    G.text(GPU, 4, 3 + 2 * i, colors.negativeEUColor, label)
                 else
                     G.text(GPU, 4, 3 + 2 * i, 0xFFFFFF, label)
                 end
                 if stockedAmount >= toStock then --In stock
                     G.text(GPU, 59 - (#stockedString + 1), 3 + 2 * i, 0xFFFFFF, stockedString)
                 elseif stockedAmount >= toStock * 0.85 then --Edit hysteresis here, slightly below stock
-                    G.text(GPU, 59 - (#stockedString + 1), 3 + 2 * i, workingColor, stockedString)
+                    G.text(GPU, 59 - (#stockedString + 1), 3 + 2 * i, colors.workingColor, stockedString)
                 else --Needs to be ordered
                     --Add crafting request loop here
                     if craftables[label] ~= nil then
@@ -238,7 +238,7 @@ function craftableBox(GPU, x, y)
                             currentlyCrafting[label] = nil
                         end
                     end
-                    G.text(GPU, 59 - (#stockedString + 1), 3 + 2 * i, negativeEUColor, stockedString)
+                    G.text(GPU, 59 - (#stockedString + 1), 3 + 2 * i, colors.negativeEUColor, stockedString)
                 end
                 G.text(GPU, 59, 3 + 2 * i, 0xFFFFFF, "| " .. amount)
                 i = math.min(i + 1, 43)

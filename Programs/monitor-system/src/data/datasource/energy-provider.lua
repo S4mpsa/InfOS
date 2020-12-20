@@ -2,7 +2,7 @@
 local parser = require("util.parser")
 local inherits = require("util.class.inherits")
 local SingleBlock = require("data.datasource.single-block")
-local mock = require("data.mock.mock-energy-provider")
+local mock = require("mock-energy-provider")
 --
 
 local EnergyProvider =

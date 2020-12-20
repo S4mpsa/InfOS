@@ -1,4 +1,4 @@
-local adresses = {
+local addresses = {
     laserEngraver1 = "d9a13648-977b-464e-a228-46bf12e38525",
     laserEngraver2 = "a4fd6874-f4a9-40d9-a47b-f88c3ef7d0fa",
     laserEngraver3 = "843022a0-5687-49d9-b94c-6637ae8a8ec9",
@@ -10,4 +10,4 @@ local adresses = {
     cleanroom = "753f5619-7076-45c0-8f0a-f3899bae00e1"
 }
 
-return adresses
+return addresses

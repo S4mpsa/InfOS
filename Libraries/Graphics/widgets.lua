@@ -4,20 +4,15 @@ computer = require("computer")
 event = require("event")
 draw = require("graphics")
 util = require("utility")
-
-local mainColor = color.purple
-local background = color.black
-local accentA = color.cyan
-local accentB = color.red
-local barColor = color.blue
+colors = require("colors")
 
 local widgets = {}
 
 function widgets.gtMachineInit(GPU, name, address)
     local maintenanceIndex = 0
     local machine = util.machine(address)
-    draw.rect(GPU, 1, 1, 28, 9, background)
-    draw.text(GPU, 4, 3, mainColor, name)
+    draw.rect(GPU, 1, 1, 28, 9, colors.background)
+    draw.text(GPU, 4, 3, colors.mainColor, name)
     if machine ~= nil then
         for i = 1, #machine.getSensorInformation() do --Get maintenance index
             if string.match(machine.getSensorInformation()[i], "Problems") ~= nil then
@@ -29,26 +24,26 @@ function widgets.gtMachineInit(GPU, name, address)
             if string.match(machine.getSensorInformation()[6], "tier") ~= nil then
                 local tier = util.tier((string.gsub(machine.getSensorInformation()[6], "([^0-9]+)", "") - 1) / 10)
                 if tier ~= nil then
-                    draw.text(GPU, 4, 5, accentB, "" .. tier)
+                    draw.text(GPU, 4, 5, colors.accentB, "" .. tier)
                 end
             end
             --Check for parallel on Processing Arrays
             if string.match(machine.getSensorInformation()[7], "Parallel") ~= nil then
                 local parallel = string.gsub(machine.getSensorInformation()[7], "([^0-9]+)", "")
                 if parallel ~= nil then
-                    draw.text(GPU, 11 + -(#parallel) .. "", 5, mainColor, parallel .. "x")
+                    draw.text(GPU, 11 + -(#parallel) .. "", 5, colors.mainColor, parallel .. "x")
                 end
             end
         end
     else
-        draw.text(GPU, 4, 5, errorColor, "Unknown")
+        draw.text(GPU, 4, 5, colors.errorColor, "Unknown")
     end
-    draw.rect(GPU, 3, 2, 3, 1, barColor)
-    draw.rect(GPU, 2, 2, 1, 7, barColor)
-    draw.rect(GPU, 3, 8, 20, 1, barColor)
-    draw.rect(GPU, 24, 8, 3, 1, barColor)
-    draw.rect(GPU, 27, 2, 1, 7, barColor)
-    draw.rect(GPU, 7, 2, 21, 1, barColor)
+    draw.rect(GPU, 3, 2, 3, 1, colors.barColor)
+    draw.rect(GPU, 2, 2, 1, 7, colors.barColor)
+    draw.rect(GPU, 3, 8, 20, 1, colors.barColor)
+    draw.rect(GPU, 24, 8, 3, 1, colors.barColor)
+    draw.rect(GPU, 27, 2, 1, 7, colors.barColor)
+    draw.rect(GPU, 7, 2, 21, 1, colors.barColor)
     return maintenanceIndex
 end
 
@@ -61,50 +56,50 @@ function widgets.gtMachine(GPU, name, address)
             local barAmount = currentProgress
             --First Straight
             _, f, _ = GPU.get(3, 1)
-            if f ~= mainColor then
+            if f ~= colors.mainColor then
                 local bars1 = math.max(0, math.min(3, barAmount))
-                draw.rect(GPU, 3, 2, 3, 1, barColor)
-                draw.rect(GPU, 24, 8, 3, 1, barColor)
-                draw.rect(GPU, 2, 2, 1, 7, barColor)
-                draw.rect(GPU, 27, 2, 1, 7, barColor)
-                draw.rect(GPU, 3, 8, 20, 1, barColor)
-                draw.rect(GPU, 7, 2, 20, 1, barColor)
-                draw.rect(GPU, 6 - bars1, 2, bars1, 1, mainColor)
-                draw.rect(GPU, 24, 8, bars1, 1, mainColor)
+                draw.rect(GPU, 3, 2, 3, 1, colors.barColor)
+                draw.rect(GPU, 24, 8, 3, 1, colors.barColor)
+                draw.rect(GPU, 2, 2, 1, 7, colors.barColor)
+                draw.rect(GPU, 27, 2, 1, 7, colors.barColor)
+                draw.rect(GPU, 3, 8, 20, 1, colors.barColor)
+                draw.rect(GPU, 7, 2, 20, 1, colors.barColor)
+                draw.rect(GPU, 6 - bars1, 2, bars1, 1, colors.mainColor)
+                draw.rect(GPU, 24, 8, bars1, 1, colors.mainColor)
             end
             _, f, _ = GPU.get(2, 4)
-            if barAmount > 3 and f ~= mainColor then --Vertical
+            if barAmount > 3 and f ~= colors.mainColor then --Vertical
                 bars2 = math.max(0, math.min(7, barAmount - 3))
-                draw.rect(GPU, 2, 2, 1, 7, barColor)
-                draw.rect(GPU, 27, 2, 1, 7, barColor)
-                draw.rect(GPU, 3, 8, 20, 1, barColor)
-                draw.rect(GPU, 7, 2, 20, 1, barColor)
-                draw.rect(GPU, 2, 2, 1, bars2, mainColor)
-                draw.rect(GPU, 27, 9 - bars2, 1, bars2, mainColor)
+                draw.rect(GPU, 2, 2, 1, 7, colors.barColor)
+                draw.rect(GPU, 27, 2, 1, 7, colors.barColor)
+                draw.rect(GPU, 3, 8, 20, 1, colors.barColor)
+                draw.rect(GPU, 7, 2, 20, 1, colors.barColor)
+                draw.rect(GPU, 2, 2, 1, bars2, colors.mainColor)
+                draw.rect(GPU, 27, 9 - bars2, 1, bars2, colors.mainColor)
             end
             if barAmount > 10 then --Long Straight
                 local bars3 = math.max(0, barAmount - 10)
-                draw.rect(GPU, 3, 8, 20, 1, barColor)
-                draw.rect(GPU, 7, 2, 20, 1, barColor)
-                draw.rect(GPU, 3, 8, bars3, 1, mainColor)
-                draw.rect(GPU, 27 - bars3, 2, bars3, 1, mainColor)
+                draw.rect(GPU, 3, 8, 20, 1, colors.barColor)
+                draw.rect(GPU, 7, 2, 20, 1, colors.barColor)
+                draw.rect(GPU, 3, 8, bars3, 1, colors.mainColor)
+                draw.rect(GPU, 27 - bars3, 2, bars3, 1, colors.mainColor)
             end
             progressString =
                 tostring(math.floor(machine.getWorkProgress() / 20)) ..
                 "/" .. tostring(math.floor(machine.getWorkMaxProgress() / 20)) .. "s"
             middlePoint = math.min(9, 12 - #progressString / 2)
-            draw.rect(GPU, 18, 5, 8, 2, background)
-            draw.text(GPU, 26 - #progressString, 5, accentA, progressString)
+            draw.rect(GPU, 18, 5, 8, 2, colors.background)
+            draw.text(GPU, 26 - #progressString, 5, colors.accentA, progressString)
         else --No work
             _, f, _ = GPU.get(5, 1)
-            if f ~= barColor then
-                draw.rect(GPU, 18, 5, 8, 2, background)
-                draw.rect(GPU, 3, 2, 3, 1, barColor)
-                draw.rect(GPU, 2, 2, 1, 7, barColor)
-                draw.rect(GPU, 3, 8, 20, 1, barColor)
-                draw.rect(GPU, 24, 8, 3, 1, barColor)
-                draw.rect(GPU, 27, 2, 1, 7, barColor)
-                draw.rect(GPU, 7, 2, 20, 1, barColor)
+            if f ~= colors.barColor then
+                draw.rect(GPU, 18, 5, 8, 2, colors.background)
+                draw.rect(GPU, 3, 2, 3, 1, colors.barColor)
+                draw.rect(GPU, 2, 2, 1, 7, colors.barColor)
+                draw.rect(GPU, 3, 8, 20, 1, colors.barColor)
+                draw.rect(GPU, 24, 8, 3, 1, colors.barColor)
+                draw.rect(GPU, 27, 2, 1, 7, colors.barColor)
+                draw.rect(GPU, 7, 2, 20, 1, colors.barColor)
             end
         end
         _, f, _ = GPU.get(6, 1)
@@ -112,20 +107,20 @@ function widgets.gtMachine(GPU, name, address)
             ((windows[name].data == 0 or string.match(machine.getSensorInformation()[windows[name].data], ".*c0.*")) and
                 machine.isWorkAllowed()) == true
          then
-            if f ~= background then
-                draw.rect(GPU, 6, 2, 1, 1, background)
-                draw.rect(GPU, 23, 8, 1, 1, background)
+            if f ~= colors.background then
+                draw.rect(GPU, 6, 2, 1, 1, colors.background)
+                draw.rect(GPU, 23, 8, 1, 1, colors.background)
             end
         else
             if (machine.isWorkAllowed()) then
-                if f ~= accentA then
-                    draw.rect(GPU, 6, 2, 1, 1, accentA)
-                    draw.rect(GPU, 23, 8, 1, 1, accentA)
+                if f ~= colors.accentA then
+                    draw.rect(GPU, 6, 2, 1, 1, colors.accentA)
+                    draw.rect(GPU, 23, 8, 1, 1, colors.accentA)
                 end
             else
-                if f ~= errorColor then
-                    draw.rect(GPU, 6, 2, 1, 1, errorColor)
-                    draw.rect(GPU, 23, 8, 1, 1, errorColor)
+                if f ~= colors.errorColor then
+                    draw.rect(GPU, 6, 2, 1, 1, colors.errorColor)
+                    draw.rect(GPU, 23, 8, 1, 1, colors.errorColor)
                 end
             end
         end
