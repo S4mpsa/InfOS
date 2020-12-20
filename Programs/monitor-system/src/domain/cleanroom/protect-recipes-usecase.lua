@@ -1,5 +1,5 @@
 -- Import section
-local alarm = require('api.sound.alarm')
+local alarm = require('alarm')
 --
 
 local function halt(machines)

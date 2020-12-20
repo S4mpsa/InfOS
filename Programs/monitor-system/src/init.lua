@@ -24,7 +24,7 @@ local EBF11 = MultiBlock:new(multiBlockAddresses.EBF11)
 
 local multiblocks = {cleanroom, EBF11}
 
-local energyBuffer = EnergyProvider:new(energyBufferAddress)
+local energyBuffer = EnergyProvider:new(energyBufferAddress.batteryBuffer1)
 
 local energyProducers = {}
 
