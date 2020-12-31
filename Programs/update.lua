@@ -1,3 +1,5 @@
+-- wget https://raw.githubusercontent.com/gordominossi/InfOS/master/Programs/update.lua -f
+
 local shell = require("shell")
 
 local tarMan = "https://raw.githubusercontent.com/mpmxyz/ocprograms/master/usr/man/tar.man"
