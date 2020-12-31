@@ -1,5 +1,5 @@
 -- Import section
-local new = require("util.class.new")
+new = require("new")
 --
 
 local MockSingleBlock = {
