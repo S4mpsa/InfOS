@@ -1,6 +1,6 @@
 -- Import section
-inherits = require("inherits")
-MockSingleBlock = require("mock-single-block")
+inherits = require("utils.inherits")
+MockSingleBlock = require("data.mock.mock-single-block")
 --
 
 local MockEnergyProvider =

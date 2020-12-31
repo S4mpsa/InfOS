@@ -5,9 +5,9 @@ MultiBlock = require("data.datasource.multi-block")
 SingleBlock = require("data.datasource.single-block")
 EnergyProvider = require("data.datasource.energy-provider")
 
-local cleanroomAddresses = require("cleanroom")
-local multiBlockAddresses = require("multi-blocks")
-local energyBufferAddress = require("energy-buffer")
+local cleanroomAddresses = require("config.addresses.cleanroom")
+local multiBlockAddresses = require("config.addresses.multi-blocks")
+local energyBufferAddress = require("config.addresses.energy-buffers")
 
 local protectCleanroomRecipes = require("domain.cleanroom.protect-recipes-usecase")
 local getMultiblockStatuses = require("domain.multiblock.get-status-usecase")
@@ -31,8 +31,9 @@ local energyProducers = {}
 for i = 0, 100 do
     print(i)
     protectCleanroomRecipes(cleanroom, cleanroomMachines)
-    local multiblockStatuses = getMultiblockStatuses(multiblocks)
+    -- local multiblockStatuses = getMultiblockStatuses(multiblocks)
     local energyStatus = getEnergyStatus(energyProducers, energyBuffer)
     os.sleep(0)
     i = i + 1
 end
+require('resources.sound.zelda-secret')()

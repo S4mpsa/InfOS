@@ -1,8 +1,8 @@
 -- Import section
-parser = require("parser")
-inherits = require("inherits")
-SingleBlock = require("single-block")
-local mock = require("mock-multi-block")
+parser = require("utils.parser")
+inherits = require("utils.inherits")
+SingleBlock = require("data.datasource.single-block")
+local mock = require("data.mock.mock-multi-block")
 --
 
 local MultiBlock =

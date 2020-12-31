@@ -1,5 +1,5 @@
 -- Import section
-local alarm = require('alarm')
+local alarm = require('resources.sound.alarm')
 --
 
 local function halt(machines)

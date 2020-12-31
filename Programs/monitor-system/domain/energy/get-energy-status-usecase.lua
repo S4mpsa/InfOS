@@ -1,6 +1,6 @@
 -- Import section
-local getConsumption = require("get-consumption-usecase")
-local getProduction = require("get-production-usecase")
+local getConsumption = require("domain.energy.get-consumption-usecase")
+local getProduction = require("domain.energy.get-production-usecase")
 --
 
 local function exec(energyProducers, energyBuffer)

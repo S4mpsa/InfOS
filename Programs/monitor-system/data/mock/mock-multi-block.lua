@@ -1,6 +1,6 @@
 -- Import section
-MockSingleBlock = require("mock-single-block")
-inherits = require("inherits")
+inherits = require("utils.inherits")
+MockSingleBlock = require("data.mock.mock-single-block")
 --
 
 local MockMultiBlock =
