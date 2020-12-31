@@ -1,6 +1,6 @@
 -- Import section
 component = require("component")
-local mock = require("mock-single-block")
+local mock = require("data.mock.mock-single-block")
 --
 
 local SingleBlock = {
