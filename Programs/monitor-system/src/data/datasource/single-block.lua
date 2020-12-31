@@ -1,5 +1,5 @@
 -- Import section
-local component = require("component")
+component = require("component")
 local mock = require("mock-single-block")
 --
 

@@ -1,8 +1,6 @@
 -- Import section
-local parser = require("util.parser")
-local inherits = require("util.class.inherits")
-local MockSingleBlock = require("data.mock.mock-single-block")
-local new = require("util.class.new")
+inherits = require("inherits")
+MockSingleBlock = require("mock-single-block")
 --
 
 local MockEnergyProvider =
