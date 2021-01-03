@@ -12,6 +12,8 @@ local energyBufferAddress = require("config.addresses.energy-buffers")
 local protectCleanroomRecipes = require("domain.cleanroom.protect-recipes-usecase")
 local getMultiblockStatuses = require("domain.multiblock.get-multiblock-status-usecase")
 local getEnergyStatus = require("domain.energy.get-energy-status-usecase")
+local listMiners = require("domain.miner.list-miners-usecase")
+local getMinersStatuses = require("domain.miner.get-miner-status-usecase")
 --
 
 local cleanroom = MultiBlock:new(multiBlockAddresses.cleanroom)
@@ -29,18 +31,23 @@ local multiblocks = {cleanroom, EBF11}
 local energyBuffer = EnergyProvider:new(energyBufferAddress.batteryBuffer1)
 
 local energyProducers = {}
-local multiblockStatuses = {}
+local multiblocksStatuses = {}
 
-for i = 0, 100 do
+for i = 1, 100 do
     print(i)
+
     protectCleanroomRecipes(cleanroom, cleanroomMachines)
-    multiblockStatuses = getMultiblockStatuses(multiblocks)
+    multiblocksStatuses = getMultiblockStatuses(multiblocks)
     local energyStatus = getEnergyStatus(energyProducers, energyBuffer)
+
+    local minersList = listMiners()
+    local minersStatuses = getMinersStatuses(minersList)
+
     os.sleep(0)
     i = i + 1
 end
 
-for multiblock, status in pairs(multiblockStatuses) do
+for multiblock, status in pairs(multiblocksStatuses) do
     print(multiblock .. ": \
     problems: " .. status.problems .. "\
     efficiency: " .. status.efficiencyPercentage)

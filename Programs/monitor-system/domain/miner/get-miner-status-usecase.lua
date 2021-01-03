@@ -1,5 +1,14 @@
-local function exec(miner)
-    return miner.isMachineActive() and miner.hasWork() -- TODO: differenciate cases
+local function exec(miners)
+    local statuses = {}
+    if #miners > 0 then
+        for address, miner in ipairs(miners) do
+            statuses[address] = {
+                active = miner:isMachineActive(),
+                hasWork = miner:hasWork()
+            }
+        end
+    end
+    return statuses
 end
 
 return exec
