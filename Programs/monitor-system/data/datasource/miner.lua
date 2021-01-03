@@ -2,7 +2,7 @@
 parser = require("utils.parser")
 inherits = require("utils.inherits")
 SingleBlock = require("data.datasource.single-block")
-local mock = require("data.mock.mock-multi-block")
+local mock = require("data.mock.mock-miner")
 --
 
 local Miner =
@@ -16,10 +16,10 @@ local Miner =
 
 function Miner:getName()
     local sensorInformation = self:getSensorInformation()
-    return parser.parseProblems(sensorInformation[1])
+    return parser.parseName(sensorInformation[1])
 end
 
-function Miner:getWoarkArea()
+function Miner:getWorkArea()
     local sensorInformation = self:getSensorInformation()
     return parser.parseWorkArea(sensorInformation[2])
 end
