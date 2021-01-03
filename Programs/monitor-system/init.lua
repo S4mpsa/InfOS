@@ -10,7 +10,7 @@ local multiBlockAddresses = require("config.addresses.multi-blocks")
 local energyBufferAddress = require("config.addresses.energy-buffers")
 
 local protectCleanroomRecipes = require("domain.cleanroom.protect-recipes-usecase")
-local getMultiblockStatuses = require("domain.multiblock.get-status-usecase")
+local getMultiblockStatuses = require("domain.multiblock.get-multiblock-status-usecase")
 local getEnergyStatus = require("domain.energy.get-energy-status-usecase")
 --
 
