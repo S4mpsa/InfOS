@@ -1,40 +1,36 @@
-comp = require("component")
-screen = require("term")
+component = require("component")
+term = require("term")
 computer = require("computer")
-event = require("event")
-thread = require("thread")
-sides = require("sides")
-get = require("utility")
 ARG = require("ARGraphics")
-G = require("graphics")
-local uc = require("unicode")
-tx = require("transforms")
-config = require("config")
-local GPU = comp.gpu
+graphics = require("graphics")
+local tx = require("transforms")
+GPU = component.gpu
+local interface = component.me_interface
 local sUtil = {}
+local itemsToStock = {}
 function sUtil.refreshCraftables()
-    local c = comp.me_interface.getCraftables()
+    local craftables = interface.getCraftables()
     local max = 0
     if max > 0 then
-        c = tx.sub(c, 1, max)
+        craftables = tx.sub(craftables, 1, max)
     end
-    for i, craftable in pairs(c) do
+    for i, craftable in pairs(craftables) do
         if i ~= "n" then
             if i % 10 == 0 then
-                G.centeredText(
+                graphics.centeredText(
                     GPU,
-                    currentWindows["Number"].x + 25,
-                    currentWindows["Number"].y * 2 + 3,
+                    graphics.currentWindows["Number"].x + 25,
+                    graphics.currentWindows["Number"].y * 2 + 3,
                     0xFFFFFF,
-                    "Discovering Patterns: " .. i .. " / " .. #c
+                    "Discovering Patterns: " .. i .. " / " .. #craftables
                 )
             end
         end
-        if craftable ~= #c then
+        if craftable ~= #craftables then
             craftables[craftable.getItemStack().label] = craftable.request
         end
     end
-    G.centeredText(GPU, 86, 85, 0xFFFFFF, "Patterns in memory: " .. #c)
+    graphics.centeredText(GPU, 86, 85, 0xFFFFFF, "Patterns in memory: " .. #craftables)
 end
 local cachedAmounts = {}
 function sUtil.updateCache()

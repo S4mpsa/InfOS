@@ -1,8 +1,8 @@
-comp = require("component")
+component = require("component")
 colors = require("colors")
 local graphics = {}
 
-function pixel(GPU, x, y, color)
+function graphics.pixel(GPU, x, y, color)
     local screenY = math.ceil(y / 2)
     local baseChar, baseForeground, baseBackground = GPU.get(x, screenY)
     GPU.setForeground(color)
@@ -14,21 +14,21 @@ function pixel(GPU, x, y, color)
     end
 end
 
-function graphics.rect(GPU, x, y, w, h, color)
+function graphics.rectangle(GPU, x, y, w, h, color)
     local hLeft = h
     if x > 0 and y > 0 then
         if y % 2 == 0 then
             for i = x, x + w - 1 do
-                pixel(GPU, i, y, color)
+                graphics.pixel(GPU, i, y, color)
             end
             hLeft = hLeft - 1
         end
-        GPU.setBackground(color)
-        GPU.setForeground(color)
+        GPU.setBackground(table.unpack(color))
+        GPU.setForeground(table.unpack(color))
         if hLeft % 2 == 1 then
             GPU.fill(x, math.ceil(y / 2) + (h - hLeft), w, (hLeft - 1) / 2, "█")
             for j = x, x + w - 1 do
-                pixel(GPU, j, y + h - 1, color)
+                graphics.pixel(GPU, j, y + h - 1, color)
             end
         else
             GPU.fill(x, math.ceil(y / 2) + (h - hLeft), w, hLeft / 2, "█")
@@ -41,7 +41,7 @@ function graphics.text(GPU, x, y, color, string)
         error("Text position must be odd on y axis")
     end
     local screenY = math.ceil(y / 2)
-    GPU.setForeground(color)
+    GPU.setForeground(table.unpack(color))
     for i = 0, #string - 1 do
         local baseChar, baseForeground, baseBackground = GPU.get(x + i, screenY)
         GPU.setBackground(baseBackground)
@@ -54,7 +54,7 @@ function graphics.centeredText(GPU, x, y, color, string)
         error("Text position must be odd on y axis")
     end
     local screenY = math.ceil(y / 2)
-    local oldForeground = GPU.setForeground(color)
+    local oldForeground = GPU.setForeground(table.unpack(color))
     local oldBackground = GPU.getBackground()
     for i = 0, #string - 1 do
         local baseChar, baseForeground, baseBackground = GPU.get(x + i - math.ceil(#string / 2) + 1, screenY)
@@ -66,14 +66,14 @@ function graphics.centeredText(GPU, x, y, color, string)
 end
 
 function graphics.border(GPU, w, h, color)
-    draw.rect(GPU, 1, 1, w, 1, color)
-    draw.rect(GPU, 1, h * 2, w, 1, color)
-    draw.rect(GPU, 1, 1, 1, h * 2, color)
-    draw.rect(GPU, w, 1, 1, h * 2, color)
+    draw.rectangle(GPU, 1, 1, w, 1, color)
+    draw.rectangle(GPU, 1, h * 2, w, 1, color)
+    draw.rectangle(GPU, 1, 1, 1, h * 2, color)
+    draw.rectangle(GPU, w, 1, 1, h * 2, color)
 end
-currentWindows = {}
+graphics.currentWindows = {}
 function graphics.checkCollision(GPU, x, y)
-    for window, params in pairs(currentWindows) do
+    for window, params in pairs(graphics.currentWindows) do
         if x >= params.x and x <= params.x + params.w - 1 then
             if y >= params.y and y <= params.y + math.ceil(params.h / 2) - 1 then
                 return window
@@ -84,7 +84,7 @@ function graphics.checkCollision(GPU, x, y)
 end
 function graphics.createWindow(GPU, width, height, name)
     local pageNumber = GPU.allocateBuffer(width, math.ceil(height / 2))
-    currentWindows[name] = {page = pageNumber, x = 1, y = 1, w = width, h = height, GPU = GPU}
+    graphics.currentWindows[name] = {page = pageNumber, x = 1, y = 1, w = width, h = height, GPU = GPU}
     return pageNumber
 end
 local function copyWindow(GPU, x, y, page, destination)
@@ -92,21 +92,22 @@ local function copyWindow(GPU, x, y, page, destination)
     GPU.bitblt(destination, x, y, 160, 50, page, 1, 1)
 end
 function graphics.refresh(GPU)
-    for window, params in pairs(currentWindows) do
+    for window, params in pairs(graphics.currentWindows) do
         if params.w > 0 then
             copyWindow(GPU, params.x, params.y, params.page)
         end
     end
     GPU.setActiveBuffer(0)
 end
-windows = {}
+
+graphics.windows = {}
 function graphics.update()
     local function redraw()
-        for window, params in pairs(windows) do
+        for window, params in pairs(graphics.windows) do
             copyWindow(params.GPU, params.x, params.y, params.page)
         end
     end
-    for name, params in pairs(windows) do
+    for name, params in pairs(graphics.windows) do
         params.GPU.setActiveBuffer(params.page)
         params.update(params.GPU, name, params.address)
         params.GPU.setActiveBuffer(0)
@@ -115,7 +116,7 @@ function graphics.update()
     os.sleep()
 end
 function graphics.clear()
-    currentWindows = {}
+    graphics.currentWindows = {}
 end
 
 return graphics

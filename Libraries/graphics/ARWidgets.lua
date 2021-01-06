@@ -1,5 +1,5 @@
-comp = require("component")
-screen = require("term")
+component = require("component")
+term = require("term")
 computer = require("computer")
 event = require("event")
 thread = require("thread")
@@ -226,7 +226,7 @@ function ARWidgets.fluidMonitor(glasses, x, y, fluidMap)
     local w = 60
     local h = 9
     local entries = 0
-    local fluids = comp.me_interface.getFluidsInNetwork()
+    local fluids = component.me_interface.getFluidsInNetwork()
     if initFluidMap then
         for i = 0, #fluidMap, 1 do
             local background =
@@ -422,7 +422,7 @@ local function clearTicker(glasses)
     end
     rollingTextObjects = {}
 end
-local cachedAmounts = refreshDatabase(comp.me_interface.getItemsInNetwork())
+local cachedAmounts = refreshDatabase(component.me_interface.getItemsInNetwork())
 function difference(new)
     local differenceArray = {}
     for label, amount in pairs(cachedAmounts) do
@@ -504,9 +504,9 @@ function ARWidgets.itemTicker(glasses, x, y, w)
     end
     if computer.uptime() - lastUpdate > 60 then
         lastUpdate = computer.uptime()
-        allItems = comp.me_interface.getItemsInNetwork()
+        allItems = component.me_interface.getItemsInNetwork()
         itemsInNetwork = #allItems
-        craftables = #comp.me_interface.getCraftables()
+        craftables = #component.me_interface.getCraftables()
         totalItems.setText("Total: " .. formatMillions(getTotalItemCount(allItems)))
         patterns.setText("Patterns: " .. craftables)
         uniqueItems.setText("Unique: " .. itemsInNetwork)
@@ -582,13 +582,13 @@ function ARWidgets.cpuMonitor(glasses, x, y)
         )
         initializeCpuMonitor = false
     end
-    local cpus = comp.me_interface.getCpus()
+    local cpus = component.me_interface.getCpus()
     for i = 1, #cpus, 1 do
         if cpus[i].busy then
-            cpuLights[i].setColor(ARG.hexToRGB(colors.positiveEUColor))
+            cpuLights[i].setColor(colors.positiveEUColor)
         else
             cpuLights[i].setAlpha(0.7)
-            cpuLights[i].setColor(ARG.hexToRGB(colors.workingColor))
+            cpuLights[i].setColor(colors.workingColor)
         end
     end
 end
@@ -615,13 +615,13 @@ function ARWidgets.displayTPS(glasses, x, y)
     local tps = math.min(20.00, get.tps())
     if tps > 15 then
         TPSText.setText("TPS: " .. string.sub(tps, 1, 5))
-        TPSText.setColor(ARG.hexToRGB(colors.positiveEUColor))
+        TPSText.setColor(colors.positiveEUColor)
     elseif tps >= 10 then
         TPSText.setText("TPS: " .. string.sub(tps, 1, 5))
-        TPSText.setColor(ARG.hexToRGB(colors.workingColor))
+        TPSText.setColor(colors.workingColor)
     else
         TPSText.setText("TPS: " .. string.sub(tps, 1, 4))
-        TPSText.setColor(ARG.hexToRGB(colors.negativeEUColor))
+        TPSText.setColor(colors.negativeEUColor)
     end
 end
 function ARWidgets.clear()
