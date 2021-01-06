@@ -1,6 +1,4 @@
 -- Import section
-computer = require("computer")
-comp = require("component")
 MultiBlock = require("data.datasource.multi-block")
 SingleBlock = require("data.datasource.single-block")
 EnergyProvider = require("data.datasource.energy-provider")

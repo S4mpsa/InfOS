@@ -1,7 +1,6 @@
-comp = require("component")
-event = require("event")
+component = require("component")
 
-local transposer = comp.transposer
+local transposer = component.transposer
 local dark = 2
 local charger = 3
 function swap()

@@ -1,14 +1,13 @@
-local comp = require("component")
-local event = require("event")
-local thread = require("thread")
+component = require("component")
+event = require("event")
 local uc = require("unicode")
 local utility = {}
-local modem = comp.modem
+local modem = component.modem
 
 function utility.machine(address)
-    machineAddress = comp.get(address)
+    machineAddress = component.get(address)
     if (machineAddress ~= nil) then
-        return comp.proxy(machineAddress)
+        return component.proxy(machineAddress)
     else
         return nil
     end

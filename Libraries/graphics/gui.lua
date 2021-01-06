@@ -1,10 +1,9 @@
-local draw = require("graphics")
+graphics = require("graphics")
 event = require("event")
-local thread = require("thread")
 local uc = require("unicode")
 component = require("component")
 GPU = component.proxy(component.get("f26678f4"))
-local colors = require("colors")
+colors = require("colors")
 
 local gui, quit, editing = {}, false, false
 local currentWindows = {}
@@ -38,9 +37,9 @@ gui.contextMenu = function(GPU, x, y, data)
     end
     local contextWindow = gui.createWindow(GPU, longestData, #data * 2, "ContextMenu" .. contextMenus)
     GPU.setActiveBuffer(contextWindow)
-    draw.rectangle(GPU, 1, 1, longestData, #data * 2, colors.lightGray)
+    graphics.rectangle(GPU, 1, 1, longestData, #data * 2, colors.lightGray)
     for i = 1, #data do
-        draw.text(GPU, 1, 1 + i * 2 - 2, colors.cyan, data[i])
+        graphics.text(GPU, 1, 1 + i * 2 - 2, colors.cyan, data[i])
     end
     currentWindows["ContextMenu" .. contextMenus].x = x
     currentWindows["ContextMenu" .. contextMenus].y = y
@@ -73,13 +72,13 @@ gui.processCommand = function(GPU, window, option)
     end
     GPU.setActiveBuffer(currentWindows["ColorBox"].page)
     if option == 1 then
-        draw.rectangle(GPU, 1, 1, 10, 10, colors.red)
+        graphics.rectangle(GPU, 1, 1, 10, 10, colors.red)
     end
     if option == 2 then
-        draw.rectangle(GPU, 1, 1, 10, 10, colors.blue)
+        graphics.rectangle(GPU, 1, 1, 10, 10, colors.blue)
     end
     if option == 3 then
-        draw.rectangle(GPU, 1, 1, 10, 10, colors.green)
+        graphics.rectangle(GPU, 1, 1, 10, 10, colors.green)
     end
     GPU.setActiveBuffer(0)
 end
@@ -88,7 +87,7 @@ local i, xOffset, yOffset = 1, 0, 0
 gui.mouseListener = function()
     local function processClick(event, address, x, y, key, player)
         activeWindow = gui.checkCollision(x, y)
-        draw.text(GPU, 1, 1, colors.cyan, "Active window: " .. activeWindow)
+        graphics.text(GPU, 1, 1, colors.cyan, "Active window: " .. activeWindow)
         if key == 1.0 and editing then
             if inContextMenu then
                 contextMenus = 0
@@ -172,13 +171,13 @@ GPU.freeAllBuffers()
 keyInput, mouseInput, drag = gui.keyboardListener(), gui.mouseListener(), gui.dragListener()
 gui.createWindow(GPU, 160, 100, "Black")
 GPU.setActiveBuffer(currentWindows["Black"].page)
-draw.rectangle(GPU, 1, 1, 160, 100, 0x000000)
+graphics.rectangle(GPU, 1, 1, 160, 100, 0x000000)
 currentWindows["Black"].w = 0
 currentWindows["Black"].h = 0
 GPU.setActiveBuffer(0)
 gui.createWindow(GPU, 160, 100, "State")
 GPU.setActiveBuffer(currentWindows["State"].page)
-draw.rectangle(GPU, 1, 1, 160, 100, 0x000000)
+graphics.rectangle(GPU, 1, 1, 160, 100, 0x000000)
 currentWindows["State"].w = 0
 currentWindows["State"].h = 0
 GPU.setActiveBuffer(0)

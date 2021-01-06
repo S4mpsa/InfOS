@@ -1,7 +1,3 @@
-component = require("component")
-term = require("term")
-computer = require("computer")
-event = require("event")
 graphics = require("graphics")
 util = require("utility")
 colors = require("colors")

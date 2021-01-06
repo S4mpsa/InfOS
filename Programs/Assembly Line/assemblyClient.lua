@@ -1,14 +1,10 @@
-comp = require("component")
 event = require("event")
-screen = require("term")
-computer = require("computer")
-thread = require("thread")
+term = require("term")
 local AU = require("util")
 local AT = require("transport")
 local S = require("serialization")
 local uc = require("unicode")
-local D = require("dictionary")
-local network = comp.modem
+local network = component.modem
 local id, AD
 local function requestID()
     network.broadcast(100, "requestID")
@@ -103,10 +99,10 @@ local function processRecipe(recipe)
         os.sleep(0.2)
     end
     if not AD.controller.hasWork() then
-        screen.write(" ... Error with starting assembly!")
+        term.write(" ... Error with starting assembly!")
         network.broadcast(id, "jammed")
     else
-        screen.write(" ... Assembly Started")
+        term.write(" ... Assembly Started")
         while AD.controller.hasWork() do
             os.sleep(0.1)
         end
@@ -115,14 +111,14 @@ local function processRecipe(recipe)
         end
     end
     AT.clearAll(AD)
-    screen.write(" ... finished task!\n")
+    term.write(" ... finished task!\n")
     network.broadcast(id, "complete")
 end
 
 local function processMessage(localAddress, remoteAddress, port, distance, type, eventType, value2, value3)
     if eventType == "startAssembly" then
         local recipe = S.unserialize(value2)
-        screen.write("Starting assembly of " .. recipe.label)
+        term.write("Starting assembly of " .. recipe.label)
         processRecipe(recipe)
     elseif eventType == "clear" then
         AT.clearAll(AD)
@@ -130,7 +126,7 @@ local function processMessage(localAddress, remoteAddress, port, distance, type,
 end
 
 local function quit()
-    screen.write("Quitting...")
+    term.write("Quitting...")
     event.ignore("modem_message", processMessage)
     event.ignore("key_up", processKey)
     os.exit()

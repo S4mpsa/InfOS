@@ -1,7 +1,6 @@
-local comp = require("component")
-local event = require("event")
-local modem = comp.modem
-local screen = require("term")
+component = require("component")
+event = require("event")
+local modem = component.modem
 local util = require("utility")
 AR = require("AR")
 glasses = util.machine("3770e3f9")

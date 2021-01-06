@@ -1,13 +1,11 @@
-local comp = require("component")
-local event = require("event")
-local screen = require("term")
-local computer = require("computer")
+component = require("component")
+term = require("term")
 
 local transposers = {}
 function configureTransposers()
-    for address, type in pairs(comp.list()) do
+    for address, type in pairs(component.list()) do
         if type == "transposer" then
-            local transposer = comp.proxy(comp.get(address))
+            local transposer = component.proxy(component.get(address))
             local foundTanks = {}
             for side = 0, 5, 1 do
                 if transposer.getTankCapacity(side) > 0 then
@@ -21,15 +19,15 @@ function configureTransposers()
                     transposers[address] = {source = foundTanks[1].side, sink = foundTanks[2].side}
                 end
             else
-                screen.write("Some transposers have more than two tanks! FIX IT!\n")
+                term.write("Some transposers have more than two tanks! FIX IT!\n")
             end
         end
     end
-    screen.write("Found " .. countTransposers() .. " output hatches to keep at 50%\n")
+    term.write("Found " .. countTransposers() .. " output hatches to keep at 50%\n")
 end
 function countTransposers()
     local count = 0
-    for address, type in pairs(comp.list()) do
+    for address, type in pairs(component.list()) do
         if type == "transposer" then
             count = count + 1
         end
@@ -38,7 +36,7 @@ function countTransposers()
 end
 function tick()
     for address, sides in pairs(transposers) do
-        local transposer = comp.proxy(comp.get(address))
+        local transposer = component.proxy(component.get(address))
         local sourceCurrent, sourceMax = transposer.getTankLevel(sides.source), transposer.getTankCapacity(sides.source)
         if sourceCurrent / sourceMax > 0.5 then
             local fluidToRemove = sourceCurrent - sourceMax / 2

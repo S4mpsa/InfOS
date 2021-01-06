@@ -1,13 +1,10 @@
-comp = require("component")
+component = require("component")
 event = require("event")
-screen = require("term")
-computer = require("computer")
-thread = require("thread")
-uc = require("unicode")
+term = require("term")
 AU = require("util")
+local uc = require("unicode")
 local S = require("serialization")
-local D = require("dictionary")
-local network = comp.modem
+local network = component.modem
 local mainChannel = 100
 -- mainChannel = Main channel for bi-directional communication
 
@@ -58,7 +55,7 @@ local function processMessage(type, localAddress, remoteAddress, port, distance,
 end
 
 local function quit()
-    screen.write("Quitting...")
+    term.write("Quitting...")
     event.ignore("modem_message", processMessage)
     event.ignore("key_up", processKey)
     run = false
@@ -101,7 +98,7 @@ local function spairs(t, order)
     end
 end
 function matchRecipe(recipes)
-    local items = comp.me_interface.getItemsInNetwork()
+    local items = component.me_interface.getItemsInNetwork()
     local foundItems = {}
     if #items > 0 then
         for i = 1, #items, 1 do
@@ -164,10 +161,10 @@ local function scheduleTasks()
             if not contains(assemblyStatus, recipe.label) then
                 local taskid = getFree()
                 if taskid ~= nil then
-                    screen.write("Started assembly of " .. recipe.label .. " with AL #" .. taskid .. "\n")
+                    term.write("Started assembly of " .. recipe.label .. " with AL #" .. taskid .. "\n")
                     startAssembly(taskid, recipe)
                 else
-                    screen.write("No free assembly lines.\n")
+                    term.write("No free assembly lines.\n")
                 end
             end
             return true
@@ -176,9 +173,9 @@ local function scheduleTasks()
                 local taskid = getFree()
                 if taskid ~= nil then
                     startAssembly(taskid, recipe)
-                    screen.write("Started assembly of " .. recipe.label .. " with AL #" .. taskid .. "\n")
+                    term.write("Started assembly of " .. recipe.label .. " with AL #" .. taskid .. "\n")
                 else
-                    screen.write("No free assembly lines.\n")
+                    term.write("No free assembly lines.\n")
                 end
                 craftable = craftable - 8
             end

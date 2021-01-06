@@ -1,8 +1,6 @@
 component = require("component")
-term = require("term")
 computer = require("computer")
 event = require("event")
-thread = require("thread")
 get = require("easy")
 ARG = require("ARGraphics")
 colors = require("colors")

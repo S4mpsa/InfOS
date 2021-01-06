@@ -1,7 +1,6 @@
-comp = require("component")
-event = require("event")
+component = require("component")
 AR = require("ARWidgets")
 
 while true do
-    AR.itemTicker(comp.glasses, 348, 0, 380)
+    AR.itemTicker(component.glasses, 348, 0, 380)
 end

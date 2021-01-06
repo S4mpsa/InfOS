@@ -1,16 +1,11 @@
-comp = require("component")
-event = require("event")
-screen = require("term")
-computer = require("computer")
-thread = require("thread")
-uc = require("unicode")
+component = require("component")
 
-local LSC = comp.gt_machine
+local LSC = component.gt_machine
 local engaged = false
 local function machine(address)
-    machineAddress = comp.get(address)
+    machineAddress = component.get(address)
     if (machineAddress ~= nil) then
-        return comp.proxy(machineAddress)
+        return component.proxy(machineAddress)
     else
         return nil
     end

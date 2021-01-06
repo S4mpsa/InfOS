@@ -1,8 +1,3 @@
-component = require("component")
-term = require("term")
-computer = require("computer")
-event = require("event")
-
 local AR = {}
 
 local terminal = {x = 8257, y = 199, z = -2731}

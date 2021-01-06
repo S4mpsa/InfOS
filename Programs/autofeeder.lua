@@ -1,5 +1,5 @@
-Comp = require("component")
-local transposer = Comp.transposer
+component = require("component")
+local transposer = component.transposer
 local players = {["Sampsa"] = 3, ["Dark"] = 2}
 local function findEmptyCans(player)
     local allItems = transposer.getAllStacks(players[player]).getAll()

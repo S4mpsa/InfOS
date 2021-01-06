@@ -1,7 +1,4 @@
 component = require("component")
-term = require("term")
-computer = require("computer")
-ARG = require("ARGraphics")
 graphics = require("graphics")
 local tx = require("transforms")
 GPU = component.gpu

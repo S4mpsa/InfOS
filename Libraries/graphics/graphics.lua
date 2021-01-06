@@ -1,5 +1,3 @@
-component = require("component")
-colors = require("colors")
 local graphics = {}
 
 function graphics.pixel(GPU, x, y, color)
@@ -66,10 +64,10 @@ function graphics.centeredText(GPU, x, y, color, string)
 end
 
 function graphics.border(GPU, w, h, color)
-    draw.rectangle(GPU, 1, 1, w, 1, color)
-    draw.rectangle(GPU, 1, h * 2, w, 1, color)
-    draw.rectangle(GPU, 1, 1, 1, h * 2, color)
-    draw.rectangle(GPU, w, 1, 1, h * 2, color)
+    graphics.rectangle(GPU, 1, 1, w, 1, color)
+    graphics.rectangle(GPU, 1, h * 2, w, 1, color)
+    graphics.rectangle(GPU, 1, 1, 1, h * 2, color)
+    graphics.rectangle(GPU, w, 1, 1, h * 2, color)
 end
 graphics.currentWindows = {}
 function graphics.checkCollision(GPU, x, y)

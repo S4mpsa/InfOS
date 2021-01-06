@@ -1,27 +1,25 @@
-comp = require("component")
+component = require("component")
 event = require("event")
-screen = require("term")
-computer = require("computer")
-thread = require("thread")
+term = require("term")
 
 local assemblyUtil = {}
 
 local function addEntries(file, prompt, amount, type)
     local a, b, c
     for i = 1, amount, 1 do
-        screen.write(prompt .. " " .. i .. " ")
+        term.write(prompt .. " " .. i .. " ")
         a, b, c = event.pull()
         while a ~= "component_added" do
             a, b, c = event.pull()
             os.sleep()
         end
         file:write(type .. i .. "," .. b .. "\n")
-        screen.write(b .. "\n")
+        term.write(b .. "\n")
     end
 end
 local function addAuxilary(file, proxy, type)
     if proxy == nil then
-        screen.write("Cant find a valid " .. type .. "! Exiting...\n")
+        term.write("Cant find a valid " .. type .. "! Exiting...\n")
         os.exit()
     else
         file:write(type .. "," .. proxy.address .. "\n")
@@ -41,9 +39,9 @@ local function split(s, sep)
     return fields
 end
 local function proxy(address)
-    machineAddress = comp.get(address)
+    machineAddress = component.get(address)
     if (machineAddress ~= nil) then
-        return comp.proxy(machineAddress)
+        return component.proxy(machineAddress)
     else
         return nil
     end
@@ -54,27 +52,27 @@ local function configureClient()
     addEntries(file, "Add fluid interface", 4, "fluid")
     addEntries(file, "Add item transposer", 15, "inputTransposer")
     addEntries(file, "Add fluid transposer", 4, "fluidTransposer")
-    addAuxilary(file, comp.me_interface, "items")
-    addAuxilary(file, comp.database, "database")
-    addAuxilary(file, comp.gt_machine, "controller")
+    addAuxilary(file, component.me_interface, "items")
+    addAuxilary(file, component.database, "database")
+    addAuxilary(file, component.gt_machine, "controller")
 end
 function assemblyUtil.buildClient()
-    screen.write("Starting Assembly Line initalization...")
+    term.write("Starting Assembly Line initalization...")
     local assemblyStructure = {}
     local file = io.open("addresses", "r")
     if file == nil then
-        screen.write(" no address configuration found, configuring:\n")
+        term.write(" no address configuration found, configuring:\n")
         configureClient()
         file = io.lines("addresses")
     else
         file = io.lines("addresses")
     end
     for line in file do
-        screen.write(".")
+        term.write(".")
         local tokens = split(line, ",")
         assemblyStructure[tokens[1]] = proxy(tokens[2])
     end
-    screen.write("\n")
+    term.write("\n")
     return assemblyStructure
 end
 local function voltageToTier(voltage)
@@ -142,7 +140,7 @@ local function addRecipe(recipelist, slot, source, sourceSide)
     end
 end
 function assemblyUtil.getRecipes(recipelist)
-    for address, type in pairs(comp.list()) do
+    for address, type in pairs(component.list()) do
         if type == "transposer" then
             local dataSource = proxy(address)
             for side = 0, 5 do

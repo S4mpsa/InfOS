@@ -1,15 +1,13 @@
-local comp = require("component")
-local event = require("event")
-local screen = require("term")
-local computer = require("computer")
+component = require("component")
+computer = require("computer")
 
 function cycle()
-    comp.redstone.setOutput(2, 15)
+    component.redstone.setOutput(2, 15)
     os.sleep(1)
-    comp.redstone.setOutput(2, 0)
+    component.redstone.setOutput(2, 0)
 end
 
-comp.gpu.setResolution(80, 40)
+component.gpu.setResolution(80, 40)
 
 local incoming = 4
 local sending = 3
@@ -26,7 +24,7 @@ function setDestination(destination)
 end
 
 function unload(index)
-    local transposer = comp.transposer
+    local transposer = component.transposer
     if transposer.getStackInSlot(controller, 1) ~= nil then
         --Using a return ticket
         cycle()
@@ -55,11 +53,11 @@ function copyWindow(GPU, x, y, page, destination)
 end
 windows = {}
 function doStartupSequence()
-    local gpu = comp.gpu
+    local gpu = component.gpu
     gpu.freeAllBuffers()
     local colors = {
-        [0] = 0x00a6ff,
-        [1] = 0x000000
+        [0] = colors.steelBlue,
+        [1] = colors.black
     }
     local buffer = gpu.allocateBuffer()
     gpu.setActiveBuffer(buffer)
@@ -68,7 +66,7 @@ function doStartupSequence()
             copyWindow(gpu, 0, 0, buffer, 0)
         end
         gpu.setForeground(colors[i % 2])
-        comp.gpu.fill(2 + i * 2, 1 + i, 80 - i * 4, 40 - i * 2, "█")
+        component.gpu.fill(2 + i * 2, 1 + i, 80 - i * 4, 40 - i * 2, "█")
         os.sleep(0.1)
     end
     gpu.setActiveBuffer(0)
@@ -79,7 +77,7 @@ function doStartupSequence()
 end
 local starting = false
 function send()
-    local transposer = comp.transposer
+    local transposer = component.transposer
     if transposer.getStackInSlot(controller, 1) == nil then
         --screen.write("The operating cell is missing!\n")
     else
@@ -90,7 +88,7 @@ function send()
     end
 end
 function checkArrivals()
-    local transposer = comp.transposer
+    local transposer = component.transposer
     for i = 1, 26 do
         if transposer.getStackInSlot(incoming, i) ~= nil then
             return i
@@ -111,7 +109,7 @@ function activateTeleporter()
     lastActivation = computer.uptime()
 end
 event.listen("walk", activateTeleporter)
-comp.gpu.fill(0, 0, 100, 50, " ")
+component.gpu.fill(0, 0, 100, 50, " ")
 while true do
     local arrival = checkArrivals()
     if arrival ~= 0 then
