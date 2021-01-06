@@ -1,7 +1,7 @@
-component = require("component")
+Component = require("component")
 AR = require("ARWidgets")
 
 while true do
-    AR.displayTPS(component.glasses, 0, 0)
-    AR.cpuMonitor(component.glasses, 520, 449)
+    AR.displayTPS(Component.glasses, 0, 0)
+    AR.cpuMonitor(Component.glasses, 520, 449)
 end

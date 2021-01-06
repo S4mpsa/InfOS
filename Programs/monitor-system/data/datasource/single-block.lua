@@ -1,5 +1,5 @@
 -- Import section
-component = require("component")
+Component = require("component")
 local mock = require("data.mock.mock-single-block")
 --
 
@@ -91,7 +91,7 @@ function SingleBlock:new(partialAdress)
     local successfull =
         pcall(
         function()
-            machine.block = component.proxy(component.get(partialAdress))
+            machine.block = Component.proxy(Component.get(partialAdress))
         end
     )
     if (not successfull) then

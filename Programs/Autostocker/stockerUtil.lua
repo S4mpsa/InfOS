@@ -1,8 +1,8 @@
-component = require("component")
-graphics = require("graphics")
+Component = require("component")
+Graphics = require("graphics.graphics")
 local tx = require("transforms")
-GPU = component.gpu
-local interface = component.me_interface
+GPU = Component.gpu
+local interface = Component.me_interface
 local sUtil = {}
 local itemsToStock = {}
 function sUtil.refreshCraftables()
@@ -14,10 +14,10 @@ function sUtil.refreshCraftables()
     for i, craftable in pairs(craftables) do
         if i ~= "n" then
             if i % 10 == 0 then
-                graphics.centeredText(
+                Graphics.centeredText(
                     GPU,
-                    graphics.currentWindows["Number"].x + 25,
-                    graphics.currentWindows["Number"].y * 2 + 3,
+                    Graphics.currentWindows["Number"].x + 25,
+                    Graphics.currentWindows["Number"].y * 2 + 3,
                     0xFFFFFF,
                     "Discovering Patterns: " .. i .. " / " .. #craftables
                 )
@@ -27,7 +27,7 @@ function sUtil.refreshCraftables()
             craftables[craftable.getItemStack().label] = craftable.request
         end
     end
-    graphics.centeredText(GPU, 86, 85, 0xFFFFFF, "Patterns in memory: " .. #craftables)
+    Graphics.centeredText(GPU, 86, 85, 0xFFFFFF, "Patterns in memory: " .. #craftables)
 end
 local cachedAmounts = {}
 function sUtil.updateCache()

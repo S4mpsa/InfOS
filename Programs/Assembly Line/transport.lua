@@ -1,4 +1,4 @@
-component = require("component")
+Component = require("component")
 
 local transport = {}
 
@@ -12,7 +12,7 @@ function transport.empty(transposer)
     transposer.transferItem(1, 0, 64, 2, 9)
 end
 function transport.clear(interface)
-    interface.setInterfaceConfiguration(1, component.database.address, 1, 0)
+    interface.setInterfaceConfiguration(1, Component.database.address, 1, 0)
 end
 function transport.check(transposer, item, amount)
     local itemstack = transposer.getStackInSlot(0, 1)

@@ -1,7 +1,7 @@
 -- Import section
-event = require("event")
+Event = require("event")
 local minerDatasource = require("data.datasource.miner")
-local oneUp = require("resources.sound.mario-one-up")
+local oneUp = require("api.sound.mario-one-up")
 --
 local minerList = {}
 
@@ -18,9 +18,9 @@ local function removeMinerFromList(_, address, machine)
     end
 end
 
-event.listen("touch", require("resources.sound.mario-one-up"))
-event.listen("component_added", addToMinerList)
-event.listen("component_removed", removeMinerFromList)
+Event.listen("touch", oneUp)
+Event.listen("component_added", addToMinerList)
+Event.listen("component_removed", removeMinerFromList)
 
 local function exec()
     return minerList

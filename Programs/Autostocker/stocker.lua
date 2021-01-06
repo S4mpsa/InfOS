@@ -1,13 +1,13 @@
-component = require("component")
-term = require("term")
-computer = require("computer")
-event = require("event")
+Component = require("component")
+Term = require("term")
+Computer = require("computer")
+Event = require("event")
 local sides = require("sides")
-graphics = require("graphics")
+Graphics = require("graphics.graphics")
 S = require("stockerUtil")
 local uc = require("unicode")
-local GPU = component.gpu
-local transposer = component.transposer
+GPU = Component.gpu
+local transposer = Component.transposer
 local itemsToStock = {}
 local craftables = {}
 local currentlyCrafting = {}
@@ -16,27 +16,27 @@ local number = ""
 local inNumberBox = false
 local function mouseListener()
     local function processClick(event, address, x, y, key, player)
-        local activeWindow = graphics.checkCollision(nil, x, y)
+        local activeWindow = Graphics.checkCollision(nil, x, y)
         if activeWindow ~= nil then
             if activeWindow == "Button" then
                 GPU.setActiveBuffer(0)
                 if drawerItem == nil or number == "" then
-                    graphics.rectangle(
+                    Graphics.rectangle(
                         GPU,
-                        graphics.currentWindows["Button"].x + 2,
-                        graphics.currentWindows["Button"].y * 2 + 1,
+                        Graphics.currentWindows["Button"].x + 2,
+                        Graphics.currentWindows["Button"].y * 2 + 1,
                         6,
                         6,
-                        colors.negativeEUColor
+                        Colors.negativeEUColor
                     )
                 else
-                    graphics.rectangle(
+                    Graphics.rectangle(
                         GPU,
-                        graphics.currentWindows["Button"].x + 2,
-                        graphics.currentWindows["Button"].y * 2 + 1,
+                        Graphics.currentWindows["Button"].x + 2,
+                        Graphics.currentWindows["Button"].y * 2 + 1,
                         6,
                         6,
-                        colors.positiveEUColor
+                        Colors.positiveEUColor
                     )
                     if itemsToStock[drawerItem] ~= nil then
                         S.update(drawerItem, itemsToStock[drawerItem], number)
@@ -50,24 +50,24 @@ local function mouseListener()
                 end
                 number = ""
                 os.sleep(0.3)
-                graphics.refresh(GPU)
+                Graphics.refresh(GPU)
             elseif activeWindow == "Number" then
                 GPU.setActiveBuffer(0)
                 if drawerItem == nil then
-                    graphics.centeredText(
+                    Graphics.centeredText(
                         GPU,
-                        graphics.currentWindows["Number"].x + 25,
-                        graphics.currentWindows["Number"].y * 2 + 3,
+                        Graphics.currentWindows["Number"].x + 25,
+                        Graphics.currentWindows["Number"].y * 2 + 3,
                         0xFFFFFF,
                         "Pattern refresh requested..."
                     )
                     S.refreshCraftables()
                 end
                 inNumberBox = true
-                graphics.rectangle(
+                Graphics.rectangle(
                     GPU,
-                    graphics.currentWindows["Number"].x + 2,
-                    graphics.currentWindows["Number"].y * 2 + 1,
+                    Graphics.currentWindows["Number"].x + 2,
+                    Graphics.currentWindows["Number"].y * 2 + 1,
                     46,
                     6,
                     0x333333
@@ -75,15 +75,15 @@ local function mouseListener()
             else
                 inNumberBox = false
                 number = ""
-                graphics.refresh(GPU)
+                Graphics.refresh(GPU)
             end
         else
             inNumberBox = false
             number = ""
-            graphics.refresh(GPU)
+            Graphics.refresh(GPU)
         end
     end
-    return event.listen("touch", processClick)
+    return Event.listen("touch", processClick)
 end
 local function keyboardListener()
     local function processKey(event, address, key, code, player)
@@ -91,133 +91,133 @@ local function keyboardListener()
             local value = uc.char(key)
             if key == 10 then
                 inNumberBox = false
-                graphics.refresh(GPU)
+                Graphics.refresh(GPU)
             end
             if key == 8 then
                 number = string.sub(number, 1, #number - 1)
             elseif (key >= 48 and key <= 57) then
                 number = number .. value
             end
-            graphics.rectangle(GPU, graphics.currentWindows["Number"].x + 2, graphics.currentWindows["Number"].y * 2 + 1, 46, 6, 0x333333)
-            graphics.text(
+            Graphics.rectangle(GPU, Graphics.currentWindows["Number"].x + 2, Graphics.currentWindows["Number"].y * 2 + 1, 46, 6, 0x333333)
+            Graphics.text(
                 GPU,
-                graphics.currentWindows["Number"].x + 4,
-                graphics.currentWindows["Number"].y * 2 + 3,
-                colors.workingColor,
+                Graphics.currentWindows["Number"].x + 4,
+                Graphics.currentWindows["Number"].y * 2 + 3,
+                Colors.workingColor,
                 number
             )
         end
     end
-    return event.listen("key_down", processKey)
+    return Event.listen("key_down", processKey)
 end
 local function getNewItem(GPU, x, y)
-    if graphics.currentWindows["Item"] == nil then
-        local itemWindow = graphics.createWindow(GPU, 60, 6, "Item")
-        graphics.currentWindows["Item"].x = x
-        graphics.currentWindows["Item"].y = y
+    if Graphics.currentWindows["Item"] == nil then
+        local itemWindow = Graphics.createWindow(GPU, 60, 6, "Item")
+        Graphics.currentWindows["Item"].x = x
+        Graphics.currentWindows["Item"].y = y
         GPU.setActiveBuffer(itemWindow)
-        graphics.rectangle(GPU, 2, 2, 58, 4, colors.hudColor)
-        graphics.rectangle(GPU, 3, 3, 56, 2, 0x000000)
+        Graphics.rectangle(GPU, 2, 2, 58, 4, Colors.hudColor)
+        Graphics.rectangle(GPU, 3, 3, 56, 2, 0x000000)
         GPU.setActiveBuffer(0)
     end
     local newDrawerItem = transposer.getStackInSlot(sides.top, 2)
     if newDrawerItem ~= nil then
         if craftables[newDrawerItem] ~= nil then
-            GPU.setForeground(colors.workingColor)
+            GPU.setForeground(Colors.workingColor)
         else
-            GPU.setActiveBuffer(colors.negativeEUColor)
+            GPU.setActiveBuffer(Colors.negativeEUColor)
         end
         if drawerItem == nil then
             drawerItem = newDrawerItem.label
-            GPU.setActiveBuffer(graphics.currentWindows["Item"].page)
-            graphics.rectangle(GPU, 3, 3, 56, 2, 0x000000)
+            GPU.setActiveBuffer(Graphics.currentWindows["Item"].page)
+            Graphics.rectangle(GPU, 3, 3, 56, 2, 0x000000)
             if craftables[drawerItem] ~= nil then
-                graphics.centeredText(GPU, 30, 3, colors.positiveEUColor, drawerItem)
+                Graphics.centeredText(GPU, 30, 3, Colors.positiveEUColor, drawerItem)
             else
-                graphics.centeredText(GPU, 30, 3, colors.negativeEUColor, drawerItem)
+                Graphics.centeredText(GPU, 30, 3, Colors.negativeEUColor, drawerItem)
             end
             GPU.setActiveBuffer(0)
             if itemsToStock[drawerItem] ~= nil then
-                graphics.rectangle(GPU, graphics.currentWindows["Item"].x, graphics.currentWindows["Item"].y * 2 - 3, 60, 2, 0x000000)
-                graphics.centeredText(
+                Graphics.rectangle(GPU, Graphics.currentWindows["Item"].x, Graphics.currentWindows["Item"].y * 2 - 3, 60, 2, 0x000000)
+                Graphics.centeredText(
                     GPU,
-                    graphics.currentWindows["Item"].x + 30,
-                    graphics.currentWindows["Item"].y * 2 - 3,
+                    Graphics.currentWindows["Item"].x + 30,
+                    Graphics.currentWindows["Item"].y * 2 - 3,
                     0xFFFFFF,
                     "Configured: " .. itemsToStock[drawerItem]
                 )
             end
-            graphics.refresh(GPU)
+            Graphics.refresh(GPU)
         else
             if drawerItem ~= newDrawerItem.label then
                 drawerItem = newDrawerItem.label
-                GPU.setActiveBuffer(graphics.currentWindows["Item"].page)
-                graphics.rectangle(GPU, 3, 3, 56, 2, 0x000000)
+                GPU.setActiveBuffer(Graphics.currentWindows["Item"].page)
+                Graphics.rectangle(GPU, 3, 3, 56, 2, 0x000000)
                 if craftables[drawerItem] ~= nil then
-                    graphics.centeredText(GPU, 30, 3, colors.positiveEUColor, drawerItem)
+                    Graphics.centeredText(GPU, 30, 3, Colors.positiveEUColor, drawerItem)
                 else
-                    graphics.centeredText(GPU, 30, 3, colors.negativeEUColor, drawerItem)
+                    Graphics.centeredText(GPU, 30, 3, Colors.negativeEUColor, drawerItem)
                 end
                 GPU.setActiveBuffer(0)
                 if itemsToStock[drawerItem] ~= nil then
-                    graphics.rectangle(GPU, graphics.currentWindows["Item"].x, graphics.currentWindows["Item"].y * 2 - 3, 60, 2, 0x000000)
-                    graphics.centeredText(
+                    Graphics.rectangle(GPU, Graphics.currentWindows["Item"].x, Graphics.currentWindows["Item"].y * 2 - 3, 60, 2, 0x000000)
+                    Graphics.centeredText(
                         GPU,
-                        graphics.currentWindows["Item"].x + 30,
-                        graphics.currentWindows["Item"].y * 2 - 3,
+                        Graphics.currentWindows["Item"].x + 30,
+                        Graphics.currentWindows["Item"].y * 2 - 3,
                         0xFFFFFF,
                         "Configured: " .. itemsToStock[drawerItem]
                     )
                 end
-                graphics.refresh(GPU)
+                Graphics.refresh(GPU)
             end
         end
     else
         if drawerItem ~= nil then
             drawerItem = nil
-            GPU.setActiveBuffer(graphics.currentWindows["Item"].page)
-            graphics.rectangle(GPU, 3, 3, 56, 2, 0x000000)
-            graphics.centeredText(GPU, 30, 3, 0xFFFFFF, "")
+            GPU.setActiveBuffer(Graphics.currentWindows["Item"].page)
+            Graphics.rectangle(GPU, 3, 3, 56, 2, 0x000000)
+            Graphics.centeredText(GPU, 30, 3, 0xFFFFFF, "")
             GPU.setActiveBuffer(0)
-            graphics.rectangle(GPU, graphics.currentWindows["Item"].x, graphics.currentWindows["Item"].y * 2 - 3, 60, 2, 0x000000)
-            graphics.refresh(GPU)
+            Graphics.rectangle(GPU, Graphics.currentWindows["Item"].x, Graphics.currentWindows["Item"].y * 2 - 3, 60, 2, 0x000000)
+            Graphics.refresh(GPU)
         end
     end
 end
 local function numberBox(GPU, x, y)
-    if graphics.currentWindows["Number"] == nil then
-        local itemWindow = graphics.createWindow(GPU, 50, 10, "Number")
-        graphics.currentWindows["Number"].x = x
-        graphics.currentWindows["Number"].y = y
+    if Graphics.currentWindows["Number"] == nil then
+        local itemWindow = Graphics.createWindow(GPU, 50, 10, "Number")
+        Graphics.currentWindows["Number"].x = x
+        Graphics.currentWindows["Number"].y = y
         GPU.setActiveBuffer(itemWindow)
-        graphics.rectangle(GPU, 2, 2, 48, 8, colors.hudColor)
-        graphics.rectangle(GPU, 3, 3, 46, 6, 0x000000)
+        Graphics.rectangle(GPU, 2, 2, 48, 8, Colors.hudColor)
+        Graphics.rectangle(GPU, 3, 3, 46, 6, 0x000000)
         GPU.setActiveBuffer(0)
     end
 end
 local function button(GPU, x, y)
-    if graphics.currentWindows["Button"] == nil then
-        local button = graphics.createWindow(GPU, 10, 10, "Button")
-        graphics.currentWindows["Button"].x = x
-        graphics.currentWindows["Button"].y = y
+    if Graphics.currentWindows["Button"] == nil then
+        local button = Graphics.createWindow(GPU, 10, 10, "Button")
+        Graphics.currentWindows["Button"].x = x
+        Graphics.currentWindows["Button"].y = y
         GPU.setActiveBuffer(button)
-        graphics.rectangle(GPU, 2, 2, 8, 8, colors.hudColor)
-        graphics.rectangle(GPU, 3, 3, 6, 6, colors.workingColor)
+        Graphics.rectangle(GPU, 2, 2, 8, 8, Colors.hudColor)
+        Graphics.rectangle(GPU, 3, 3, 6, 6, Colors.workingColor)
         GPU.setActiveBuffer(0)
     end
 end
 local function craftableBox(GPU, x, y)
-    if graphics.currentWindows["Craft"] == nil then
-        local crafts = graphics.createWindow(GPU, 72, 100, "Craft")
-        graphics.currentWindows["Craft"].x = x
-        graphics.currentWindows["Craft"].y = y
+    if Graphics.currentWindows["Craft"] == nil then
+        local crafts = Graphics.createWindow(GPU, 72, 100, "Craft")
+        Graphics.currentWindows["Craft"].x = x
+        Graphics.currentWindows["Craft"].y = y
         GPU.setActiveBuffer(crafts)
-        graphics.rectangle(GPU, 2, 2, 70, 94, colors.hudColor)
+        Graphics.rectangle(GPU, 2, 2, 70, 94, Colors.hudColor)
         GPU.setActiveBuffer(0)
     end
-    GPU.setActiveBuffer(graphics.currentWindows["Craft"].page)
-    graphics.rectangle(GPU, 3, 4, 68, 90, 0x000000)
-    graphics.rectangle(GPU, 48, 2, 1, 94, colors.hudColor)
+    GPU.setActiveBuffer(Graphics.currentWindows["Craft"].page)
+    Graphics.rectangle(GPU, 3, 4, 68, 90, 0x000000)
+    Graphics.rectangle(GPU, 48, 2, 1, 94, Colors.hudColor)
     local i = 1
     S.updateCache()
     for label, amount in pairs(itemsToStock) do
@@ -227,16 +227,16 @@ local function craftableBox(GPU, x, y)
         if S.uniques() > 2500 then --Check against rebooted system
             if toStock > 0 then
                 if drawerItem == label then
-                    graphics.text(GPU, 4, 3 + 2 * i, colors.workingColor, label)
+                    Graphics.text(GPU, 4, 3 + 2 * i, Colors.workingColor, label)
                 elseif craftables[label] == nil then
-                    graphics.text(GPU, 4, 3 + 2 * i, colors.negativeEUColor, label)
+                    Graphics.text(GPU, 4, 3 + 2 * i, Colors.negativeEUColor, label)
                 else
-                    graphics.text(GPU, 4, 3 + 2 * i, 0xFFFFFF, label)
+                    Graphics.text(GPU, 4, 3 + 2 * i, 0xFFFFFF, label)
                 end
                 if stockedAmount >= toStock then --In stock
-                    graphics.text(GPU, 59 - (#stockedString + 1), 3 + 2 * i, 0xFFFFFF, stockedString)
+                    Graphics.text(GPU, 59 - (#stockedString + 1), 3 + 2 * i, 0xFFFFFF, stockedString)
                 elseif stockedAmount >= toStock * 0.85 then --Edit hysteresis here, slightly below stock
-                    graphics.text(GPU, 59 - (#stockedString + 1), 3 + 2 * i, colors.workingColor, stockedString)
+                    Graphics.text(GPU, 59 - (#stockedString + 1), 3 + 2 * i, Colors.workingColor, stockedString)
                 else --Needs to be ordered
                     --Add crafting request loop here
                     if craftables[label] ~= nil then
@@ -246,33 +246,33 @@ local function craftableBox(GPU, x, y)
                             currentlyCrafting[label] = nil
                         end
                     end
-                    graphics.text(GPU, 59 - (#stockedString + 1), 3 + 2 * i, colors.negativeEUColor, stockedString)
+                    Graphics.text(GPU, 59 - (#stockedString + 1), 3 + 2 * i, Colors.negativeEUColor, stockedString)
                 end
-                graphics.text(GPU, 59, 3 + 2 * i, 0xFFFFFF, "| " .. amount)
+                Graphics.text(GPU, 59, 3 + 2 * i, 0xFFFFFF, "| " .. amount)
                 i = math.min(i + 1, 43)
             end
         end
     end
     GPU.setActiveBuffer(0)
-    graphics.refresh(GPU)
+    Graphics.refresh(GPU)
 end
 
 mouseListener()
 keyboardListener()
 GPU.setResolution(160, 46)
-term.clear()
-graphics.clear()
+Term.clear()
+Graphics.clear()
 numberBox(GPU, 100, 41)
 button(GPU, 150, 41)
 craftableBox(GPU, 0, 0)
-graphics.refresh(GPU)
+Graphics.refresh(GPU)
 S.refreshCraftables()
 S.loadPatterns()
-local timeSinceRefresh = computer.uptime()
+local timeSinceRefresh = Computer.uptime()
 while true do
     getNewItem(GPU, 100, 38)
-    if computer.uptime() - timeSinceRefresh > 900 then
-        timeSinceRefresh = computer.uptime()
+    if Computer.uptime() - timeSinceRefresh > 900 then
+        timeSinceRefresh = Computer.uptime()
         craftableBox(GPU, 0, 0)
     end
     os.sleep(0.5)

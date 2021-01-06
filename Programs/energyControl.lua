@@ -1,11 +1,11 @@
-component = require("component")
+Component = require("component")
 
-local LSC = component.gt_machine
+local LSC = Component.gt_machine
 local engaged = false
 local function machine(address)
-    machineAddress = component.get(address)
+    local machineAddress = Component.get(address)
     if (machineAddress ~= nil) then
-        return component.proxy(machineAddress)
+        return Component.proxy(machineAddress)
     else
         return nil
     end

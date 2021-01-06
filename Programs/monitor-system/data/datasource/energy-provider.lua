@@ -1,12 +1,12 @@
 -- Import section
-parser = require("utils.parser")
-inherits = require("utils.inherits")
+Parser = require("utils.parser")
+Inherits = require("utils.inherits")
 SingleBlock = require("data.datasource.single-block")
 local mock = require("data.mock.mock-energy-provider")
 --
 
 local EnergyProvider =
-    inherits(
+    Inherits(
     SingleBlock,
     {
         mock = mock,
@@ -56,17 +56,17 @@ end
 
 function EnergyProvider:getTotalEnergy()
     local sensorInformation = self:getSensorInformation()
-    return parser.parseStoredEnergy(sensorInformation[3])
+    return Parser.parseStoredEnergy(sensorInformation[3])
 end
 
 function EnergyProvider:getAverageInput()
     local sensorInformation = self:getSensorInformation()
-    return parser.parseAverageInput(sensorInformation[5])
+    return Parser.parseAverageInput(sensorInformation[5])
 end
 
 function EnergyProvider:getAverageOutput()
     local sensorInformation = self:getSensorInformation()
-    return parser.parseAverageOutput(sensorInformation[7])
+    return Parser.parseAverageOutput(sensorInformation[7])
 end
 
 return EnergyProvider

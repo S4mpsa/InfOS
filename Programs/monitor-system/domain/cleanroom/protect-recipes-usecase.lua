@@ -1,17 +1,17 @@
 -- Import section
-local alarm = require('resources.sound.alarm')
+Alarm = require("api.sound.alarm")
 --
 
 local function halt(machines)
-    alarm()
-    for i = 1, #machines do
-        machines[i]:setWorkAllowed(false)
+    Alarm()
+    for _, machine in ipairs(machines) do
+        machine:setWorkAllowed(false)
     end
 end
 
 local function resume(machines)
-    for i = 1, #machines do
-        machines[i]:setWorkAllowed(true)
+    for _, machine in ipairs(machines) do
+        machine:setWorkAllowed(true)
     end
 end
 

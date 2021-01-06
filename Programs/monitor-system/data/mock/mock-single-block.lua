@@ -1,5 +1,5 @@
 -- Import section
-new = require("utils.new")
+New = require("utils.new")
 --
 
 local MockSingleBlock = {
@@ -89,7 +89,7 @@ end
 MockSingleBlock.__index = MockSingleBlock
 
 function MockSingleBlock:new()
-    return new(self)
+    return New(self)
 end
 
 function MockSingleBlock:getEfficiencyPercentage()

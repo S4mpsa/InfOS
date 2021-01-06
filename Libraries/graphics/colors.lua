@@ -15,24 +15,30 @@ local colors = {
     lightGray = 0xD3D3D3,
     darkGray = 0xA9A9A9,
     darkSlateGrey = 0x2F4F4F,
-    black = 0x000000,
-    machineBackground = colors.darkGray,
-    progressBackground = colors.lightGray,
-    labelColor = colors.chocolate,
-    errorColor = colors.red,
-    idleColor = colors.purple,
-    workingColor = colors.steelBlue,
-    positiveEUColor = colors.lime,
-    negativeEUColor = colors.brown,
-    timeColor = colors.purple,
-    textColor = colors.black,
-    hudColor = colors.darkSlateGrey,
-    mainColor = colors.rosyBrown,
-    background = colors.black,
-    accentA = colors.cyan,
-    accentB = colors.magenta,
-    barColor = colors.blue
+    black = 0x000000
 }
+
+table.concat(
+    colors,
+    {
+        machineBackground = colors.darkGray,
+        progressBackground = colors.lightGray,
+        labelColor = colors.chocolate,
+        errorColor = colors.red,
+        idleColor = colors.purple,
+        workingColor = colors.steelBlue,
+        positiveEUColor = colors.lime,
+        negativeEUColor = colors.brown,
+        timeColor = colors.purple,
+        textColor = colors.black,
+        hudColor = colors.darkSlateGrey,
+        mainColor = colors.rosyBrown,
+        background = colors.black,
+        accentA = colors.cyan,
+        accentB = colors.magenta,
+        barColor = colors.blue
+    }
+)
 
 local RGB = {}
 
@@ -52,7 +58,7 @@ setmetatable(
     colors,
     {
         __index = function(self, color)
-            return self.RGB[color] or {0, 0, 0}
+            return self.RGB[color] or 0, 0, 0
         end
     }
 )

@@ -1,13 +1,13 @@
-component = require("component")
-event = require("event")
+Component = require("component")
+Event = require("event")
 local uc = require("unicode")
 local utility = {}
-local modem = component.modem
+local modem = Component.modem
 
 function utility.machine(address)
-    machineAddress = component.get(address)
+    local machineAddress = Component.get(address)
     if (machineAddress ~= nil) then
-        return component.proxy(machineAddress)
+        return Component.proxy(machineAddress)
     else
         return nil
     end
@@ -31,7 +31,7 @@ function utility.splitNumber(number) --Returns given number formatted as XXX,XXX
     local string = tostring(math.abs(number))
     local sign = number / math.abs(number)
     for i = 1, #string do
-        n = string:sub(i, i)
+        local n = string:sub(i, i)
         formattedNumber[i] = n
         if ((#string - i) % 3 == 0) and (#string - i > 0) then
             formattedNumber[i] = formattedNumber[i] .. ","
@@ -62,18 +62,18 @@ function utility.exit(key)
     local function processKey(event, address, key, code, player)
         local value = uc.char(key)
         if value == "e" then
-            run = false
+            Run = false
         end
         return false
     end
-    event.listen("key_up", processKey)
+    Event.listen("key_up", processKey)
 end
 
 function utility.componentChange(broadcastPort)
     local function sendAddress(event, address, type)
         modem.broadcast(broadcastPort, event, address, type)
     end
-    event.listen("component_added", sendAddress)
+    Event.listen("component_added", sendAddress)
 end
 
 function utility.progressText(current, max)

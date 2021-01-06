@@ -1,13 +1,15 @@
-component = require("component")
-computer = require("computer")
+Component = require("component")
+Computer = require("computer")
+Graphics = require("graphics.graphics")
+GPU = Component.gpu
 
-function cycle()
-    component.redstone.setOutput(2, 15)
+local function cycle()
+    Component.redstone.setOutput(2, 15)
     os.sleep(1)
-    component.redstone.setOutput(2, 0)
+    Component.redstone.setOutput(2, 0)
 end
 
-component.gpu.setResolution(80, 40)
+Component.gpu.setResolution(80, 40)
 
 local incoming = 4
 local sending = 3
@@ -20,11 +22,11 @@ local ticket = 1
 --    end
 --end
 
-function setDestination(destination)
+local function setDestination(destination)
 end
 
-function unload(index)
-    local transposer = component.transposer
+local function unload(index)
+    local transposer = Component.transposer
     if transposer.getStackInSlot(controller, 1) ~= nil then
         --Using a return ticket
         cycle()
@@ -47,37 +49,32 @@ function unload(index)
         transposer.transferItem(incoming, controller, 1, index, 1)
     end
 end
-function copyWindow(GPU, x, y, page, destination)
-    destination = 0 or destination
-    GPU.bitblt(destination, x, y, 160, 46, page, 1, 1)
-end
-windows = {}
-function doStartupSequence()
-    local gpu = component.gpu
-    gpu.freeAllBuffers()
+Graphics.windows = {}
+local function doStartupSequence()
+    GPU.freeAllBuffers()
     local colors = {
-        [0] = colors.steelBlue,
-        [1] = colors.black
+        [0] = Colors.steelBlue,
+        [1] = Colors.black
     }
-    local buffer = gpu.allocateBuffer()
-    gpu.setActiveBuffer(buffer)
+    local buffer = GPU.allocateBuffer()
+    GPU.setActiveBuffer(buffer)
     for i = 2, 20, 1 do
         if i % 2 == 0 then
-            copyWindow(gpu, 0, 0, buffer, 0)
+            Graphics.copyWindow(GPU, 0, 0, buffer, 0)
         end
-        gpu.setForeground(colors[i % 2])
-        component.gpu.fill(2 + i * 2, 1 + i, 80 - i * 4, 40 - i * 2, "█")
+        GPU.setForeground(colors[i % 2])
+        Component.gpu.fill(2 + i * 2, 1 + i, 80 - i * 4, 40 - i * 2, "█")
         os.sleep(0.1)
     end
-    gpu.setActiveBuffer(0)
+    GPU.setActiveBuffer(0)
     os.sleep(0.5)
-    gpu.setForeground(0x000000)
-    gpu.fill(0, 0, 100, 50, "█")
-    gpu.setForeground(0xFFFFFF)
+    GPU.setForeground(0x000000)
+    GPU.fill(0, 0, 100, 50, "█")
+    GPU.setForeground(0xFFFFFF)
 end
 local starting = false
-function send()
-    local transposer = component.transposer
+local function send()
+    local transposer = Component.transposer
     if transposer.getStackInSlot(controller, 1) == nil then
         --screen.write("The operating cell is missing!\n")
     else
@@ -87,8 +84,8 @@ function send()
         transposer.transferItem(controller, sending, 1, 2, 1)
     end
 end
-function checkArrivals()
-    local transposer = component.transposer
+local function checkArrivals()
+    local transposer = Component.transposer
     for i = 1, 26 do
         if transposer.getStackInSlot(incoming, i) ~= nil then
             return i
@@ -97,24 +94,24 @@ function checkArrivals()
     return 0
 end
 local lastActivation = 0
-function setStarting()
+local function setStarting()
     starting = false
 end
-function activateTeleporter()
+local function activateTeleporter()
     if starting == false then
         starting = true
         send()
-        event.timer(10, setStarting)
+        Event.timer(10, setStarting)
     end
-    lastActivation = computer.uptime()
+    lastActivation = Computer.uptime()
 end
-event.listen("walk", activateTeleporter)
-component.gpu.fill(0, 0, 100, 50, " ")
+Event.listen("walk", activateTeleporter)
+Component.gpu.fill(0, 0, 100, 50, " ")
 while true do
     local arrival = checkArrivals()
     if arrival ~= 0 then
         starting = true
-        event.timer(10, setStarting)
+        Event.timer(10, setStarting)
         unload(arrival)
     end
     os.sleep(0.5)

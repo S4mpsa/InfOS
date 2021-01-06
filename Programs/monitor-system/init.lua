@@ -50,4 +50,4 @@ for multiblock, status in pairs(multiblocksStatuses) do
     problems: " .. status.problems .. "\
     efficiency: " .. status.efficiencyPercentage)
 end
-require("resources.sound.zelda-secret")()
+require("api.sound.zelda-secret")()

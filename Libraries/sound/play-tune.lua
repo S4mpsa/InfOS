@@ -1,5 +1,5 @@
 -- Import section
-computer = require("computer")
+Computer = require("computer")
 --
 
 local notes = {
@@ -49,7 +49,7 @@ local notes = {
 local function playTune(tune)
   return function()
     for i, note in ipairs(tune) do
-      computer.beep(notes[note.pitch or note], note.duration or 0.1)
+      Computer.beep(notes[note.pitch or note], note.duration or 0.1)
       os.sleep(note.wait or 0.01)
     end
   end

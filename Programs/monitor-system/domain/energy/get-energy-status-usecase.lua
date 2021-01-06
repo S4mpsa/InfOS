@@ -8,12 +8,23 @@ local function exec(energyProducers, energyBuffer)
     -- local production = getProduction(energyBuffer)
     local consumption = energyBuffer:getAverageInput()
     local production = energyBuffer:getAverageOutput()
-    local energyCapacity = energyBuffer:getTotalEnergy().maximum
-    local timeToFull = (production - consumption) ~= 0 and energyCapacity / (production - consumption) or "-"
+
+    local changeRate = production - consumption
+
+    local totalEnergy = energyBuffer:getTotalEnergy()
+    local maximumEnergy = totalEnergy.maximum
+    local currentEnergy = totalEnergy.current
+
+    local energyLimit = changeRate > 0 and maximumEnergy or 0
+
+    local timeToFull = changeRate > 0 and (energyLimit - currentEnergy) / changeRate or nil
+    local timeToEmpty = changeRate < 0 and (energyLimit - currentEnergy) / changeRate or nil
+
     return {
         consumption = consumption,
         production = production,
         timeToFull = timeToFull,
+        timeToEmpty = timeToEmpty
     }
 end
 

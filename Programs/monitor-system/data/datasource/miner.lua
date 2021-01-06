@@ -1,12 +1,12 @@
 -- Import section
-parser = require("utils.parser")
-inherits = require("utils.inherits")
+Parser = require("utils.parser")
+Inherits = require("utils.inherits")
 SingleBlock = require("data.datasource.single-block")
 local mock = require("data.mock.mock-miner")
 --
 
 local Miner =
-    inherits(
+    Inherits(
     SingleBlock,
     {
         mock = mock,
@@ -16,12 +16,12 @@ local Miner =
 
 function Miner:getName()
     local sensorInformation = self:getSensorInformation()
-    return parser.parseName(sensorInformation[1])
+    return Parser.parseName(sensorInformation[1])
 end
 
 function Miner:getWorkArea()
     local sensorInformation = self:getSensorInformation()
-    return parser.parseWorkArea(sensorInformation[2])
+    return Parser.parseWorkArea(sensorInformation[2])
 end
 
 return Miner

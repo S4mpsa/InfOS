@@ -1,22 +1,23 @@
-event = require("event")
-term = require("term")
+Event = require("event")
+Term = require("term")
 local AU = require("util")
 local AT = require("transport")
 local S = require("serialization")
 local uc = require("unicode")
-local network = component.modem
+local fluidMap = (require("dictionary"))
+local network = Component.modem
 local id, AD
 local function requestID()
     network.broadcast(100, "requestID")
-    local _, _, _, _, _, messageType, value = event.pull("modem_message")
+    local _, _, _, _, _, messageType, value = Event.pull("modem_message")
     while messageType ~= "sendID" do
-        _, _, _, _, _, messageType, value = event.pull("modem_message")
+        _, _, _, _, _, messageType, value = Event.pull("modem_message")
         os.sleep(0.2)
     end
     return value
 end
 
-function checkRepeat(recipe)
+local function checkRepeat(recipe)
     local correctItems = 0
     for i = 1, recipe.inputs, 1 do
         if AT.isEmpty(AD["inputTransposer" .. i], 16) then
@@ -94,15 +95,15 @@ local function processRecipe(recipe)
     while checkRepeat(recipe) do
         insert()
     end
-    local wait = computer.uptime()
-    while not AD.controller.hasWork() and computer.uptime() < wait + 5 do
+    local wait = Computer.uptime()
+    while not AD.controller.hasWork() and Computer.uptime() < wait + 5 do
         os.sleep(0.2)
     end
     if not AD.controller.hasWork() then
-        term.write(" ... Error with starting assembly!")
+        Term.write(" ... Error with starting assembly!")
         network.broadcast(id, "jammed")
     else
-        term.write(" ... Assembly Started")
+        Term.write(" ... Assembly Started")
         while AD.controller.hasWork() do
             os.sleep(0.1)
         end
@@ -111,28 +112,29 @@ local function processRecipe(recipe)
         end
     end
     AT.clearAll(AD)
-    term.write(" ... finished task!\n")
+    Term.write(" ... finished task!\n")
     network.broadcast(id, "complete")
 end
 
 local function processMessage(localAddress, remoteAddress, port, distance, type, eventType, value2, value3)
     if eventType == "startAssembly" then
         local recipe = S.unserialize(value2)
-        term.write("Starting assembly of " .. recipe.label)
+        Term.write("Starting assembly of " .. recipe.label)
         processRecipe(recipe)
     elseif eventType == "clear" then
         AT.clearAll(AD)
     end
 end
+local processKey = {}
 
 local function quit()
-    term.write("Quitting...")
-    event.ignore("modem_message", processMessage)
-    event.ignore("key_up", processKey)
+    Term.write("Quitting...")
+    Event.ignore("modem_message", processMessage)
+    Event.ignore("key_up", processKey)
     os.exit()
 end
 
-function processKey(event, address, key, code, player)
+local function processKey(event, address, key, code, player)
     local value = uc.char(key)
     if value == "." then
         quit()
@@ -158,5 +160,5 @@ local function startAssembly()
 end
 
 startAssembly()
-event.listen("modem_message", processMessage)
-event.listen("key_up", processKey)
+Event.listen("modem_message", processMessage)
+Event.listen("key_up", processKey)

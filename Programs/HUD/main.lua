@@ -1,16 +1,16 @@
-component = require("component")
+Component = require("component")
 AR = require("ARWidgets")
 local wSampsa, hSampsa = 853, 473
 local powerHudX, powerHudY, powerHudW, powerHudH = 0, hSampsa - 24, wSampsa * 0.39 + 3, 14
-local glasses = component.glasses
+local glasses = Component.glasses
 glasses.removeAll()
 AR.minimapOverlay(glasses)
 AR.hudOverlayBase(glasses, 335, 449)
 AR.clear()
 AR.crossHair(glasses, 422, 231)
-term.clear()
+Term.clear()
 while true do
-    AR.powerDisplay(glasses, component.gt_machine, powerHudX, powerHudY, powerHudW, powerHudH)
+    AR.powerDisplay(glasses, Component.gt_machine, powerHudX, powerHudY, powerHudW, powerHudH)
     AR.fluidMonitor(
         glasses,
         795,

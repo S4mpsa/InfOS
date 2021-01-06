@@ -1,4 +1,4 @@
-fluidMap = {
+local fluidMap = {
     ["fluid.molten.solderingalloy"] = {name = "gt.metaitem.99.314.name", size = 144},
     ["fluid.lubricant"] = {name = "gt.Volumetric_Flask.name", size = 250},
     ["IC2 Coolant"] = {name = "Coolant Cell", size = 1000},
@@ -9,7 +9,7 @@ fluidMap = {
     ["fluid.molten.naquadria"] = {name = "gt.metaitem.99.327.name", size = 144}
 }
 
-dictionary = {
+local dictionary = {
     ["gt.metaitem.01.32705.name"] = "gt.metaitem.03.32084.name", --IV
     ["gt.metaitem.03.32086.name"] = "gt.metaitem.03.32084.name",
     ["gt.metaitem.03.32089.name"] = "gt.metaitem.03.32084.name",
@@ -36,3 +36,5 @@ dictionary = {
 --     {"gt.metaitem.03.32095.name","gt.metaitem.03.32099.name"}, -- UHV
 --     {"gt.metaitem.03.32120.name"} -- UEV
 -- }
+
+return fluidMap, dictionary

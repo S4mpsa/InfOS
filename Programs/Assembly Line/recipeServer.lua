@@ -1,10 +1,11 @@
-component = require("component")
-event = require("event")
-term = require("term")
+Component = require("component")
+Event = require("event")
+Term = require("term")
 AU = require("util")
 local uc = require("unicode")
 local S = require("serialization")
-local network = component.modem
+local fluidMap, dictionary = require("dictionary")
+local network = Component.modem
 local mainChannel = 100
 -- mainChannel = Main channel for bi-directional communication
 
@@ -54,14 +55,16 @@ local function processMessage(type, localAddress, remoteAddress, port, distance,
     end
 end
 
+local processKey = {}
+
 local function quit()
-    term.write("Quitting...")
-    event.ignore("modem_message", processMessage)
-    event.ignore("key_up", processKey)
+    Term.write("Quitting...")
+    Event.ignore("modem_message", processMessage)
+    Event.ignore("key_up", processKey)
     run = false
 end
 
-function processKey(event, address, key, code, player)
+local function processKey(event, address, key, code, player)
     local value = uc.char(key)
     if value == "." then
         quit()
@@ -70,7 +73,7 @@ function processKey(event, address, key, code, player)
     end
 end
 
-function startAssembly(assemblyport, recipe)
+local function startAssembly(assemblyport, recipe)
     assemblyStatus[assemblyport] = recipe.label
     network.broadcast(assemblyport, "startAssembly", S.serialize(recipe))
 end
@@ -97,8 +100,8 @@ local function spairs(t, order)
         end
     end
 end
-function matchRecipe(recipes)
-    local items = component.me_interface.getItemsInNetwork()
+local function matchRecipe(recipes)
+    local items = Component.me_interface.getItemsInNetwork()
     local foundItems = {}
     if #items > 0 then
         for i = 1, #items, 1 do
@@ -161,10 +164,10 @@ local function scheduleTasks()
             if not contains(assemblyStatus, recipe.label) then
                 local taskid = getFree()
                 if taskid ~= nil then
-                    term.write("Started assembly of " .. recipe.label .. " with AL #" .. taskid .. "\n")
+                    Term.write("Started assembly of " .. recipe.label .. " with AL #" .. taskid .. "\n")
                     startAssembly(taskid, recipe)
                 else
-                    term.write("No free assembly lines.\n")
+                    Term.write("No free assembly lines.\n")
                 end
             end
             return true
@@ -173,9 +176,9 @@ local function scheduleTasks()
                 local taskid = getFree()
                 if taskid ~= nil then
                     startAssembly(taskid, recipe)
-                    term.write("Started assembly of " .. recipe.label .. " with AL #" .. taskid .. "\n")
+                    Term.write("Started assembly of " .. recipe.label .. " with AL #" .. taskid .. "\n")
                 else
-                    term.write("No free assembly lines.\n")
+                    Term.write("No free assembly lines.\n")
                 end
                 craftable = craftable - 8
             end
@@ -194,8 +197,8 @@ local function initializeServer()
 end
 
 initializeServer()
-event.listen("modem_message", processMessage)
-event.listen("key_up", processKey)
+Event.listen("modem_message", processMessage)
+Event.listen("key_up", processKey)
 
 while run do
     scheduleTasks()

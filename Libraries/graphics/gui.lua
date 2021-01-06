@@ -1,16 +1,16 @@
-graphics = require("graphics")
-event = require("event")
+Graphics = require("graphics.graphics")
+Event = require("event")
 local uc = require("unicode")
-component = require("component")
-GPU = component.proxy(component.get("f26678f4"))
-colors = require("colors")
+Component = require("component")
+GPU = Component.gpu
+Colors = require("colors")
 
 local gui, quit, editing = {}, false, false
 local currentWindows = {}
 local activeWindow
 local keyInput, mouseInput, drag, inContextMenu
 
-gui.checkCollision = function(x, y)
+function gui.checkCollision(x, y)
     for window, params in pairs(currentWindows) do
         if x >= params.x and x <= params.x + params.w - 1 then
             if y >= params.y and y <= params.y + math.ceil(params.h / 2) - 1 then
@@ -23,7 +23,7 @@ end
 
 local contextMenus = 0
 
-gui.contextMenu = function(GPU, x, y, data)
+function gui.contextMenu (GPU, x, y, data)
     local function filterClicks(event)
         return event == "touch"
     end
@@ -37,16 +37,16 @@ gui.contextMenu = function(GPU, x, y, data)
     end
     local contextWindow = gui.createWindow(GPU, longestData, #data * 2, "ContextMenu" .. contextMenus)
     GPU.setActiveBuffer(contextWindow)
-    graphics.rectangle(GPU, 1, 1, longestData, #data * 2, colors.lightGray)
+    Graphics.rectangle(GPU, 1, 1, longestData, #data * 2, Colors.lightGray)
     for i = 1, #data do
-        graphics.text(GPU, 1, 1 + i * 2 - 2, colors.cyan, data[i])
+        Graphics.text(GPU, 1, 1 + i * 2 - 2, Colors.cyan, data[i])
     end
     currentWindows["ContextMenu" .. contextMenus].x = x
     currentWindows["ContextMenu" .. contextMenus].y = y
     GPU.setActiveBuffer(0)
 end
 
-gui.keyboardListener = function()
+function gui.keyboardListener ()
     local function processKey(event, address, key, code, player)
         local value = uc.char(key)
         if value == "." then
@@ -60,34 +60,34 @@ gui.keyboardListener = function()
             end
         end
     end
-    return event.listen("key_up", processKey)
+    return Event.listen("key_up", processKey)
 end
 
-gui.processCommand = function(GPU, window, option)
+function gui.processCommand(GPU, window, option)
     local pageNumber = currentWindows[window].page
     if currentWindows["ColorBox"] == nil then
-        gui.createWindow(GPU, 10, 10, "ColorBox")
+        Graphics.createWindow(GPU, 10, 10, "ColorBox")
         currentWindows["ColorBox"].x = 10
         currentWindows["ColorBox"].y = 10
     end
     GPU.setActiveBuffer(currentWindows["ColorBox"].page)
     if option == 1 then
-        graphics.rectangle(GPU, 1, 1, 10, 10, colors.red)
+        Graphics.rectangle(GPU, 1, 1, 10, 10, Colors.red)
     end
     if option == 2 then
-        graphics.rectangle(GPU, 1, 1, 10, 10, colors.blue)
+        Graphics.rectangle(GPU, 1, 1, 10, 10, Colors.blue)
     end
     if option == 3 then
-        graphics.rectangle(GPU, 1, 1, 10, 10, colors.green)
+        Graphics.rectangle(GPU, 1, 1, 10, 10, Colors.green)
     end
     GPU.setActiveBuffer(0)
 end
 
 local i, xOffset, yOffset = 1, 0, 0
-gui.mouseListener = function()
+function gui.mouseListener()
     local function processClick(event, address, x, y, key, player)
         activeWindow = gui.checkCollision(x, y)
-        graphics.text(GPU, 1, 1, colors.cyan, "Active window: " .. activeWindow)
+        Graphics.text(GPU, 1, 1, Colors.cyan, "Active window: " .. activeWindow)
         if key == 1.0 and editing then
             if inContextMenu then
                 contextMenus = 0
@@ -113,10 +113,10 @@ gui.mouseListener = function()
             end
         end
     end
-    return event.listen("touch", processClick)
+    return Event.listen("touch", processClick)
 end
 
-gui.dragListener = function()
+function gui.dragListener()
     local function processDrag(event, address, x, y, key, player)
         if editing and inContextMenu == false then
             local window = currentWindows[activeWindow]
@@ -124,68 +124,53 @@ gui.dragListener = function()
             currentWindows[activeWindow].y = y - yOffset
         end
     end
-    return event.listen("drag", processDrag)
+    return Event.listen("drag", processDrag)
 end
 
-gui.dropListener = function()
+function gui.dropListener()
     local function processDrop(event, address, x, y, key, player)
     end
-    return event.listen("drop", processDrop)
+    return Event.listen("drop", processDrop)
 end
 
-gui.createWindow = function(GPU, width, height, name)
-    local pageNumber = GPU.allocateBuffer(width, math.ceil(height / 2))
-    currentWindows[name] = {page = pageNumber, x = 1, y = 1, w = width, h = height}
-    return pageNumber
-end
-
-gui.compose = function(GPU)
+function gui.compose(GPU)
     local stateBuffer = currentWindows["State"].page
     GPU.setActiveBuffer(stateBuffer)
     if editing then
-        copyWindow(GPU, 1, 1, currentWindows["Black"].page)
+        Graphics.copyWindow(GPU, 1, 1, currentWindows["Black"].page)
     end
     for window, params in pairs(currentWindows) do
         if params.w > 0 then
-            copyWindow(GPU, params.x, params.y, params.page, stateBuffer)
+            Graphics.copyWindow(GPU, params.x, params.y, params.page, stateBuffer)
         end
     end
     if inContextMenu then
         local cont = currentWindows["ContextMenu1"]
-        copyWindow(GPU, cont.x, cont.y, cont.page)
+        Graphics.copyWindow(GPU, cont.x, cont.y, cont.page)
     end
     GPU.setActiveBuffer(0)
 end
 
-gui.copyWindow = function(GPU, x, y, page, destination)
-    destination = 0 or destination
-    GPU.bitblt(destination, x, y, 160, 50, page, 1, 1)
-end
 
---return gui
-
-GPU = component.proxy(component.get("de837fec"))
-term = component.get("48ce2988")
-GPU.bind(term)
 GPU.freeAllBuffers()
 keyInput, mouseInput, drag = gui.keyboardListener(), gui.mouseListener(), gui.dragListener()
-gui.createWindow(GPU, 160, 100, "Black")
+Graphics.createWindow(GPU, 160, 100, "Black")
 GPU.setActiveBuffer(currentWindows["Black"].page)
-graphics.rectangle(GPU, 1, 1, 160, 100, 0x000000)
+Graphics.rectangle(GPU, 1, 1, 160, 100, 0x000000)
 currentWindows["Black"].w = 0
 currentWindows["Black"].h = 0
 GPU.setActiveBuffer(0)
-gui.createWindow(GPU, 160, 100, "State")
+Graphics.createWindow(GPU, 160, 100, "State")
 GPU.setActiveBuffer(currentWindows["State"].page)
-graphics.rectangle(GPU, 1, 1, 160, 100, 0x000000)
+Graphics.rectangle(GPU, 1, 1, 160, 100, 0x000000)
 currentWindows["State"].w = 0
 currentWindows["State"].h = 0
 GPU.setActiveBuffer(0)
-copyWindow(GPU, 1, 1, currentWindows["Black"].page)
+Graphics.copyWindow(GPU, 1, 1, currentWindows["Black"].page)
 
 while true do
     if quit then
-        event.cancel(keyInput)
+        Event.cancel(keyInput)
         break
     end
     gui.compose(GPU)

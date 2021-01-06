@@ -1,12 +1,12 @@
 -- Import section
-parser = require("utils.parser")
-inherits = require("utils.inherits")
+Parser = require("utils.parser")
+Inherits = require("utils.inherits")
 SingleBlock = require("data.datasource.single-block")
 local mock = require("data.mock.mock-multi-block")
 --
 
 local MultiBlock =
-    inherits(
+    Inherits(
     SingleBlock,
     {
         mock = mock,
@@ -16,12 +16,12 @@ local MultiBlock =
 
 function MultiBlock:getNumberOfProblems()
     local sensorInformation = self:getSensorInformation()
-    return parser.parseProblems(sensorInformation[5])
+    return Parser.parseProblems(sensorInformation[5])
 end
 
 function MultiBlock:getEfficiencyPercentage()
     local sensorInformation = self:getSensorInformation()
-    return parser.parseEfficiency(sensorInformation[5])
+    return Parser.parseEfficiency(sensorInformation[5])
 end
 
 return MultiBlock

@@ -21,8 +21,8 @@ function graphics.rectangle(GPU, x, y, w, h, color)
             end
             hLeft = hLeft - 1
         end
-        GPU.setBackground(table.unpack(color))
-        GPU.setForeground(table.unpack(color))
+        GPU.setBackground(color)
+        GPU.setForeground(color)
         if hLeft % 2 == 1 then
             GPU.fill(x, math.ceil(y / 2) + (h - hLeft), w, (hLeft - 1) / 2, "█")
             for j = x, x + w - 1 do
@@ -39,7 +39,7 @@ function graphics.text(GPU, x, y, color, string)
         error("Text position must be odd on y axis")
     end
     local screenY = math.ceil(y / 2)
-    GPU.setForeground(table.unpack(color))
+    GPU.setForeground(color)
     for i = 0, #string - 1 do
         local baseChar, baseForeground, baseBackground = GPU.get(x + i, screenY)
         GPU.setBackground(baseBackground)
@@ -52,7 +52,7 @@ function graphics.centeredText(GPU, x, y, color, string)
         error("Text position must be odd on y axis")
     end
     local screenY = math.ceil(y / 2)
-    local oldForeground = GPU.setForeground(table.unpack(color))
+    local oldForeground = GPU.setForeground(color)
     local oldBackground = GPU.getBackground()
     for i = 0, #string - 1 do
         local baseChar, baseForeground, baseBackground = GPU.get(x + i - math.ceil(#string / 2) + 1, screenY)
@@ -80,15 +80,18 @@ function graphics.checkCollision(GPU, x, y)
     end
     return nil
 end
+
 function graphics.createWindow(GPU, width, height, name)
     local pageNumber = GPU.allocateBuffer(width, math.ceil(height / 2))
     graphics.currentWindows[name] = {page = pageNumber, x = 1, y = 1, w = width, h = height, GPU = GPU}
     return pageNumber
 end
+
 local function copyWindow(GPU, x, y, page, destination)
     destination = 0 or destination
     GPU.bitblt(destination, x, y, 160, 50, page, 1, 1)
 end
+
 function graphics.refresh(GPU)
     for window, params in pairs(graphics.currentWindows) do
         if params.w > 0 then
@@ -113,6 +116,7 @@ function graphics.update()
     redraw()
     os.sleep()
 end
+
 function graphics.clear()
     graphics.currentWindows = {}
 end

@@ -7,7 +7,7 @@ function AR.cube(glasses, x, y, z, color, alpha, scale)
     alpha = alpha or 1
     local cube = glasses.addCube3D()
     cube.set3DPos(x - terminal.x, y - terminal.y, z - terminal.z)
-    cube.setColor(table.unpack(color))
+    cube.setColor(color)
     cube.setAlpha(alpha)
     cube.setScale(scale)
     return cube
@@ -19,7 +19,7 @@ function AR.line(glasses, source, dest, color, alpha, scale)
     local line = glasses.addLine3D()
     line.setVertex(1, source.x - terminal.x + 0.5, source.y - terminal.y + 0.5, source.z - terminal.z + 0.5)
     line.setVertex(2, dest.x - terminal.x + 0.5, dest.y - terminal.y + 0.5, dest.z - terminal.z + 0.5)
-    line.setColor(table.unpack(color))
+    line.setColor(color)
     line.setAlpha(alpha)
     line.setScale(scale)
     return line
@@ -30,7 +30,7 @@ function AR.worldText(glasses, name, x, y, z, color, alpha, scale)
     alpha = alpha or 1
     local text = glasses.addFloatingText()
     text.set3DPos(x - terminal.x, y - terminal.y, z - terminal.z)
-    text.setColor(table.unpack(color))
+    text.setColor(color)
     text.setAlpha(alpha)
     text.setScale(scale)
     text.setText(name)
@@ -40,7 +40,7 @@ end
 function AR.hudTriangle(glasses, a, b, c, color, alpha)
     alpha = alpha or 1.0
     local triangle = glasses.addTriangle()
-    triangle.setColor(table.unpack(color))
+    triangle.setColor(color)
     triangle.setAlpha(alpha)
     triangle.setVertex(1, a[1], a[2])
     triangle.setVertex(2, b[1], b[2])
@@ -51,7 +51,7 @@ end
 function AR.hudQuad(glasses, a, b, c, d, color, alpha)
     alpha = alpha or 1.0
     local quad = glasses.addQuad()
-    quad.setColor(table.unpack(color))
+    quad.setColor(color)
     quad.setAlpha(alpha)
     quad.setVertex(1, a[1], a[2])
     quad.setVertex(2, b[1], b[2])
@@ -65,7 +65,7 @@ function AR.hudRectangle(glasses, x, y, w, h, color, alpha)
     local rect = glasses.addRect()
     rect.setPosition(x, y)
     rect.setSize(h, w)
-    rect.setColor(table.unpack(color))
+    rect.setColor(color)
     rect.setAlpha(alpha)
     return rect
 end
@@ -83,7 +83,7 @@ function AR.hudText(glasses, displayText, x, y, color, scale)
     local text = glasses.addTextLabel()
     text.setText(displayText)
     text.setPosition(x, y)
-    text.setColor(table.unpack(color))
+    text.setColor(color)
     AR.textSize(text, scale)
     return text
 end
