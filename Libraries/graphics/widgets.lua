@@ -4,7 +4,7 @@ Colors = require("colors")
 
 local widgets = {}
 
-function widgets.gtMachineInit(GPU, name, address)
+function widgets.gtMabchineInit(GPU, name, address)
     local maintenanceIndex = 0
     local machine = util.machine(address)
     Graphics.rectangle(GPU, 1, 1, 28, 9, Colors.background)
@@ -99,7 +99,8 @@ function widgets.gtMachine(GPU, name, address)
         end
         _, f, _ = GPU.get(6, 1)
         if
-            ((Graphics.windows[name].data == 0 or string.match(machine.getSensorInformation()[Graphics.windows[name].data], ".*c0.*")) and
+            ((Graphics.windows[name].data == 0 or
+                string.match(machine.getSensorInformation()[Graphics.windows[name].data], ".*c0.*")) and
                 machine.isWorkAllowed()) == true
          then
             if f ~= Colors.background then

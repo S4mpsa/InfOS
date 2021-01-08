@@ -20,22 +20,22 @@ local colors = {
 
 ---[[
 local newColors = {
-    machineBackground = colors.darkGray,
-    progressBackground = colors.lightGray,
-    labelColor = colors.chocolate,
-    errorColor = colors.red,
-    idleColor = colors.purple,
-    workingColor = colors.steelBlue,
-    positiveEUColor = colors.lime,
-    negativeEUColor = colors.brown,
-    timeColor = colors.purple,
-    textColor = colors.black,
-    hudColor = colors.darkSlateGrey,
-    mainColor = colors.rosyBrown,
     background = colors.black,
+    machineBackground = colors.darkSlateGrey,
+    progressBackground = colors.purple,
+    barColor = colors.magenta,
+    labelColor = colors.chocolate,
+    idleColor = colors.brown,
+    workingColor = colors.green,
+    errorColor = colors.red,
+    positiveEUColor = colors.lime,
+    negativeEUColor = colors.red,
+    timeColor = colors.purple,
+    textColor = colors.brown,
+    hudColor = colors.darkSlateGrey,
+    mainColor = colors.steelBlue,
     accentA = colors.cyan,
-    accentB = colors.magenta,
-    barColor = colors.blue
+    accentB = colors.blue
 }
 
 for name, color in pairs(newColors) do
