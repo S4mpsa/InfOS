@@ -52,4 +52,10 @@ function Parser.parseWorkArea(worAreaString)
     return string.gsub(string.gsub(size, "§a", ""), "§r", "")
 end
 
+function Parser.parseProbablyUses(probablyUsesString)
+    local noCommaString = string.gsub(probablyUsesString, ",", "")
+    local estimate = string.sub(noCommaString, string.find(noCommaString, "%bc§"))
+    return tonumber((string.gsub(string.gsub(estimate, "c", ""), "§", "")))
+end
+
 return Parser

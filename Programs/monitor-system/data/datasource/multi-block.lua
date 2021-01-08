@@ -24,4 +24,14 @@ function MultiBlock:getEfficiencyPercentage()
     return Parser.parseEfficiency(sensorInformation[5])
 end
 
+function MultiBlock:getEnergyUsage() -- EU/t
+    local maxProgress = self:getWorkMaxProgress() or 0
+    if maxProgress > 0 then
+        local sensorInformation = self:getSensorInformation()
+        return Parser.parseProbablyUses(sensorInformation[3])
+    else
+        return 0
+    end
+end
+
 return MultiBlock

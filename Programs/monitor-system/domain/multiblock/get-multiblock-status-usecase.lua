@@ -12,6 +12,7 @@ local function exec(multiblocks)
 
         statuses[multiblock.name] = {
             problems = problems,
+            probablyUses = multiblock:getEnergyUsage(),
             efficiencyPercentage = multiblock:getEfficiencyPercentage()
         }
     end
