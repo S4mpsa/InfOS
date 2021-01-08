@@ -18,27 +18,31 @@ local colors = {
     black = 0x000000
 }
 
-table.concat(
-    colors,
-    {
-        machineBackground = colors.darkGray,
-        progressBackground = colors.lightGray,
-        labelColor = colors.chocolate,
-        errorColor = colors.red,
-        idleColor = colors.purple,
-        workingColor = colors.steelBlue,
-        positiveEUColor = colors.lime,
-        negativeEUColor = colors.brown,
-        timeColor = colors.purple,
-        textColor = colors.black,
-        hudColor = colors.darkSlateGrey,
-        mainColor = colors.rosyBrown,
-        background = colors.black,
-        accentA = colors.cyan,
-        accentB = colors.magenta,
-        barColor = colors.blue
-    }
-)
+---[[
+local newColors = {
+    machineBackground = colors.darkGray,
+    progressBackground = colors.lightGray,
+    labelColor = colors.chocolate,
+    errorColor = colors.red,
+    idleColor = colors.purple,
+    workingColor = colors.steelBlue,
+    positiveEUColor = colors.lime,
+    negativeEUColor = colors.brown,
+    timeColor = colors.purple,
+    textColor = colors.black,
+    hudColor = colors.darkSlateGrey,
+    mainColor = colors.rosyBrown,
+    background = colors.black,
+    accentA = colors.cyan,
+    accentB = colors.magenta,
+    barColor = colors.blue
+}
+
+for name, color in pairs(newColors) do
+    colors[name] = color
+end
+
+--[[
 
 local RGB = {}
 
@@ -62,5 +66,5 @@ setmetatable(
         end
     }
 )
-
+--]]
 return colors

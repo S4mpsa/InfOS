@@ -6,7 +6,7 @@ GPU = Component.gpu
 Colors = require("colors")
 
 local gui, quit, editing = {}, false, false
-local currentWindows = {}
+local currentWindows = Graphics.currentWindows
 local activeWindow
 local keyInput, mouseInput, drag, inContextMenu
 

@@ -87,7 +87,7 @@ function graphics.createWindow(GPU, width, height, name)
     return pageNumber
 end
 
-local function copyWindow(GPU, x, y, page, destination)
+function graphics.copyWindow(GPU, x, y, page, destination)
     destination = 0 or destination
     GPU.bitblt(destination, x, y, 160, 50, page, 1, 1)
 end
@@ -95,7 +95,7 @@ end
 function graphics.refresh(GPU)
     for window, params in pairs(graphics.currentWindows) do
         if params.w > 0 then
-            copyWindow(GPU, params.x, params.y, params.page)
+            graphics.copyWindow(GPU, params.x, params.y, params.page)
         end
     end
     GPU.setActiveBuffer(0)
@@ -105,7 +105,7 @@ graphics.windows = {}
 function graphics.update()
     local function redraw()
         for window, params in pairs(graphics.windows) do
-            copyWindow(params.GPU, params.x, params.y, params.page)
+            graphics.copyWindow(params.GPU, params.x, params.y, params.page)
         end
     end
     for name, params in pairs(graphics.windows) do
