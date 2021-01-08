@@ -3,7 +3,15 @@ New = require("utils.new")
 --
 
 local MockSingleBlock = {
-    name = "MockSingleBlock"
+    name = "MockSingleBlock",
+    workAllowed = true,
+    workProgress = 3,
+    workMaxProgress = 4,
+    storedEU = 1234,
+    active = true,
+    outputVoltage = 0,
+    outputAmperage = 1,
+    EUCapacity = 2048
 }
 
 function MockSingleBlock.setWorkAllowed(allow)
@@ -43,11 +51,11 @@ function MockSingleBlock.getSensorInformation()
 end
 
 function MockSingleBlock.getEUOutputAverage()
-    return 128
+    return MockSingleBlock.EUOutputAverage
 end
 
 function MockSingleBlock.getEUInputAverage()
-    return 128
+    return MockSingleBlock.EUInputAverage
 end
 
 function MockSingleBlock.getStoredEU()
@@ -71,7 +79,7 @@ function MockSingleBlock.hasWork()
 end
 
 function MockSingleBlock.getOutputAmperage()
-    return 2
+    return MockSingleBlock.outputAmperage
 end
 
 function MockSingleBlock.getEUCapacity()

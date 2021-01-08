@@ -80,7 +80,7 @@ function SingleBlock:getEUMaxStored()
     return self.block.getEUMaxStored()
 end
 
-function SingleBlock:new(partialAdress)
+function SingleBlock:new(partialAdress, name)
     local machine = {}
     setmetatable(machine, self)
 
@@ -95,8 +95,11 @@ function SingleBlock:new(partialAdress)
         end
     )
     if (not successfull) then
+        print("Couldn't find the machine " .. partialAdress)
         machine.block = self.mock:new()
     end
+
+    machine.name = name
 
     return machine
 end
