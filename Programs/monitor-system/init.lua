@@ -4,7 +4,7 @@
 -- EnergyProvider = require("data.datasource.energy-provider")
 Colors = require("graphics.colors")
 Unicode = require("unicode")
-Graphics = require("graphics.graphics")
+-- Graphics = require("graphics.graphics")
 DoubleBuffer = require("graphics.doubleBuffering")
 Event = require("event")
 
@@ -94,7 +94,6 @@ local function fakewidget()
         state = state,
         progress = 0,
         maxProgress = state ~= states[3] and state ~= states[4] and math.random(500) or 0,
-        idleTime = 0,
         area = {height = baseHeight, width = baseWidth}
     }
 end
@@ -114,7 +113,6 @@ table.insert(
         state = states[1],
         progress = math.random(16000000),
         maxProgress = 16000000,
-        idleTime = 0,
         scale = 2,
         area = {x = baseWidth, y = baseHeight * 5, width = baseWidth * 2, height = baseHeight}
     }
@@ -130,7 +128,6 @@ Event.listen(
 
         widget.progress = 0
         widget.maxProgress = 0
-        widget.idleTime = 0
         if widget.state == states[1] or widget.state == states[2] then
             widget.state = states[3]
         elseif widget.state == states[3] or widget.state == states[4] then
@@ -228,11 +225,9 @@ while true do
                 widget.progress = 0
                 widget.state = states[2]
                 widget.maxProgress = 0
-                widget.idleTime = 0
             end
         elseif widget.state == states[2] then
-            widget.idleTime = widget.idleTime + 1
-            if widget.idleTime > math.random(1000) then
+            if math.random(1000) > 999 then
                 widget.state = states[1]
                 widget.maxProgress = math.random(500)
             end
