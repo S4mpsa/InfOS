@@ -65,7 +65,7 @@ require("api.sound.zelda-secret")()
 --]]
 local component = {
     name = "Machine",
-    working = true,
+    state = true,
     leftInfo = "ON",
     middleInfo = "something",
     rightInfo = "16 / 32 s",
@@ -73,71 +73,76 @@ local component = {
     maxProgress = 1000
 }
 
-local width = 40
-local height = 10
+local baseWidth = 40
+local baseHeight = 10
 
 local function drawTitle(title)
-    local x = width
+    local x = baseWidth
     local y = 0
     local scale = 3
+    local width = baseWidth * scale
+    local height = baseHeight
     DoubleBuffer.drawRectangle(
         x + 1,
         y + 1,
-        width * scale - 1,
+        width - 1,
         height - 1,
         Colors.machineBackground,
         Colors.machineBackground,
         "█"
     )
-    DoubleBuffer.drawFrame(x + 1, y + 1, width * scale - 1, height - 1, Colors.labelColor)
-    DoubleBuffer.drawLine(x + 3, y + 6, x + width * scale - 3, y + 6, Colors.machineBackground, Colors.textColor, "─")
-    DoubleBuffer.drawText(x + (width * scale - Unicode.len(title)) / 2, y + 5, Colors.mainColor, title)
+    DoubleBuffer.drawFrame(x + 1, y + 1, width - 1, height - 1, Colors.labelColor)
+    DoubleBuffer.drawLine(x + 3, y + 6, x + width - 3, y + 6, Colors.machineBackground, Colors.textColor, "─")
+    DoubleBuffer.drawText(x + (width - Unicode.len(title)) / 2, y + 5, Colors.mainColor, title)
 end
 
 local function drawProgress(x, y, width, height, progress, maxProgress, color)
-    progress = math.floor(progress * (width + height - 2) / maxProgress)
+    progress = math.floor(progress * (width + height - 2) / (maxProgress ~= 0 and maxProgress or 1))
 
     local lengths = {
         first = progress > 5 and 5 or progress,
         second = progress > height - 2 + 5 and height - 2 or progress - (5),
-        third = progress > width - 6 + height - 2 + 5 and width - 6 or progress - (height - 2 + 5)
+        third = progress > width - 7 + height - 2 + 5 and width - 7 or progress - (height - 2 + 5)
     }
-    DoubleBuffer.drawRectangle(x + 6 - lengths.first, y + 1, lengths.first, 1, color, color, "█")
-    DoubleBuffer.drawRectangle(x + 1, y + 2, 1, lengths.second, color, color, "█")
-    DoubleBuffer.drawRectangle(x + 1, y + height, lengths.third, 1, color, color, "█")
-    DoubleBuffer.drawRectangle(x + width - 4, y + height, lengths.first, 1, color, color, "█")
-    DoubleBuffer.drawRectangle(x + width, y + height - lengths.second, 1, lengths.second, color, color, "█")
-    DoubleBuffer.drawRectangle(x + 1 + width - lengths.third, y + 1, lengths.third, 1, color, color, "█")
+    DoubleBuffer.drawSemiPixelRectangle(x + 6 - lengths.first, y + 1, lengths.first, 1, color)
+    DoubleBuffer.drawSemiPixelRectangle(x + 1, y + 2, 1, lengths.second, color)
+    DoubleBuffer.drawSemiPixelRectangle(x + 1, y + height, lengths.third, 1, color)
+    DoubleBuffer.drawSemiPixelRectangle(x + width - 4, y + height, lengths.first, 1, color)
+    DoubleBuffer.drawSemiPixelRectangle(x + width, y + height - lengths.second, 1, lengths.second, color)
+    DoubleBuffer.drawSemiPixelRectangle(x + 1 + width - lengths.third, y + 1, lengths.third, 1, color)
 end
 
 local function drawWidget(index, component, scale)
+    local globalWidth = baseWidth
     scale = scale or 1
-    local x = width + width * ((index - 1) % 3)
+    local x = globalWidth + globalWidth * ((index - 1) % 3)
+    local width = globalWidth * scale
+    local height = baseHeight
     local y = height * math.ceil((index) / 3)
     DoubleBuffer.drawRectangle(
         x + 1,
         y + 1,
-        width * scale - 1,
+        width - 1,
         height - 1,
         Colors.machineBackground,
         Colors.machineBackground,
         "█"
     )
 
-    drawProgress(x, y, width * scale - 1, height - 1, 1, 1, Colors.progressBackground)
-    drawProgress(x, y, width * scale - 1, height - 1, component.progress, component.maxProgress, Colors.barColor)
+    drawProgress(x, 2 * y, width - 1, 2 * (height - 1), 1, 1, Colors.progressBackground)
+    drawProgress(x, 2 * y, width - 1, 2 * (height - 1), component.progress, component.maxProgress, Colors.barColor)
 
-    DoubleBuffer.drawLine(x + 3, y + 5, x + width * scale - 3, y + 5, Colors.machineBackground, Colors.textColor, "─")
+    DoubleBuffer.drawLine(x + 3, y + 5, x + width - 3, y + 5, Colors.machineBackground, Colors.textColor, "─")
     DoubleBuffer.drawText(x + 3, y + 3, Colors.labelColor, component.name)
     DoubleBuffer.drawText(
         x + 3,
         y + 7,
-        component.working and Colors.workingColor or Colors.errorColor,
+        component.state and Colors.workingColor or Colors.idleColor,
         component.leftInfo
     )
     if component.middleInfo then
         DoubleBuffer.drawText(
-            x + 3 + 3 + Unicode.len(component.leftInfo),
+            x + 3 + 3 + Unicode.len("IDLE"),
             y + height - 3,
             Colors.textColor,
             component.middleInfo
@@ -145,7 +150,7 @@ local function drawWidget(index, component, scale)
     end
     if component.rightInfo then
         DoubleBuffer.drawText(
-            x + width * scale - Unicode.len(tostring(component.rightInfo)) - 3,
+            x + width - Unicode.len(tostring(component.rightInfo)) - 3,
             y + height - 3,
             Colors.accentA,
             tostring(component.rightInfo)
@@ -156,11 +161,14 @@ end
 drawTitle("Overview")
 while true do
     component.progress = component.progress + 1
-    component.rightInfo = component.progress .. " / " .. component.maxProgress .. " s"
     if component.progress >= component.maxProgress then
-        os.sleep(0.5)
         component.progress = 0
+        component.state = false
+        component.leftInfo = "IDLE"
+        component.maxProgress = 0
+        os.sleep(0.5)
     end
+    component.rightInfo = component.progress .. "/" .. component.maxProgress .. " s"
     for index = 1, 10 do
         if index < 10 then
             drawWidget(index, component, 1)
@@ -169,6 +177,12 @@ while true do
         end
     end
     DoubleBuffer.drawChanges()
+    if not component.state then
+        component.state = true
+        component.leftInfo = "ON"
+        component.maxProgress = 1000
+        os.sleep(3.5)
+    end
     os.sleep(0)
 end
 
