@@ -6,6 +6,7 @@ Colors = require("graphics.colors")
 Unicode = require("unicode")
 Graphics = require("graphics.graphics")
 DoubleBuffer = require("graphics.doubleBuffering")
+Event = require("event")
 
 -- local cleanroomAddresses = require("config.addresses.cleanroom")
 -- local multiBlockAddresses = require("config.addresses.multi-blocks")
@@ -63,6 +64,9 @@ end
 
 require("api.sound.zelda-secret")()
 --]]
+local baseWidth = 40
+local baseHeight = 10
+
 local states = {
     {state = "ON", color = Colors.workingColor},
     {state = "IDLE", color = Colors.idleColor},
@@ -83,35 +87,57 @@ local fakeNames = {
     "Implosion Compressor"
 }
 
-local function fakeComponent()
+local function fakewidget()
+    local state = states[math.random(4)]
     return {
         name = fakeNames[math.random(10)] .. " " .. math.random(3),
-        state = states[math.random(4)],
+        state = state,
         progress = 0,
-        maxProgress = math.random(500),
-        idleTime = 0
+        maxProgress = state ~= states[3] and state ~= states[4] and math.random(500) or 0,
+        idleTime = 0,
+        area = {height = baseHeight, width = baseWidth}
     }
 end
 
-local components = {}
+local widgets = {}
 
 for i = 1, 9 do
-    table.insert(components, fakeComponent())
+    local widget = fakewidget()
+    widget.area.x = baseWidth + baseWidth * ((i - 1) % 3)
+    widget.area.y = baseHeight * math.ceil(i / 3)
+    table.insert(widgets, fakewidget())
 end
 table.insert(
-    components,
+    widgets,
     {
         name = "Power",
         state = states[1],
         progress = math.random(16000000),
         maxProgress = 16000000,
         idleTime = 0,
-        scale = 2
+        scale = 2,
+        area = {x = baseWidth, y = baseHeight * 5, width = baseWidth * 2, height = baseHeight}
     }
 )
+widgets[11] = widgets[10]
 
-local baseWidth = 40
-local baseHeight = 10
+Event.listen(
+    "touch",
+    function(_, _, x, y)
+        local index =
+            1 + (math.floor(2 * ((x - baseWidth) / baseWidth + 3 * math.floor((y - baseHeight) / baseHeight)))) / 2
+        local widget = widgets[index] or widgets[index - 0.5]
+
+        widget.progress = 0
+        widget.maxProgress = 0
+        widget.idleTime = 0
+        if widget.state == states[1] or widget.state == states[2] then
+            widget.state = states[3]
+        elseif widget.state == states[3] or widget.state == states[4] then
+            widget.state = states[2]
+        end
+    end
+)
 
 local function drawTitle(title)
     local x = baseWidth
@@ -149,11 +175,13 @@ local function drawProgress(x, y, width, height, progress, maxProgress, color)
     DoubleBuffer.drawSemiPixelRectangle(x + 1 + width - lengths.third, y + 1, lengths.third, 1, color)
 end
 
-local function drawWidget(index, component)
-    local globalWidth = baseWidth
-    local scale = component.scale or 1
-    local x = globalWidth + globalWidth * ((index - 1) % 3)
-    local width = globalWidth * scale
+local function drawWidget(index, widget)
+    if index > 10 then
+        return
+    end
+    local scale = widget.scale or 1
+    local x = baseWidth + baseWidth * ((index - 1) % 3)
+    local width = baseWidth * scale
     local height = baseHeight
     local y = height * math.ceil((index) / 3)
     DoubleBuffer.drawRectangle(
@@ -167,55 +195,50 @@ local function drawWidget(index, component)
     )
 
     drawProgress(x, 2 * y, width - 1, 2 * (height - 1), 1, 1, Colors.progressBackground)
-    drawProgress(x, 2 * y, width - 1, 2 * (height - 1), component.progress, component.maxProgress, Colors.barColor)
+    drawProgress(x, 2 * y, width - 1, 2 * (height - 1), widget.progress, widget.maxProgress, Colors.barColor)
 
     DoubleBuffer.drawLine(x + 3, y + 5, x + width - 3, y + 5, Colors.machineBackground, Colors.textColor, "─")
-    DoubleBuffer.drawText(x + 3, y + 3, Colors.labelColor, component.name)
-    DoubleBuffer.drawText(x + 3, y + 7, component.state.color, component.state.state)
-    if component.state == states[4] then
+    DoubleBuffer.drawText(x + 3, y + 3, Colors.labelColor, widget.name)
+    DoubleBuffer.drawText(x + 3, y + 7, widget.state.color, widget.state.state)
+    if widget.state == states[4] then
         drawProgress(x, 2 * y, width - 1, 2 * (height - 1), 1, 1, Colors.errorColor)
     else
-        if component.middleInfo then
-            DoubleBuffer.drawText(
-                x + 3 + 3 + Unicode.len("IDLE"),
-                y + height - 3,
-                Colors.textColor,
-                component.middleInfo
-            )
+        if widget.middleInfo then
+            DoubleBuffer.drawText(x + 3 + 3 + Unicode.len("IDLE"), y + height - 3, Colors.textColor, widget.middleInfo)
         end
         DoubleBuffer.drawText(
-            x + width - Unicode.len(component.progress .. "/" .. component.maxProgress) - 3,
+            x + width - Unicode.len(widget.progress .. "/" .. widget.maxProgress .. " s") - 3,
             y + height - 3,
             Colors.accentA,
-            component.progress .. "/" .. component.maxProgress
+            widget.progress .. "/" .. widget.maxProgress .. " s"
         )
     end
 end
 
 drawTitle("Overview")
 while true do
-    for index, component in ipairs(components) do
-        local breakComponent = math.random(10000) > 9999
-        if breakComponent then
-            component.state = states[4]
+    for index, widget in ipairs(widgets) do
+        local breakWidget = math.random(10000) > 9999
+        if breakWidget and index ~= 10 and index ~= 11 and widget.state ~= states[3] then
+            widget.state = states[4]
         end
-        if component.state == states[1] then
-            component.progress = component.progress + 1
-            if component.progress >= component.maxProgress then
-                component.progress = 0
-                component.state = states[2]
-                component.maxProgress = 0
-                component.idleTime = 0
+        if widget.state == states[1] then
+            widget.progress = widget.progress + 1
+            if widget.progress >= widget.maxProgress then
+                widget.progress = 0
+                widget.state = states[2]
+                widget.maxProgress = 0
+                widget.idleTime = 0
             end
-        elseif component.state == states[2] then
-            component.idleTime = component.idleTime + 1
-            if component.idleTime > math.random(1000) then
-                component.state = states[1]
-                component.maxProgress = math.random(500)
+        elseif widget.state == states[2] then
+            widget.idleTime = widget.idleTime + 1
+            if widget.idleTime > math.random(1000) then
+                widget.state = states[1]
+                widget.maxProgress = math.random(500)
             end
         end
 
-        drawWidget(index, component)
+        drawWidget(index, widget)
     end
     DoubleBuffer.drawChanges()
     os.sleep(0)
