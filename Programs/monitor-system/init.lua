@@ -1,23 +1,23 @@
 -- Import section
-MultiBlock = require("data.datasource.multi-block")
-SingleBlock = require("data.datasource.single-block")
-EnergyProvider = require("data.datasource.energy-provider")
+-- MultiBlock = require("data.datasource.multi-block")
+-- SingleBlock = require("data.datasource.single-block")
+-- EnergyProvider = require("data.datasource.energy-provider")
 Colors = require("graphics.colors")
 Unicode = require("unicode")
 Graphics = require("graphics.graphics")
 DoubleBuffer = require("graphics.doubleBuffering")
 
-local cleanroomAddresses = require("config.addresses.cleanroom")
-local multiBlockAddresses = require("config.addresses.multi-blocks")
-local energyBufferAddresses = require("config.addresses.energy-buffers")
+-- local cleanroomAddresses = require("config.addresses.cleanroom")
+-- local multiBlockAddresses = require("config.addresses.multi-blocks")
+-- local energyBufferAddresses = require("config.addresses.energy-buffers")
 
-local protectCleanroomRecipes = require("domain.cleanroom.protect-recipes-usecase")
-local getMultiblockStatuses = require("domain.multiblock.get-multiblock-status-usecase")
-local getEnergyStatus = require("domain.energy.get-energy-status-usecase")
-local listMiners = require("domain.miner.list-miners-usecase")
-local getMinersStatuses = require("domain.miner.get-miner-status-usecase")
+-- local protectCleanroomRecipes = require("domain.cleanroom.protect-recipes-usecase")
+-- local getMultiblockStatuses = require("domain.multiblock.get-multiblock-status-usecase")
+-- local getEnergyStatus = require("domain.energy.get-energy-status-usecase")
+-- local listMiners = require("domain.miner.list-miners-usecase")
+-- local getMinersStatuses = require("domain.miner.get-miner-status-usecase")
 
-local GPU = Component.gpu
+-- local GPU = Component.gpu
 --
 
 --[[
@@ -63,15 +63,52 @@ end
 
 require("api.sound.zelda-secret")()
 --]]
-local component = {
-    name = "Machine",
-    state = true,
-    leftInfo = "ON",
-    middleInfo = "something",
-    rightInfo = "16 / 32 s",
-    progress = 0,
-    maxProgress = 1000
+local states = {
+    {state = "ON", color = Colors.workingColor},
+    {state = "IDLE", color = Colors.idleColor},
+    {state = "OFF", color = Colors.offColor},
+    {state = "BROKEN", color = Colors.errorColor}
 }
+
+local fakeNames = {
+    "Cleanroom",
+    "Electric Blast Furnace",
+    "Miner",
+    "Vacuum Freezer",
+    "Multi Smelter",
+    "Sifter",
+    "Large Chemical Reactor",
+    "Distillery",
+    "Oil Cracking Unit",
+    "Implosion Compressor"
+}
+
+local function fakeComponent()
+    return {
+        name = fakeNames[math.random(10)] .. " " .. math.random(3),
+        state = states[math.random(4)],
+        progress = 0,
+        maxProgress = math.random(500),
+        idleTime = 0
+    }
+end
+
+local components = {}
+
+for i = 1, 9 do
+    table.insert(components, fakeComponent())
+end
+table.insert(
+    components,
+    {
+        name = "Power",
+        state = states[1],
+        progress = math.random(16000000),
+        maxProgress = 16000000,
+        idleTime = 0,
+        scale = 2
+    }
+)
 
 local baseWidth = 40
 local baseHeight = 10
@@ -112,9 +149,9 @@ local function drawProgress(x, y, width, height, progress, maxProgress, color)
     DoubleBuffer.drawSemiPixelRectangle(x + 1 + width - lengths.third, y + 1, lengths.third, 1, color)
 end
 
-local function drawWidget(index, component, scale)
+local function drawWidget(index, component)
     local globalWidth = baseWidth
-    scale = scale or 1
+    local scale = component.scale or 1
     local x = globalWidth + globalWidth * ((index - 1) % 3)
     local width = globalWidth * scale
     local height = baseHeight
@@ -134,58 +171,55 @@ local function drawWidget(index, component, scale)
 
     DoubleBuffer.drawLine(x + 3, y + 5, x + width - 3, y + 5, Colors.machineBackground, Colors.textColor, "─")
     DoubleBuffer.drawText(x + 3, y + 3, Colors.labelColor, component.name)
-    DoubleBuffer.drawText(
-        x + 3,
-        y + 7,
-        component.state and Colors.workingColor or Colors.idleColor,
-        component.leftInfo
-    )
-    if component.middleInfo then
+    DoubleBuffer.drawText(x + 3, y + 7, component.state.color, component.state.state)
+    if component.state == states[4] then
+        drawProgress(x, 2 * y, width - 1, 2 * (height - 1), 1, 1, Colors.errorColor)
+    else
+        if component.middleInfo then
+            DoubleBuffer.drawText(
+                x + 3 + 3 + Unicode.len("IDLE"),
+                y + height - 3,
+                Colors.textColor,
+                component.middleInfo
+            )
+        end
         DoubleBuffer.drawText(
-            x + 3 + 3 + Unicode.len("IDLE"),
-            y + height - 3,
-            Colors.textColor,
-            component.middleInfo
-        )
-    end
-    if component.rightInfo then
-        DoubleBuffer.drawText(
-            x + width - Unicode.len(tostring(component.rightInfo)) - 3,
+            x + width - Unicode.len(component.progress .. "/" .. component.maxProgress) - 3,
             y + height - 3,
             Colors.accentA,
-            tostring(component.rightInfo)
+            component.progress .. "/" .. component.maxProgress
         )
     end
 end
 
 drawTitle("Overview")
 while true do
-    component.progress = component.progress + 1
-    if component.progress >= component.maxProgress then
-        component.progress = 0
-        component.state = false
-        component.leftInfo = "IDLE"
-        component.maxProgress = 0
-        os.sleep(0.5)
-    end
-    component.rightInfo = component.progress .. "/" .. component.maxProgress .. " s"
-    for index = 1, 10 do
-        if index < 10 then
-            drawWidget(index, component, 1)
-        elseif index == 10 then
-            drawWidget(index, component, 2)
+    for index, component in ipairs(components) do
+        local breakComponent = math.random(10000) > 9999
+        if breakComponent then
+            component.state = states[4]
         end
+        if component.state == states[1] then
+            component.progress = component.progress + 1
+            if component.progress >= component.maxProgress then
+                component.progress = 0
+                component.state = states[2]
+                component.maxProgress = 0
+                component.idleTime = 0
+            end
+        elseif component.state == states[2] then
+            component.idleTime = component.idleTime + 1
+            if component.idleTime > math.random(1000) then
+                component.state = states[1]
+                component.maxProgress = math.random(500)
+            end
+        end
+
+        drawWidget(index, component)
     end
     DoubleBuffer.drawChanges()
-    if not component.state then
-        component.state = true
-        component.leftInfo = "ON"
-        component.maxProgress = 1000
-        os.sleep(3.5)
-    end
     os.sleep(0)
 end
-
 --[[
 Page = require("api.gui.page")
 Notifications = {}
