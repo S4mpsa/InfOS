@@ -1,12 +1,12 @@
 -- Import section
+Colors = require("graphics.colors")
+Unicode = require("unicode")
+DoubleBuffer = require("graphics.doubleBuffering")
+Event = require("event")
+-- Graphics = require("graphics.graphics")
 -- MultiBlock = require("data.datasource.multi-block")
 -- SingleBlock = require("data.datasource.single-block")
 -- EnergyProvider = require("data.datasource.energy-provider")
-Colors = require("graphics.colors")
-Unicode = require("unicode")
--- Graphics = require("graphics.graphics")
-DoubleBuffer = require("graphics.doubleBuffering")
-Event = require("event")
 
 -- local cleanroomAddresses = require("config.addresses.cleanroom")
 -- local multiBlockAddresses = require("config.addresses.multi-blocks")
@@ -68,10 +68,10 @@ local baseWidth = 40
 local baseHeight = 10
 
 local states = {
-    {state = "ON", color = Colors.workingColor},
-    {state = "IDLE", color = Colors.idleColor},
-    {state = "OFF", color = Colors.offColor},
-    {state = "BROKEN", color = Colors.errorColor}
+    {name = "ON", color = Colors.workingColor},
+    {name = "IDLE", color = Colors.idleColor},
+    {name = "OFF", color = Colors.offColor},
+    {name = "BROKEN", color = Colors.errorColor}
 }
 
 local fakeNames = {
@@ -87,9 +87,11 @@ local fakeNames = {
     "Implosion Compressor"
 }
 
-local function updateMachineWidget(self)
+local machineWidget = {}
+
+function machineWidget:update()
     local breakWidget = math.random(10000) > 9999
-    if breakWidget and self.type ~= "power" and self.state ~= states[3] then
+    if breakWidget and self.state ~= states[3] then
         self.state = states[4]
     end
     if self.state == states[1] then
@@ -113,22 +115,28 @@ local function updateMachineWidget(self)
     end
 end
 
-local function machineOnClick(self)
+function machineWidget:onClick()
     if self.state == states[1] or self.state == states[2] then
         self.state = states[3]
     elseif self.state == states[3] then
         if self.progress < self.maxProgress then
             self.state = states[1]
         else
+            self.progress = 0
+            self.maxProgress = 0
             self.state = states[2]
         end
     elseif self.state == states[4] then
         self.progress = 0
         self.maxProgress = 0
+        self.state = states[2]
     end
 end
 
-local function fakewidget()
+function machineWidget:getMiddleString()
+end
+
+function machineWidget.fake()
     local state = states[math.random(4)]
     return {
         name = fakeNames[math.random(10)] .. " " .. math.floor(math.random(3)),
@@ -136,30 +144,49 @@ local function fakewidget()
         progress = 0,
         maxProgress = state ~= states[3] and state ~= states[4] and math.random(500) or 0,
         type = "machine",
-        update = updateMachineWidget,
-        onClick = machineOnClick
+        update = machineWidget.update,
+        onClick = machineWidget.onClick,
+        getMiddleString = machineWidget.getMiddleString
     }
 end
 
-local widgets = {}
+local powerWidget = {}
 
-for i = 1, 9 do
-    table.insert(widgets, fakewidget())
+function powerWidget:update()
+    self.progress = self.progress + self.dProgress
 end
-table.insert(
-    widgets,
-    {
+
+function powerWidget:onClick()
+    self.dProgress = -self.dProgress
+end
+
+function powerWidget:getMiddleString()
+    local remaining = self.dProgress > 0 and self.maxProgress - self.progress or -self.progress
+    return (self.dProgress > 0 and "+" or "") ..
+        self.dProgress .. "EU/s. " .. (self.dProgress > 0 and "Full in: " or "Empty in: ") .. remaining / self.dProgress
+end
+
+function powerWidget.fake()
+    return {
         name = "Power",
         state = states[1],
         progress = math.random(16000000),
         maxProgress = 16000000,
         scale = 2,
         type = "power",
-        update = updateMachineWidget,
-        onClick = function()
-        end
+        dProgress = 1,
+        update = powerWidget.update,
+        onClick = powerWidget.onClick,
+        getMiddleString = powerWidget.getMiddleString
     }
-)
+end
+
+local widgets = {}
+
+for i = 1, 9 do
+    table.insert(widgets, machineWidget.fake())
+end
+table.insert(widgets, powerWidget.fake())
 widgets[11] = widgets[10]
 
 Event.listen(
@@ -233,12 +260,13 @@ local function drawWidget(index, widget)
 
     DoubleBuffer.drawLine(x + 3, y + 5, x + width - 3, y + 5, Colors.machineBackground, Colors.textColor, "─")
     DoubleBuffer.drawText(x + 3, y + 3, Colors.labelColor, widget.name)
-    DoubleBuffer.drawText(x + 3, y + 7, widget.state.color, widget.state.state)
+    DoubleBuffer.drawText(x + 3, y + 7, widget.state.color, widget.state.name)
     if widget.state == states[4] then
         drawProgress(x, 2 * y, width - 1, 2 * (height - 1), 1, 1, Colors.errorColor)
     else
-        if widget.middleInfo then
-            DoubleBuffer.drawText(x + 3 + 3 + Unicode.len("IDLE"), y + height - 3, Colors.textColor, widget.middleInfo)
+        local middleInfo = widget:getMiddleString()
+        if middleInfo then
+            DoubleBuffer.drawText(x + 3 + 3 + Unicode.len("IDLE"), y + height - 3, Colors.textColor, middleInfo)
         end
         DoubleBuffer.drawText(
             x + width - Unicode.len(widget.progress .. "/" .. widget.maxProgress .. " s") - 3,
