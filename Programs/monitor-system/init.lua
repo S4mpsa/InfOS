@@ -87,23 +87,41 @@ local fakeNames = {
     "Implosion Compressor"
 }
 
+local function updateWidget(self)
+    local breakWidget = math.random(10000) > 9999
+        if breakWidget and self.type ~= "power" and self.state ~= states[3] then
+            self.state = states[4]
+        end
+        if self.state == states[1] then
+            self.progress = self.progress + 1
+            if self.progress >= self.maxProgress then
+                self.progress = 0
+                self.state = states[2]
+                self.maxProgress = 0
+            end
+        elseif self.state == states[2] then
+            if math.random(1000) > 999 then
+                self.state = states[1]
+                self.maxProgress = math.random(500)
+            end
+        end
+end
+
 local function fakewidget()
     local state = states[math.random(4)]
     return {
-        name = fakeNames[math.random(10)] .. " " .. math.random(3),
+        name = fakeNames[math.random(10)] .. " " .. math.floor(math.random(3)),
         state = state,
         progress = 0,
         maxProgress = state ~= states[3] and state ~= states[4] and math.random(500) or 0,
-        area = {height = baseHeight, width = baseWidth}
+        type = "machine",
+        update = updateWidget
     }
 end
 
 local widgets = {}
 
 for i = 1, 9 do
-    local widget = fakewidget()
-    widget.area.x = baseWidth + baseWidth * ((i - 1) % 3)
-    widget.area.y = baseHeight * math.ceil(i / 3)
     table.insert(widgets, fakewidget())
 end
 table.insert(
@@ -114,7 +132,8 @@ table.insert(
         progress = math.random(16000000),
         maxProgress = 16000000,
         scale = 2,
-        area = {x = baseWidth, y = baseHeight * 5, width = baseWidth * 2, height = baseHeight}
+        type = "power",
+        update = updateWidget
     }
 )
 widgets[11] = widgets[10]
@@ -215,24 +234,7 @@ end
 drawTitle("Overview")
 while true do
     for index, widget in ipairs(widgets) do
-        local breakWidget = math.random(10000) > 9999
-        if breakWidget and index ~= 10 and index ~= 11 and widget.state ~= states[3] then
-            widget.state = states[4]
-        end
-        if widget.state == states[1] then
-            widget.progress = widget.progress + 1
-            if widget.progress >= widget.maxProgress then
-                widget.progress = 0
-                widget.state = states[2]
-                widget.maxProgress = 0
-            end
-        elseif widget.state == states[2] then
-            if math.random(1000) > 999 then
-                widget.state = states[1]
-                widget.maxProgress = math.random(500)
-            end
-        end
-
+        widget:update()
         drawWidget(index, widget)
     end
     DoubleBuffer.drawChanges()

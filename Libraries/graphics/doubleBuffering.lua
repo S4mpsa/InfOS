@@ -475,7 +475,7 @@ end
 --------------------------------------------------------------------------------
 
 local function semiPixelRawSet(index, color, yPercentTwoEqualsZero)
-    local upperPixel, lowerPixel, bothPixel = "▀", "▄", " "
+    local upperPixel, lowerPixel, bothPixel = "▀", "▄", "█"
     local background, foreground, symbol =
         newFrameBackgrounds[index],
         newFrameForegrounds[index],

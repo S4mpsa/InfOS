@@ -5,28 +5,40 @@ local colors = {
     magenta = 0xFF00FF,
     yellow = 0xFFFF00,
     cyan = 0x00FFFF,
+    greenYellow = 0xADFF2F,
     green = 0x008000,
+    darkOliveGreen = 0x556B2F,
+    indigo = 0x4B0082,
     purple = 0x800080,
+    deepSkyBlue = 0x00BFFF,
+    dodgerBlue = 0x1E90FF,
     steelBlue = 0x4682B4,
-    brown = 0xA52A2A,
-    chocolate = 0xD2691E,
+    darkSlateBlue = 0x483D8B,
+    midnightBlue = 0x191970,
+    navy = 0x000080,
+    darkOrange = 0xFFA500,
     rosyBrown = 0xBC8F8F,
+    goldenRod = 0xDAA520,
+    chocolate = 0xD2691E,
+    brown = 0xA52A2A,
+    maroon = 0x800000,
     white = 0xFFFFFF,
     lightGray = 0xD3D3D3,
     darkGray = 0xA9A9A9,
     darkSlateGrey = 0x2F4F4F,
+    notBlack = 0x101020,
     black = 0x000000
 }
 
 ---[[
 local newColors = {
     background = colors.black,
-    machineBackground = colors.darkSlateGrey,
-    progressBackground = colors.purple,
-    barColor = colors.magenta,
-    labelColor = colors.chocolate,
-    idleColor = colors.green,
-    workingColor = colors.lime,
+    machineBackground = colors.notBlack,
+    progressBackground = colors.indigo,
+    barColor = colors.deepSkyBlue,
+    labelColor = colors.goldenRod,
+    idleColor = colors.lime,
+    workingColor = colors.deepSkyBlue,
     offColor = colors.brown,
     errorColor = colors.red,
     positiveEUColor = colors.lime,
@@ -34,7 +46,7 @@ local newColors = {
     timeColor = colors.purple,
     textColor = colors.steelBlue,
     hudColor = colors.darkSlateGrey,
-    mainColor = colors.chocolate,
+    mainColor = colors.goldenRod,
     accentA = colors.cyan,
     accentB = colors.blue
 }
@@ -59,13 +71,15 @@ end
 
 colors.RGB = RGB
 
+--]]
 setmetatable(
     colors,
     {
         __index = function(self, color)
-            return self.RGB[color] or 0, 0, 0
+            return self[color] or 0, 0, 0
         end
     }
 )
+
 --]]
 return colors
