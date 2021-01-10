@@ -87,24 +87,34 @@ local fakeNames = {
     "Implosion Compressor"
 }
 
-local function updateWidget(self)
+local function updateMachineWidget(self)
     local breakWidget = math.random(10000) > 9999
-        if breakWidget and self.type ~= "power" and self.state ~= states[3] then
-            self.state = states[4]
+    if breakWidget and self.type ~= "power" and self.state ~= states[3] then
+        self.state = states[4]
+    end
+    if self.state == states[1] then
+        self.progress = self.progress + 1
+        if self.progress >= self.maxProgress then
+            self.progress = 0
+            self.state = states[2]
+            self.maxProgress = 0
         end
-        if self.state == states[1] then
-            self.progress = self.progress + 1
-            if self.progress >= self.maxProgress then
-                self.progress = 0
-                self.state = states[2]
-                self.maxProgress = 0
-            end
-        elseif self.state == states[2] then
-            if math.random(1000) > 999 then
-                self.state = states[1]
-                self.maxProgress = math.random(500)
-            end
+    elseif self.state == states[2] then
+        if math.random(1000) > 999 then
+            self.state = states[1]
+            self.maxProgress = math.random(500)
         end
+    end
+end
+
+local function machineOnClick(self)
+    self.progress = 0
+    self.maxProgress = 0
+    if self.state == states[1] or self.state == states[2] then
+        self.state = states[3]
+    elseif self.state == states[3] or self.state == states[4] then
+        self.state = states[2]
+    end
 end
 
 local function fakewidget()
@@ -115,7 +125,8 @@ local function fakewidget()
         progress = 0,
         maxProgress = state ~= states[3] and state ~= states[4] and math.random(500) or 0,
         type = "machine",
-        update = updateWidget
+        update = updateMachineWidget,
+        onClick = machineOnClick
     }
 end
 
@@ -133,7 +144,9 @@ table.insert(
         maxProgress = 16000000,
         scale = 2,
         type = "power",
-        update = updateWidget
+        update = updateMachineWidget,
+        onClick = function()
+        end
     }
 )
 widgets[11] = widgets[10]
@@ -145,13 +158,7 @@ Event.listen(
             1 + (math.floor(2 * ((x - baseWidth) / baseWidth + 3 * math.floor((y - baseHeight) / baseHeight)))) / 2
         local widget = widgets[index] or widgets[index - 0.5]
 
-        widget.progress = 0
-        widget.maxProgress = 0
-        if widget.state == states[1] or widget.state == states[2] then
-            widget.state = states[3]
-        elseif widget.state == states[3] or widget.state == states[4] then
-            widget.state = states[2]
-        end
+        widget:onClick()
     end
 )
 
