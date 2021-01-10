@@ -96,24 +96,35 @@ local function updateMachineWidget(self)
         self.progress = self.progress + 1
         if self.progress >= self.maxProgress then
             self.progress = 0
-            self.state = states[2]
             self.maxProgress = 0
+            self.state = states[2]
         end
     elseif self.state == states[2] then
         if math.random(1000) > 999 then
             self.state = states[1]
             self.maxProgress = math.random(500)
         end
+    elseif self.state == states[3] then
+        self.progress = self.progress + 1
+        if self.progress >= self.maxProgress then
+            self.progress = 0
+            self.maxProgress = 0
+        end
     end
 end
 
 local function machineOnClick(self)
-    self.progress = 0
-    self.maxProgress = 0
     if self.state == states[1] or self.state == states[2] then
         self.state = states[3]
-    elseif self.state == states[3] or self.state == states[4] then
-        self.state = states[2]
+    elseif self.state == states[3] then
+        if self.progress < self.maxProgress then
+            self.state = states[1]
+        else
+            self.state = states[2]
+        end
+    elseif self.state == states[4] then
+        self.progress = 0
+        self.maxProgress = 0
     end
 end
 

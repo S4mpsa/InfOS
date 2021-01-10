@@ -26,7 +26,7 @@ local colors = {
     lightGray = 0xD3D3D3,
     darkGray = 0xA9A9A9,
     darkSlateGrey = 0x2F4F4F,
-    notBlack = 0x101020,
+    notBlack = 0x181828,
     black = 0x000000
 }
 
