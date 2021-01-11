@@ -94,6 +94,18 @@ local function draw(self, index)
     end
 end
 
+function widget.clear()
+    DoubleBuffer.drawRectangle(
+        Constants.baseWidth,
+        Constants.baseHeight,
+        3 * Constants.baseWidth,
+        4 * Constants.baseHeight,
+        Colors.background,
+        Colors.background,
+        "█"
+    )
+end
+
 local fake = {}
 
 fake.names = {
@@ -208,7 +220,7 @@ end
 function widget.fakeWidgets()
     local fakeWidgets = {}
 
-    for _ = 1, 9 do
+    for _ = 1, math.random(30) do
         table.insert(fakeWidgets, fake.machineWidget.create())
     end
 
