@@ -9,7 +9,7 @@ shell.execute("wget " .. tarMan .. " -f")
 shell.setWorkingDirectory("/bin")
 shell.execute("wget " .. tarBin .. " -f")
 
-local InfOS = "https://github.com/gordominossi/InfOS/releases/download/v0/InfOS.tar"
+local InfOS = "https://github.com/gordominossi/InfOS/releases/download/v0.1/InfOS.tar"
 
 shell.setWorkingDirectory("/home")
 print("Updating InfOS")

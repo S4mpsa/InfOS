@@ -19,6 +19,11 @@ function MultiBlock:getNumberOfProblems()
     return Parser.parseProblems(sensorInformation[5])
 end
 
+function MultiBlock:getProgress()
+    local sensorInformation = self:getSensorInformation()
+    return Parser.parseProgress(sensorInformation[1])
+end
+
 function MultiBlock:getEfficiencyPercentage()
     local sensorInformation = self:getSensorInformation()
     return Parser.parseEfficiency(sensorInformation[5])

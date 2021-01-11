@@ -5,37 +5,50 @@ local colors = {
     magenta = 0xFF00FF,
     yellow = 0xFFFF00,
     cyan = 0x00FFFF,
+    greenYellow = 0xADFF2F,
     green = 0x008000,
+    darkOliveGreen = 0x556B2F,
+    indigo = 0x4B0082,
     purple = 0x800080,
+    deepSkyBlue = 0x00BFFF,
+    dodgerBlue = 0x1E90FF,
     steelBlue = 0x4682B4,
-    brown = 0xA52A2A,
-    chocolate = 0xD2691E,
+    darkSlateBlue = 0x483D8B,
+    midnightBlue = 0x191970,
+    navy = 0x000080,
+    darkOrange = 0xFFA500,
     rosyBrown = 0xBC8F8F,
+    goldenRod = 0xDAA520,
+    chocolate = 0xD2691E,
+    brown = 0xA52A2A,
+    maroon = 0x800000,
     white = 0xFFFFFF,
     lightGray = 0xD3D3D3,
     darkGray = 0xA9A9A9,
     darkSlateGrey = 0x2F4F4F,
+    notBlack = 0x181828,
     black = 0x000000
 }
 
 ---[[
 local newColors = {
-    machineBackground = colors.darkGray,
-    progressBackground = colors.lightGray,
-    labelColor = colors.chocolate,
-    errorColor = colors.red,
-    idleColor = colors.purple,
-    workingColor = colors.steelBlue,
-    positiveEUColor = colors.lime,
-    negativeEUColor = colors.brown,
-    timeColor = colors.purple,
-    textColor = colors.black,
-    hudColor = colors.darkSlateGrey,
-    mainColor = colors.rosyBrown,
     background = colors.black,
+    machineBackground = colors.notBlack,
+    progressBackground = colors.indigo,
+    barColor = colors.deepSkyBlue,
+    labelColor = colors.goldenRod,
+    idleColor = colors.lime,
+    workingColor = colors.deepSkyBlue,
+    offColor = colors.brown,
+    errorColor = colors.red,
+    positiveEUColor = colors.lime,
+    negativeEUColor = colors.red,
+    timeColor = colors.purple,
+    textColor = colors.steelBlue,
+    hudColor = colors.darkSlateGrey,
+    mainColor = colors.goldenRod,
     accentA = colors.cyan,
-    accentB = colors.magenta,
-    barColor = colors.blue
+    accentB = colors.blue
 }
 
 for name, color in pairs(newColors) do
@@ -58,13 +71,15 @@ end
 
 colors.RGB = RGB
 
+--]]
 setmetatable(
     colors,
     {
         __index = function(self, color)
-            return self.RGB[color] or 0, 0, 0
+            return self[color] or 0, 0, 0
         end
     }
 )
+
 --]]
 return colors

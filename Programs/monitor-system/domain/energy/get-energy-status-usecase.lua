@@ -3,7 +3,7 @@ local getConsumption = require("domain.energy.get-consumption-usecase")
 local getProduction = require("domain.energy.get-production-usecase")
 --
 
-local function exec(energyProducers, energyBuffer)
+local function exec(energyBuffer)
     -- local comsumption = getConsumption(energyBuffer)
     -- local production = getProduction(energyBuffer)
     local consumption = energyBuffer:getAverageInput()
