@@ -1,10 +1,11 @@
 -- Import section
+Computer = require("computer")
 Unicode = require("unicode")
 Event = require("event")
 DoubleBuffer = require("graphics.doubleBuffering")
+Constants = require("api.gui.constants")
 Colors = require("graphics.colors")
 Widget = require("api.gui.widget")
-Constants = require("api.gui.constants")
 --
 
 -- GPU resolution should be 160 x 50.
@@ -79,13 +80,17 @@ function page.create(element)
     drawTitle(element.title)
 
     local panelIndex = 1
-    for _, pg in pairs(pages) do
+    for _, pg in ipairs(pages) do
         if pg ~= element then
-            elements.panelSections[panelIndex] = pg
+            elements.panelSections[panelIndex] = pg.title
             drawPanelSection(panelIndex, pg.title)
             panelIndex = panelIndex + 1
         end
     end
+
+    elements[4.5] = {onClick = function()
+            Computer.shutdown(true)
+        end}
 
     elements[6] = elements.machineWidgets[1]
     elements[7] = elements.machineWidgets[2]

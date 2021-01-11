@@ -1,8 +1,8 @@
 Component = require("component")
 Unicode = require("unicode")
-Colors = require("graphics.colors")
 DoubleBuffer = require("graphics.doubleBuffering")
 Constants = require("api.gui.constants")
+Colors = require("graphics.colors")
 
 local widget = {}
 
@@ -45,7 +45,7 @@ function widget.drawBaseWidget(x, y, scale, title)
     )
     DoubleBuffer.drawFrame(x + 1, y + 1, width - 1, height - 1, Colors.labelColor)
     DoubleBuffer.drawLine(x + 3, y + 5, x + width - 3, y + 5, Colors.machineBackground, Colors.textColor, "─")
-    DoubleBuffer.drawText(x + (width - Unicode.len(title)) / 2, y + 3, Colors.labelColor, title)
+    DoubleBuffer.drawText(x + math.floor((width - Unicode.len(title)) / 2), y + 3, Colors.labelColor, title)
 end
 
 local function draw(self, index)
@@ -71,7 +71,7 @@ local function draw(self, index)
             DoubleBuffer.drawText(x + 3 + 3 + Unicode.len("IDLE"), y + height - 3, Colors.textColor, middleInfo)
         end
         DoubleBuffer.drawText(
-            x + width - Unicode.len(self.progress .. "/" .. self.maxProgress .. " s") - 2,
+            x + width - Unicode.len(self.progress .. "/" .. self.maxProgress .. " s") - 3,
             y + height - 3,
             Colors.accentA,
             self.progress .. "/" .. self.maxProgress .. " s"
