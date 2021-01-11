@@ -5,3 +5,7 @@
 |sto|ev ti|ev ti|
 |ove| power |b|f|
 --]]
+
+return {
+    title ="Notifications"
+}

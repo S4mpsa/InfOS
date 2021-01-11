@@ -5,3 +5,7 @@
 |ove|ev ti|ev ti|
 |not| power |b|f|
 --]]
+
+return {
+    title = "Stock"
+}

@@ -5,3 +5,7 @@
 |sto| w | w | w |
 |not| power |b|f|
 --]]
+
+return {
+    title = "Widgets"
+}
