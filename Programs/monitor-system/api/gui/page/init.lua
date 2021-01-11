@@ -73,9 +73,19 @@ end
 local function drawPanelSection(index, title)
     local width = math.floor(0.6 * Constants.baseWidth)
     local height = math.floor(0.6 * Constants.baseHeight)
-    local x = (Constants.baseWidth - width) / 2
+    local x = math.floor((Constants.baseWidth - width) / 2)
     local y = (index - 1) * Constants.baseHeight + math.floor((Constants.baseHeight - height) / 2)
     Widget.drawBaseWidget(x, y, width, height, title)
+end
+
+local function drawNavigationButtons()
+    local width = math.floor(0.3 * Constants.baseWidth)
+    local height = math.floor(0.6 * Constants.baseHeight)
+    local x = math.floor(2.8 * Constants.baseWidth) + math.floor((Constants.baseWidth - width) / 2)
+    local y = 4 * Constants.baseHeight + math.floor((Constants.baseHeight - height) / 2)
+    Widget.drawBaseWidget(x, y, width, height, "<")
+    x = math.floor(3.2 * Constants.baseWidth) + math.floor((Constants.baseWidth - width) / 2)
+    Widget.drawBaseWidget(x, y, width, height, ">")
 end
 
 function page.create(element)
@@ -94,6 +104,8 @@ function page.create(element)
             panelIndex = panelIndex + 1
         end
     end
+
+    drawNavigationButtons()
 
     elements[4.5] = {
         onClick = function()
