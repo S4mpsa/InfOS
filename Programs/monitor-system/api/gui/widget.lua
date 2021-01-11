@@ -25,15 +25,21 @@ local function drawProgress(x, y, width, height, progress, maxProgress, color)
     DoubleBuffer.drawSemiPixelRectangle(x + 6 - lengths.first, y + 1, lengths.first, 1, color)
     DoubleBuffer.drawSemiPixelRectangle(x + 1, y + 2, 1, lengths.second, color)
     DoubleBuffer.drawSemiPixelRectangle(x + 1, y + height, lengths.third, 1, color)
-    DoubleBuffer.drawRectangle(x + width - 6, (y + height) / 2, 2, 1, Colors.machineBackground, Colors.machineBackground, "█")
+    DoubleBuffer.drawRectangle(
+        x + width - 6,
+        (y + height) / 2,
+        2,
+        1,
+        Colors.machineBackground,
+        Colors.machineBackground,
+        "█"
+    )
     DoubleBuffer.drawSemiPixelRectangle(x + width - 4, y + height, lengths.first, 1, color)
     DoubleBuffer.drawSemiPixelRectangle(x + width, y + height - lengths.second, 1, lengths.second, color)
     DoubleBuffer.drawSemiPixelRectangle(x + 1 + width - lengths.third, y + 1, lengths.third, 1, color)
 end
 
-function widget.drawBaseWidget(x, y, scale, title)
-    local width = Constants.baseWidth * scale
-    local height = Constants.baseHeight
+function widget.drawBaseWidget(x, y, width, height, title)
     DoubleBuffer.drawRectangle(
         x + 1,
         y + 1,
@@ -43,9 +49,18 @@ function widget.drawBaseWidget(x, y, scale, title)
         Colors.machineBackground,
         "█"
     )
+    DoubleBuffer.drawLine(
+        x + 3,
+        y + math.ceil(0.5 * height),
+        x + width - 3,
+        y + math.ceil(0.5 * height),
+        Colors.machineBackground,
+        Colors.textColor,
+        "─"
+    )
     DoubleBuffer.drawFrame(x + 1, y + 1, width - 1, height - 1, Colors.labelColor)
-    DoubleBuffer.drawLine(x + 3, y + 5, x + width - 3, y + 5, Colors.machineBackground, Colors.textColor, "─")
-    DoubleBuffer.drawText(x + math.floor((width - Unicode.len(title)) / 2), y + 3, Colors.labelColor, title)
+    title = Unicode.len(title) < width - 8 and " " .. title .. " " or " " .. string.gsub(title, "%l*%s", "") .. " "
+    DoubleBuffer.drawText(x + math.floor((width - Unicode.len(title) + 1) / 2), y + 3, Colors.labelColor, title)
 end
 
 local function draw(self, index)
@@ -58,7 +73,7 @@ local function draw(self, index)
     local x = Constants.baseWidth + Constants.baseWidth * ((index - 1) % 3)
     local y = height * math.ceil((index) / 3)
 
-    widget.drawBaseWidget(x, y, scale, self.name)
+    widget.drawBaseWidget(x, y, width, height, self.name)
 
     drawProgress(x, 2 * y, width - 1, 2 * (height - 1), 1, 1, Colors.progressBackground)
     drawProgress(x, 2 * y, width - 1, 2 * (height - 1), self.progress, self.maxProgress, Colors.barColor)
