@@ -1,7 +1,7 @@
 -- Import section
-Event = require("event")
-Colors = require("graphics.colors")
-Widget = require("api.gui.widget")
+-- Event = require("event")
+-- Colors = require("graphics.colors")
+-- Widget = require("api.gui.widget")
 Page = require("api.gui.page")
 -- Graphics = require("graphics.graphics")
 -- MultiBlock = require("data.datasource.multi-block")
