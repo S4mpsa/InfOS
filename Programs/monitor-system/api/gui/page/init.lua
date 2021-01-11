@@ -66,15 +66,15 @@ local function drawTitle(title)
     local x = Constants.baseWidth
     local y = 1
     local width = 3 * Constants.baseWidth
-    local height = 0.8 * Constants.baseHeight
+    local height = math.floor(0.8 * Constants.baseHeight)
     Widget.drawBaseWidget(x, y, width, height, title)
 end
 
 local function drawPanelSection(index, title)
-    local width = 0.6 * Constants.baseWidth
-    local height = 0.6 * Constants.baseHeight
+    local width = math.floor(0.6 * Constants.baseWidth)
+    local height = math.floor(0.6 * Constants.baseHeight)
     local x = (Constants.baseWidth - width) / 2
-    local y = (index - 1) * Constants.baseHeight + (Constants.baseHeight - height) / 2
+    local y = (index - 1) * Constants.baseHeight + math.floor((Constants.baseHeight - height) / 2)
     Widget.drawBaseWidget(x, y, width, height, title)
 end
 
