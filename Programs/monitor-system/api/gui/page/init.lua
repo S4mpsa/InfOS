@@ -1,21 +1,23 @@
 -- Import section
+Unicode = require("unicode")
+Event = require("event")
 DoubleBuffer = require("graphics.doubleBuffering")
 Colors = require("graphics.colors")
-Unicode = require("unicode")
 Widget = require("api.gui.widget")
+Constants = require("api.gui.constants")
 --
 
 -- GPU resolution should be 160 x 50.
--- Screen should be 16 blocks by 10 blocks. (Could also be 8 x 5).
--- That way, each block should have a resolution of 10 x 10
+-- Screen should be 8 x 5 blocks.
+-- That way, each block should have a resolution of 20 x 10
 -- Organizing the page:
 ---- Title on top of the page (title)
----- Side panel on the left With a width of 20 pixels (panel)
----- Two buttons for page navigation (b, f)
-------- Each with a width of 10 pixels
----- 1 Power widget on the bottom, with a width of 40 pixels (power)
+---- Side panel on the left With a width of 40 pixels (panel)
+---- 2 buttons for page navigation (b, f)
+------- Each with a width of 20 pixels
+---- 1 Power widget on the bottom, with a width of 80 pixels (power)
 ---- 9 Regular widgets on the right, in a 3 x 3 grid (w)
------- Each one with a width of 20 pixels
+------ Each one with a width of 40 pixels
 --[[
 | p |   title   |
 | a | w | w | w |
@@ -23,74 +25,105 @@ Widget = require("api.gui.widget")
 | e | w | w | w |
 | l | power |b|f|
 --]]
+local pages = {
+    glasses = require("api.gui.page.glasses"),
+    widgets = require("api.gui.page.widgets"),
+    help = require("api.gui.page.help"),
+    stock = require("api.gui.page.stock"),
+    notifications = require("api.gui.page.notifications"),
+    overview = require("api.gui.page.overview")
+}
+pages[1] = pages.glasses
+pages[2] = pages.widgets
+pages[3] = pages.help
+pages[4] = pages.stock
+pages[5] = pages.notifications
+pages[6] = pages.overview
+
 local page = {}
 
-local pages = {
-    overview = require("api.gui.page.overview"),
-    notifications = require("api.gui.page.notifications"),
-    stock = require("api.gui.page.stock"),
-    help = require("api.gui.page.help"),
-    widgets = require("api.gui.page.widgets"),
-    glasses = require("api.gui.page.glasses")
+local elements = {
+    machineWidgets = {},
+    powerWidgets = {},
+    panelSections = {},
+    navigationButtons = {}
 }
-
-local widgets = {}
 
 Event.listen(
     "touch",
     function(_, _, x, y)
-        local index =
-            1 +
-            (math.floor(
-                2 *
-                    ((x - Widget.baseWidth) / Widget.baseWidth +
-                        3 * math.floor((y - Widget.baseHeight) / Widget.baseHeight))
-            )) /
-                2
-        local widget = widgets[index] or widgets[index - 0.5]
+        local xContribution = x / Constants.baseWidth
+        local yContribution = 4 * math.floor(y / Constants.baseHeight)
+        local screenIndex = 1 + (math.floor(2 * (xContribution + yContribution))) / 2
 
-        widget:onClick()
+        local selected = elements[screenIndex] or elements[screenIndex - 0.5]
+        selected:onClick()
     end
 )
 
 local function drawTitle(title)
-    local x = Widget.baseWidth
+    local x = Constants.baseWidth
     local y = 0
     local scale = 3
-    local width = Widget.baseWidth * scale
-    local height = Widget.baseHeight
-    DoubleBuffer.drawRectangle(
-        x + 1,
-        y + 1,
-        width - 1,
-        height - 1,
-        Colors.machineBackground,
-        Colors.machineBackground,
-        "█"
-    )
-    DoubleBuffer.drawFrame(x + 1, y + 1, width - 1, height - 1, Colors.labelColor)
-    DoubleBuffer.drawLine(x + 3, y + 6, x + width - 3, y + 6, Colors.machineBackground, Colors.textColor, "─")
-    DoubleBuffer.drawText(x + (width - Unicode.len(title)) / 2, y + 5, Colors.mainColor, title)
+    Widget.drawBaseWidget(x, y, scale, title)
 end
 
-function page.create(page)
-    drawTitle(page.title)
+local function drawPanelSection(index, title)
+    local x = 0
+    local y = (index - 1) * Constants.baseHeight
+    local scale = 1
+    Widget.drawBaseWidget(x, y, scale, title)
+end
+
+function page.create(element)
+    drawTitle(element.title)
+
+    local panelIndex = 1
+    for _, pg in pairs(pages) do
+        if pg ~= element then
+            elements.panelSections[panelIndex] = pg
+            drawPanelSection(panelIndex, pg.title)
+            panelIndex = panelIndex + 1
+        end
+    end
+
+    elements[6] = elements.machineWidgets[1]
+    elements[7] = elements.machineWidgets[2]
+    elements[8] = elements.machineWidgets[3]
+    elements[10] = elements.machineWidgets[4]
+    elements[11] = elements.machineWidgets[5]
+    elements[12] = elements.machineWidgets[6]
+    elements[14] = elements.machineWidgets[7]
+    elements[15] = elements.machineWidgets[8]
+    elements[16] = elements.machineWidgets[9]
+
+    elements[18] = elements.powerWidgets[1]
+    elements[19] = elements.powerWidgets[1]
+
+    elements[1] = elements.panelSections[1]
+    elements[5] = elements.panelSections[2]
+    elements[9] = elements.panelSections[3]
+    elements[13] = elements.panelSections[3]
+    elements[17] = elements.panelSections[5]
+
+    elements[20] = elements.navigationButtons[1]
+    elements[20.5] = elements.navigationButtons[2]
 end
 
 function page.fake()
-    for i = 1, 9 do
-        table.insert(widgets, Widget.machineWidget.fake())
-    end
-    table.insert(widgets, Widget.powerWidget.fake())
-    widgets[11] = widgets[10]
-
+    elements.machineWidgets = Widget.fakeWidgets()
+    elements.powerWidgets = Widget.fakePowerWidget()
     page.create(pages.overview)
 end
 
 function page.update()
-    for index, widget in ipairs(widgets) do
-        widget:update()
-        widget:draw(index)
+    for index, machineWidget in ipairs(elements.machineWidgets) do
+        machineWidget:update()
+        machineWidget:draw(index)
+    end
+    for index, powerWidget in ipairs(elements.powerWidgets) do
+        powerWidget:update()
+        powerWidget:draw(index)
     end
     DoubleBuffer.drawChanges()
 end

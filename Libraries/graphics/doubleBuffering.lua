@@ -458,8 +458,8 @@ end
 
 local function drawFrame(x, y, width, height, color)
     local stringUp, stringDown, x2 =
-        "┌" .. string.rep("─", width - 2) .. "┐",
-        "└" .. string.rep("─", width - 2) .. "┘",
+        "╭" .. string.rep("─", width - 2) .. "╮",
+        "╰" .. string.rep("─", width - 2) .. "╯",
         x + width - 1
 
     drawText(x, y, color, stringUp)
