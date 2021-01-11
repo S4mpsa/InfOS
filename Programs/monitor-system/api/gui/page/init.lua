@@ -82,15 +82,22 @@ function page.create(element)
     local panelIndex = 1
     for _, pg in ipairs(pages) do
         if pg ~= element then
-            elements.panelSections[panelIndex] = pg.title
+            elements.panelSections[panelIndex] = {
+                title = pg.title,
+                onClick = function()
+                    page.create(pg)
+                end
+            }
             drawPanelSection(panelIndex, pg.title)
             panelIndex = panelIndex + 1
         end
     end
 
-    elements[4.5] = {onClick = function()
+    elements[4.5] = {
+        onClick = function()
             Computer.shutdown(true)
-        end}
+        end
+    }
 
     elements[6] = elements.machineWidgets[1]
     elements[7] = elements.machineWidgets[2]
@@ -108,7 +115,7 @@ function page.create(element)
     elements[1] = elements.panelSections[1]
     elements[5] = elements.panelSections[2]
     elements[9] = elements.panelSections[3]
-    elements[13] = elements.panelSections[3]
+    elements[13] = elements.panelSections[4]
     elements[17] = elements.panelSections[5]
 
     elements[20] = elements.navigationButtons[1]
