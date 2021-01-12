@@ -65,7 +65,7 @@ Event.listen(
 local function drawTitle(title)
     local x = Constants.baseWidth
     local y = 1
-    local width = 3 * Constants.baseWidth
+    local width = math.floor(2.5 * Constants.baseWidth)
     local height = math.floor(0.8 * Constants.baseHeight)
     Widget.drawBaseWidget(x, y, width, height, title)
 end
@@ -86,6 +86,14 @@ local function drawNavigationButton(self, index)
     if self.active then
         Widget.drawBaseWidget(x, y, width, height, self.title)
     end
+end
+
+local function drawRebootButton()
+    local width = math.floor(0.3 * Constants.baseWidth)
+    local height = math.floor(0.6 * Constants.baseHeight)
+    local x = math.floor(3.25 * Constants.baseWidth) + math.floor((Constants.baseWidth - width) / 2)
+    local y = math.floor((Constants.baseHeight - height) / 2)
+    Widget.drawBaseWidget(x, y, width, height, "Restart")
 end
 
 local function clickNavigationButton(self)
@@ -135,6 +143,7 @@ function page.create(element)
     for i = 1, 9 do
         elements.machineWidgets.active[i] = elements.machineWidgets[9 * (elements.machineWidgets.active.index - 1) + i]
     end
+
     elements.navigationButtons[1] = {
         title = "◀",
         active = true,
@@ -154,11 +163,14 @@ function page.create(element)
         draw = drawNavigationButton
     }
 
-    elements[4.5] = {
+    elements.rebootButton = {
         onClick = function()
             Computer.shutdown(true)
         end
     }
+    drawRebootButton()
+
+    elements[4.5] = elements.rebootButton
 
     elements[6] = elements.machineWidgets.active[1]
     elements[7] = elements.machineWidgets.active[2]
