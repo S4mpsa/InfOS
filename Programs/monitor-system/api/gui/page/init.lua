@@ -26,6 +26,8 @@ Widget = require("api.gui.widget")
 | e | w | w | w |
 | l | power |b|f|
 --]]
+local page = {}
+
 local pages = {
     glasses = require("api.gui.page.glasses"),
     widgets = require("api.gui.page.widgets"),
@@ -41,11 +43,8 @@ pages[4] = pages.stock
 pages[5] = pages.notifications
 pages[6] = pages.overview
 
-local page = {}
-
 local elements = {
     machineWidgets = {},
-    powerWidgets = {},
     panelSections = {},
     navigationButtons = {}
 }
@@ -182,8 +181,8 @@ function page.create(element)
     elements[15] = elements.machineWidgets.active[8]
     elements[16] = elements.machineWidgets.active[9]
 
-    elements[18] = elements.powerWidgets[1]
-    elements[19] = elements.powerWidgets[1]
+    elements[18] = elements.powerWidget
+    elements[19] = elements.powerWidget
 
     elements[1] = elements.panelSections[1]
     elements[5] = elements.panelSections[2]
@@ -197,7 +196,13 @@ end
 
 function page.fake()
     elements.machineWidgets = Widget.fakeWidgets()
-    elements.powerWidgets = Widget.fakePowerWidget()
+    elements.powerWidget = Widget.fakePowerWidget()
+    page.create(pages.overview)
+end
+
+function page.setup(energyBufferAddress)
+    elements.machineWidgets = Widget.fakeWidgets()
+    elements.powerWidget = Widget.createPowerWidget(energyBufferAddress)
     page.create(pages.overview)
 end
 
@@ -208,10 +213,10 @@ function page.update()
     for index, activeMachineWidget in ipairs(elements.machineWidgets.active) do
         activeMachineWidget.draw(activeMachineWidget, index)
     end
-    for index, powerWidget in ipairs(elements.powerWidgets) do
-        powerWidget:update()
-        powerWidget:draw(index)
-    end
+
+    elements.powerWidget:update()
+    elements.powerWidget:draw()
+
     for index, navigationButton in ipairs(elements.navigationButtons) do
         navigationButton:update()
         navigationButton:draw(index)

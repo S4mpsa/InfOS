@@ -1,6 +1,7 @@
 -- Import section
 Inherits = require("utils.inherits")
 MockSingleBlock = require("data.mock.mock-single-block")
+Utility = require("utils.utility")
 --
 
 local MockEnergyProvider =
@@ -11,15 +12,20 @@ local MockEnergyProvider =
     }
 )
 
+local progress = math.random(1608388608)
+local input = math.random(16000)
+local output = math.random(16000)
 function MockEnergyProvider.getSensorInformation()
+    input = input + math.random(-100, 100)
+    output = input + math.random(-100, 100)
     return {
         "§9Insane Voltage Battery Buffer§r",
         "Stored Items:",
-        "§a1,608,383,129§r EU / §e1,608,388,608§r EU",
+        "§a" .. Utility.splitNumber(progress + input - output) .. "§r EU / §e1,608,388,608§r EU",
         "Average input:",
-        "11,396 EU/t",
+        Utility.splitNumber(input) .. " EU/t",
         "Average output:",
-        "11,158 EU/t",
+        Utility.splitNumber(output) .. " EU/t",
         n = 7
     }
 end
