@@ -3,6 +3,7 @@ Unicode = require("unicode")
 DoubleBuffer = require("graphics.doubleBuffering")
 Constants = require("api.gui.constants")
 Colors = require("graphics.colors")
+Utility = require("utils.utility")
 
 local widget = {}
 
@@ -11,6 +12,11 @@ local states = {
     {name = "IDLE", color = Colors.idleColor},
     {name = "OFF", color = Colors.offColor},
     {name = "BROKEN", color = Colors.errorColor}
+}
+
+local types = {
+    power = "power",
+    machine = "machine"
 }
 
 local function drawProgress(x, y, width, height, progress, maxProgress, color)
@@ -64,7 +70,7 @@ function widget.drawBaseWidget(x, y, width, height, title)
 end
 
 local function draw(self, index)
-    if self.type == "power" then
+    if self.type == types.power then
         index = 10
     end
     local scale = self.scale or 1
@@ -83,13 +89,23 @@ local function draw(self, index)
     else
         local middleInfo = self:getMiddleString()
         if middleInfo then
-            DoubleBuffer.drawText(x + 3 + 3 + Unicode.len("IDLE"), y + height - 3, Colors.textColor, middleInfo)
+            DoubleBuffer.drawText(
+                x - 3 - 3 + width - Unicode.len(middleInfo) -
+                    Unicode.len(
+                        Utility.splitNumber(self.progress) .. " / " .. Utility.splitNumber(self.maxProgress) .. " s"
+                    ),
+                y + height - 3,
+                Colors.textColor,
+                middleInfo
+            )
         end
         DoubleBuffer.drawText(
-            x + width - Unicode.len(self.progress .. "/" .. self.maxProgress .. " s") - 3,
+            x + width -
+                Unicode.len(Utility.splitNumber(self.progress) .. " / " .. Utility.splitNumber(self.maxProgress) .. " s") -
+                3,
             y + height - 3,
             Colors.accentA,
-            self.progress .. "/" .. self.maxProgress .. " s"
+            Utility.splitNumber(self.progress) .. " / " .. Utility.splitNumber(self.maxProgress) .. " s"
         )
     end
 end
@@ -198,7 +214,8 @@ end
 function fake.powerWidget:getMiddleString()
     local remaining = self.dProgress > 0 and self.maxProgress - self.progress or -self.progress
     return (self.dProgress > 0 and "+" or "") ..
-        self.dProgress .. "EU/s. " .. (self.dProgress > 0 and "Full in: " or "Empty in: ") .. remaining / self.dProgress
+        self.dProgress ..
+            "EU/s. " .. (self.dProgress > 0 and " Full in: " or "Empty in: ") .. remaining / self.dProgress
 end
 
 function fake.powerWidget.create()
@@ -207,9 +224,9 @@ function fake.powerWidget.create()
         state = states[1],
         progress = math.random(16000000),
         maxProgress = 16000000,
-        scale = 2,
-        type = "power",
         dProgress = 1,
+        scale = 2,
+        type = types.power,
         update = fake.powerWidget.update,
         onClick = fake.powerWidget.onClick,
         getMiddleString = fake.powerWidget.getMiddleString,
@@ -228,12 +245,35 @@ function widget.fakeWidgets()
 end
 
 function widget.fakePowerWidget()
-    local fakePowerWidgets = {}
+    return fake.powerWidget.create()
+end
 
-    table.insert(fakePowerWidgets, fake.powerWidget.create())
-    fakePowerWidgets[11] = fakePowerWidgets[10]
+function widget.createPowerWidget(address)
+    local getPowerStatus = require("domain.energy.get-energy-status-usecase")
+    local function update(self)
+        for key, value in pairs(getPowerStatus(address, self.name)) do
+            self[key] = value
+        end
+    end
 
-    return fakePowerWidgets
+    local function getMiddleString(self)
+        local time = self.timeToFull or self.timeToEmpty or 0
+        return (self.dProgress >= 0 and " Full in: " or "Empty in: ") .. Utility.splitNumber(time) .. " s"
+    end
+
+    local powerWidget = {
+        name = "Power",
+        scale = 2,
+        type = types.power,
+        update = update,
+        onClick = function()
+        end,
+        getMiddleString = getMiddleString,
+        draw = draw
+    }
+    powerWidget:update()
+
+    return powerWidget
 end
 
 return widget

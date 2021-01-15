@@ -1,16 +1,14 @@
 -- Import section
--- Event = require("event")
--- Colors = require("graphics.colors")
--- Widget = require("api.gui.widget")
+
 Page = require("api.gui.page")
--- Graphics = require("graphics.graphics")
+
 -- MultiBlock = require("data.datasource.multi-block")
 -- SingleBlock = require("data.datasource.single-block")
--- EnergyProvider = require("data.datasource.energy-provider")
+EnergyProvider = require("data.datasource.energy-provider")
 
 -- local cleanroomAddresses = require("config.addresses.cleanroom")
 -- local multiBlockAddresses = require("config.addresses.multi-blocks")
--- local energyBufferAddresses = require("config.addresses.energy-buffers")
+local energyBufferAddresses = require("config.addresses.energy-buffers")
 
 -- local protectCleanroomRecipes = require("domain.cleanroom.protect-recipes-usecase")
 -- local getMultiblockStatuses = require("domain.multiblock.get-multiblock-status-usecase")
@@ -64,12 +62,11 @@ end
 
 require("api.sound.zelda-secret")()
 --]]
-
-Page.fake()
+Page.setup(energyBufferAddresses.batteryBuffer1)
 
 while true do
     Page.update()
-    os.sleep(0)
+    os.sleep(0.2)
 end
 
 --[[
