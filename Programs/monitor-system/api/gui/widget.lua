@@ -251,16 +251,16 @@ end
 function widget.createPowerWidget(address)
     local getPowerStatus = require("domain.energy.get-energy-status-usecase")
     local function update(self)
-        for key, value in pairs(getPowerStatus(address, "power")) do
+        for key, value in pairs(getPowerStatus(address, self.name)) do
             self[key] = value
         end
     end
 
     local function getMiddleString(self)
-        local time = self.timeToFull or self.timeToEmpty .. " s"
+        local time = self.timeToFull or self.timeToEmpty or 0
         return (self.dProgress > 0 and "+" or "") ..
             self.dProgress ..
-                " EU/s. " .. (self.dProgress > 0 and " Full in: " or "Empty in: ") .. Utility.splitNumber(time)
+                " EU/s. " .. (self.dProgress >= 0 and " Full in: " or "Empty in: ") .. Utility.splitNumber(time) .. " s"
     end
 
     local powerWidget = {
