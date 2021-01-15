@@ -18,10 +18,11 @@ local output = math.random(16000)
 function MockEnergyProvider.getSensorInformation()
     input = input + math.random(-100, 100)
     output = input + math.random(-100, 100)
+    progress = progress + input - output > 0 and progress + input - output or 0
     return {
         "§9Insane Voltage Battery Buffer§r",
         "Stored Items:",
-        "§a" .. Utility.splitNumber(progress + input - output) .. "§r EU / §e1,608,388,608§r EU",
+        "§a" .. Utility.splitNumber(progress) .. "§r EU / §e1,608,388,608§r EU",
         "Average input:",
         Utility.splitNumber(input) .. " EU/t",
         "Average output:",

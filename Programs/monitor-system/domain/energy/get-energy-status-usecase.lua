@@ -1,15 +1,12 @@
 -- Import section
-Machine = require("data.datasource.machines")
+Machine = require("data.datasource.machine")
 --
 
 local function exec(address, name)
-    local energyBuffer = Machine.getMachine(address, name)
-    -- local comsumption = getConsumption(energyBuffer)
-    -- local production = getProduction(energyBuffer)
+    local energyBuffer = Machine.getMachine(address, name, Machine.types.energy)
+
     local consumption = energyBuffer:getAverageInput()
     local production = energyBuffer:getAverageOutput()
-    local state = {name = "ON", color = Colors.workingColor}
-
     local changeRate = production - consumption
 
     local totalEnergy = energyBuffer:getTotalEnergy()
@@ -17,6 +14,17 @@ local function exec(address, name)
     local currentEnergy = totalEnergy.current
 
     local energyLimit = changeRate > 0 and maximumEnergy or 0
+
+    local state = {}
+    if (currentEnergy == maximumEnergy) then
+        state = {name = changeRate .. " EU/s", color = Colors.workingColor}
+    elseif currentEnergy == 0 then
+        state = {name = changeRate .. " EU/s", color = Colors.errorColor}
+    elseif changeRate > 0 then
+        state = {name = "+" .. changeRate .. " EU/s", color = Colors.idleColor}
+    else
+        state = {name = changeRate .. " EU/s", color = Colors.offColor}
+    end
 
     local timeToFull = changeRate > 0 and math.floor((energyLimit - currentEnergy) / changeRate) or nil
     local timeToEmpty = changeRate < 0 and math.floor((energyLimit - currentEnergy) / changeRate) or nil
