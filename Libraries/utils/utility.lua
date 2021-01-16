@@ -2,7 +2,6 @@ Component = require("component")
 Event = require("event")
 local uc = require("unicode")
 local utility = {}
-local modem = Component.modem
 
 function utility.machine(address)
     local machineAddress = Component.get(address)
@@ -71,7 +70,7 @@ end
 
 function utility.componentChange(broadcastPort)
     local function sendAddress(event, address, type)
-        modem.broadcast(broadcastPort, event, address, type)
+        Component.modem.broadcast(broadcastPort, event, address, type)
     end
     Event.listen("component_added", sendAddress)
 end
