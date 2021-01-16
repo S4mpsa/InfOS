@@ -92,7 +92,8 @@ local function draw(self, index)
             DoubleBuffer.drawText(
                 x - 3 - 3 + width - Unicode.len(middleInfo) -
                     Unicode.len(
-                        Utility.splitNumber(self.progress) .. " / " .. Utility.splitNumber(self.maxProgress) .. " s"
+                        Utility.splitNumber(math.floor(self.progress)) ..
+                            " / " .. Utility.splitNumber(math.floor(self.maxProgress)) .. " s"
                     ),
                 y + height - 3,
                 Colors.textColor,
@@ -101,11 +102,15 @@ local function draw(self, index)
         end
         DoubleBuffer.drawText(
             x + width -
-                Unicode.len(Utility.splitNumber(self.progress) .. " / " .. Utility.splitNumber(self.maxProgress) .. " s") -
+                Unicode.len(
+                    Utility.splitNumber(math.floor(self.progress)) ..
+                        " / " .. Utility.splitNumber(math.floor(self.maxProgress)) .. " s"
+                ) -
                 3,
             y + height - 3,
             Colors.accentA,
-            Utility.splitNumber(self.progress) .. " / " .. Utility.splitNumber(self.maxProgress) .. " s"
+            Utility.splitNumber(math.floor(self.progress)) ..
+                " / " .. Utility.splitNumber(math.floor(self.maxProgress)) .. " s"
         )
     end
 end
