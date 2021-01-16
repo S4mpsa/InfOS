@@ -27,6 +27,7 @@ shell.execute("tar -xf InfOS.tar")
 shell.execute("rm -f InfOS.tar")
 
 shell.setWorkingDirectory("/home/")
+shell.execute("cp -ru InfOS/Libraries lib")
 shell.execute("rm -f .shrc")
 shell.execute("cp InfOS/.shrc .shrc")
 shell.execute("rm -f setup.lua")

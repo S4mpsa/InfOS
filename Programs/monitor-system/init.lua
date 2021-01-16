@@ -66,7 +66,7 @@ Page.setup(energyBufferAddresses.batteryBuffer1)
 
 while true do
     Page.update()
-    os.sleep(0.2)
+    os.sleep(0)
 end
 
 --[[

@@ -17,7 +17,7 @@ local function exec(address, name)
 
     local state = {}
     if (currentEnergy == maximumEnergy) then
-        state = {name = changeRate .. " EU/s", color = Colors.workingColor}
+        state = {name = (changeRate > 0 and "+" or "") .. changeRate .. " EU/s", color = Colors.workingColor}
     elseif currentEnergy == 0 then
         state = {name = changeRate .. " EU/s", color = Colors.errorColor}
     elseif changeRate > 0 then
