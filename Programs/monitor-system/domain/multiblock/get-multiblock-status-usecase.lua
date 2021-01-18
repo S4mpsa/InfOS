@@ -1,6 +1,5 @@
 -- Import section
 Machine = require("data.datasource.machine")
-Alarm = require("api.sound.alarm")
 --
 
 local function exec(address, name)
@@ -9,7 +8,7 @@ local function exec(address, name)
     local problems = multiblock:getNumberOfProblems()
 
     local state = {}
-    if multiblock:isMachineEnabled() then
+    if multiblock:isWorkAllowed() then
         if multiblock:hasWork() then
             state = Machine.states.ON
         else
@@ -24,12 +23,10 @@ local function exec(address, name)
     end
 
     local totalProgress = multiblock:getProgress()
-    local maxProgress = totalProgress.maximum
-    local progress = totalProgress.current
 
-    status[multiblock.name] = {
-        progress = progress,
-        maxProgress = maxProgress,
+    status = {
+        progress = totalProgress.current,
+        maxProgress = totalProgress.maximum,
         problems = problems,
         probablyUses = multiblock:getEnergyUsage(),
         efficiencyPercentage = multiblock:getEfficiencyPercentage(),
