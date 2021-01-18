@@ -95,15 +95,7 @@ local function drawRebootButton()
     Widget.drawBaseWidget(x, y, width, height, "Restart")
 end
 
-local function clickNavigationButton(self)
-    if not self.active then
-        return
-    end
-    if self.title == "◀" then
-        elements.machineWidgets.active.index = elements.machineWidgets.active.index - 1
-    else
-        elements.machineWidgets.active.index = elements.machineWidgets.active.index + 1
-    end
+local function refreshActiveMachineWidgets()
     for i = 1, 9 do
         elements.machineWidgets.active[i] = elements.machineWidgets[9 * (elements.machineWidgets.active.index - 1) + i]
     end
@@ -117,11 +109,28 @@ local function clickNavigationButton(self)
     elements[14] = elements.machineWidgets.active[7]
     elements[15] = elements.machineWidgets.active[8]
     elements[16] = elements.machineWidgets.active[9]
+
     Widget.clear()
+end
+
+local function clickNavigationButton(self)
+    if not self.active then
+        return
+    end
+    if self.title == "◀" then
+        elements.machineWidgets.active.index = elements.machineWidgets.active.index - 1
+    else
+        elements.machineWidgets.active.index = elements.machineWidgets.active.index + 1
+    end
+    refreshActiveMachineWidgets()
 end
 
 function page.create(element)
     drawTitle(element.title)
+
+    elements.machineWidgets.active = {}
+    elements.machineWidgets.active.index = 1
+    refreshActiveMachineWidgets()
 
     local panelIndex = 1
     for _, pg in ipairs(pages) do
@@ -136,12 +145,11 @@ function page.create(element)
             panelIndex = panelIndex + 1
         end
     end
-
-    elements.machineWidgets.active = {}
-    elements.machineWidgets.active.index = 1
-    for i = 1, 9 do
-        elements.machineWidgets.active[i] = elements.machineWidgets[9 * (elements.machineWidgets.active.index - 1) + i]
-    end
+    elements[1] = elements.panelSections[1]
+    elements[5] = elements.panelSections[2]
+    elements[9] = elements.panelSections[3]
+    elements[13] = elements.panelSections[4]
+    elements[17] = elements.panelSections[5]
 
     elements.navigationButtons[1] = {
         title = "◀",
@@ -161,6 +169,8 @@ function page.create(element)
         onClick = clickNavigationButton,
         draw = drawNavigationButton
     }
+    elements[20] = elements.navigationButtons[1]
+    elements[20.5] = elements.navigationButtons[2]
 
     elements.rebootButton = {
         onClick = function()
@@ -168,30 +178,10 @@ function page.create(element)
         end
     }
     drawRebootButton()
-
     elements[4.5] = elements.rebootButton
-
-    elements[6] = elements.machineWidgets.active[1]
-    elements[7] = elements.machineWidgets.active[2]
-    elements[8] = elements.machineWidgets.active[3]
-    elements[10] = elements.machineWidgets.active[4]
-    elements[11] = elements.machineWidgets.active[5]
-    elements[12] = elements.machineWidgets.active[6]
-    elements[14] = elements.machineWidgets.active[7]
-    elements[15] = elements.machineWidgets.active[8]
-    elements[16] = elements.machineWidgets.active[9]
 
     elements[18] = elements.powerWidget
     elements[19] = elements.powerWidget
-
-    elements[1] = elements.panelSections[1]
-    elements[5] = elements.panelSections[2]
-    elements[9] = elements.panelSections[3]
-    elements[13] = elements.panelSections[4]
-    elements[17] = elements.panelSections[5]
-
-    elements[20] = elements.navigationButtons[1]
-    elements[20.5] = elements.navigationButtons[2]
 end
 
 function page.fake()
@@ -200,8 +190,10 @@ function page.fake()
     page.create(pages.overview)
 end
 
-function page.setup(energyBufferAddress)
-    elements.machineWidgets = Widget.fakeWidgets()
+function page.setup(energyBufferAddress, multiblockAddresses)
+    for name, address in pairs(multiblockAddresses) do
+        table.insert(elements.machineWidgets, Widget.createMachineWidget(address, name))
+    end
     elements.powerWidget = Widget.createPowerWidget(energyBufferAddress)
     page.create(pages.overview)
 end
@@ -211,7 +203,7 @@ function page.update()
         machineWidget:update()
     end
     for index, activeMachineWidget in ipairs(elements.machineWidgets.active) do
-        activeMachineWidget.draw(activeMachineWidget, index)
+        activeMachineWidget:draw(index)
     end
 
     elements.powerWidget:update()

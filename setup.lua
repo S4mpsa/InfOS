@@ -12,9 +12,6 @@ shell.execute("wget -fq " .. tarBin)
 local InfOS = "https://github.com/gordominossi/InfOS/releases/download/v0.2.1/InfOS.tar"
 
 shell.setWorkingDirectory("/home")
-if not shell.resolve("/home/lib") then
-    shell.execute("mkdir lib")
-end
 if not shell.resolve("/home/InfOS") then
     shell.execute("mkdir InfOS")
 end
@@ -28,7 +25,8 @@ shell.execute("rm -f InfOS.tar")
 
 shell.setWorkingDirectory("/home/")
 shell.execute("rm -rf lib")
-shell.execute("cp -r InfOS/Libraries lib")
+shell.execute("mkdir lib")
+shell.execute("cp -r InfOS/Libraries/* lib")
 shell.execute("rm -f .shrc")
 shell.execute("cp InfOS/.shrc .shrc")
 shell.execute("rm -f setup.lua")

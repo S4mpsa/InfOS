@@ -7,7 +7,7 @@ Page = require("api.gui.page")
 EnergyProvider = require("data.datasource.energy-provider")
 
 -- local cleanroomAddresses = require("config.addresses.cleanroom")
--- local multiBlockAddresses = require("config.addresses.multi-blocks")
+local multiBlockAddresses = require("config.addresses.multi-blocks")
 local energyBufferAddresses = require("config.addresses.energy-buffers")
 
 -- local protectCleanroomRecipes = require("domain.cleanroom.protect-recipes-usecase")
@@ -62,7 +62,7 @@ end
 
 require("api.sound.zelda-secret")()
 --]]
-Page.setup(energyBufferAddresses.batteryBuffer1)
+Page.setup(energyBufferAddresses.batteryBuffer1, multiBlockAddresses)
 
 while true do
     Page.update()
