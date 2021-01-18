@@ -8,34 +8,35 @@ local MockMultiBlock =
     MockSingleBlock,
     {
         name = "MockMultiBlock",
-        progress = 0,
-        maxProgress = 0,
+        isBroken = false
     }
 )
 
-function MockMultiBlock:getSensorInformation()
-    self.progress = self.progress + 1
-    if self.progress > self.maxProgress then
-        self.maxProgress = math.random(500)
-        self.progress = 0
+function MockMultiBlock.getSensorInformation()
+    MockMultiBlock.workProgress = MockMultiBlock.workProgress + 1
+    if MockMultiBlock.workProgress > MockMultiBlock.workMaxProgress then
+        MockMultiBlock.workProgress = 0
     end
-    self.isBroken = self.isBroken or math.random(100000) > 99999
+    if MockMultiBlock.workAllowed and not MockMultiBlock.isBroken and math.random(1000) > 999 then
+        MockMultiBlock.workMaxProgress = math.random(500)
+    end
+    MockMultiBlock.isBroken = MockMultiBlock.isBroken or math.random(100000) > 99999
     return {
-        "Progress: §a" .. self.progress .. "§r s / §e" .. self.maxProgress .. "§r s",
+        "Progress: §a" .. MockMultiBlock.workProgress .. "§r s / §e" .. MockMultiBlock.workMaxProgress .. "§r s",
         "Stored Energy: §a1000§r EU / §e1000§r EU",
         "Probably uses: §c4§r EU/t",
         "Max Energy Income: §e128§r EU/t(x2A) Tier: §eMV§r",
-        "Problems: §c" .. self.isBroken and 1 or 0 .. "§r Efficiency: §e100.0§r %",
+        "Problems: §c" .. (MockMultiBlock.isBroken and 1 or 0) .. "§r Efficiency: §e100.0§r %",
         "Pollution reduced to: §a0§r %",
         n = 6
     }
 end
 
-function MockMultiBlock:setWorkAllowed(allow)
-    if self.isBroken then
-       self.isBroken = false
+function MockMultiBlock.setWorkAllowed(allow)
+    if MockMultiBlock.isBroken then
+        MockMultiBlock.isBroken = false
     end
-    self.workAllowed = allow
+    MockMultiBlock.workAllowed = allow
 end
 
 return MockMultiBlock
