@@ -9,7 +9,7 @@ shell.execute("wget -fq " .. tarMan)
 shell.setWorkingDirectory("/bin")
 shell.execute("wget -fq " .. tarBin)
 
-local InfOS = "https://github.com/gordominossi/InfOS/releases/download/v0.2.1/InfOS.tar"
+local InfOS = "https://github.com/gordominossi/InfOS/releases/latest/download/InfOS.tar"
 
 shell.setWorkingDirectory("/home")
 if not shell.resolve("/home/InfOS") then
