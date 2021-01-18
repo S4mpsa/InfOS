@@ -216,8 +216,8 @@ function widget.createMachineWidget(address, name)
     end
 
     local toggleMultiblockWork = require("domain.multiblock.toggle-multiblock-work")
-    local function onClick()
-        toggleMultiblockWork(address)
+    local function onClick(self)
+        toggleMultiblockWork(address, self.name)
     end
 
     local machineWidget = {
