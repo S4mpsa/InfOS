@@ -200,7 +200,7 @@ function page.fake()
     page.create(pages.overview)
 end
 
-function page.setup(energyBufferAddress)
+function page.setup(energyBufferAddress, multiblockAddresses)
     elements.machineWidgets = Widget.fakeWidgets()
     elements.powerWidget = Widget.createPowerWidget(energyBufferAddress)
     page.create(pages.overview)
