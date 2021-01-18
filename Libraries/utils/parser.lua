@@ -1,16 +1,16 @@
-local Parser = {}
+local parser = {}
 
-function Parser.parseProgress(progressString)
+function parser.parseProgress(progressString)
     local current = string.sub(progressString, string.find(progressString, "%ba§"))
     current = tonumber((string.gsub(string.gsub(current, "a", ""), "§", "")))
 
-    local maximum = string.sub(progressString, string.find(progressString, "%be§"))
+    local maximum = string.sub(progressString, string.find(progressString, "%be§", (string.find(progressString, "/"))))
     maximum = tonumber((string.gsub(string.gsub(maximum, "e", ""), "§", "")))
 
     return {current = current, maximum = maximum}
 end
 
-function Parser.parseStoredEnergy(storedEnergyString)
+function parser.parseStoredEnergy(storedEnergyString)
     local noCommaString = string.gsub(storedEnergyString, ",", "")
 
     local current = string.sub(noCommaString, string.find(noCommaString, "%ba§"))
@@ -22,40 +22,40 @@ function Parser.parseStoredEnergy(storedEnergyString)
     return {current = current, maximum = maximum}
 end
 
-function Parser.parseAverageInput(averageInputString)
+function parser.parseAverageInput(averageInputString)
     local noCommaString = string.gsub(averageInputString, ",", "")
     return tonumber((string.sub(noCommaString, string.find(noCommaString, "%d+"))))
 end
 
-function Parser.parseAverageOutput(averageOutputString)
+function parser.parseAverageOutput(averageOutputString)
     local noCommaString = string.gsub(averageOutputString, ",", "")
     return tonumber((string.sub(noCommaString, string.find(noCommaString, "%d+"))))
 end
 
-function Parser.parseProblems(problemsString)
+function parser.parseProblems(problemsString)
     local problems = string.sub(problemsString, string.find(problemsString, "c%d"))
     return tonumber((string.gsub(problems, "c", "")))
 end
 
-function Parser.parseEfficiency(efficiencyString)
+function parser.parseEfficiency(efficiencyString)
     local noParagraphMarkString = string.gsub(efficiencyString, "§r", "")
     local efficiency = string.sub(noParagraphMarkString, string.find(noParagraphMarkString, "%d+%.*%d*%s%%"))
     return tonumber((string.gsub(efficiency, "%s%%", "")))
 end
 
-function Parser.parseName(nameString)
+function parser.parseName(nameString)
     return string.gsub(string.gsub(nameString, "§9", ""), "§r", "")
 end
 
-function Parser.parseWorkArea(worAreaString)
+function parser.parseWorkArea(worAreaString)
     local size = string.sub(worAreaString, string.find(worAreaString, "§a%d+x%d+§r"))
     return string.gsub(string.gsub(size, "§a", ""), "§r", "")
 end
 
-function Parser.parseProbablyUses(probablyUsesString)
+function parser.parseProbablyUses(probablyUsesString)
     local noCommaString = string.gsub(probablyUsesString, ",", "")
     local estimate = string.sub(noCommaString, string.find(noCommaString, "%bc§"))
     return tonumber((string.gsub(string.gsub(estimate, "c", ""), "§", "")))
 end
 
-return Parser
+return parser

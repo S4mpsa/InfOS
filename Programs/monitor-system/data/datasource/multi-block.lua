@@ -14,6 +14,16 @@ local MultiBlock =
     }
 )
 
+function Parser.parseProgress(progressString)
+    local current = string.sub(progressString, string.find(progressString, "%ba§"))
+    current = tonumber((string.gsub(string.gsub(current, "a", ""), "§", "")))
+
+    local maximum = string.sub(progressString, string.find(progressString, "%be§", (string.find(progressString, "/"))))
+    maximum = tonumber((string.gsub(string.gsub(maximum, "e", ""), "§", "")))
+
+    return {current = current, maximum = maximum}
+end
+
 function MultiBlock:getNumberOfProblems()
     local sensorInformation = self:getSensorInformation()
     return Parser.parseProblems(sensorInformation[5])
