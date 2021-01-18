@@ -201,7 +201,9 @@ function page.fake()
 end
 
 function page.setup(energyBufferAddress, multiblockAddresses)
-    elements.machineWidgets = Widget.fakeWidgets()
+    for name, address in pairs(multiblockAddresses) do
+        table.insert(elements.machineWidgets, Widget.createMachineWidget(address, name))
+    end
     elements.powerWidget = Widget.createPowerWidget(energyBufferAddress)
     page.create(pages.overview)
 end
@@ -211,7 +213,7 @@ function page.update()
         machineWidget:update()
     end
     for index, activeMachineWidget in ipairs(elements.machineWidgets.active) do
-        activeMachineWidget.draw(activeMachineWidget, index)
+        activeMachineWidget:draw(index)
     end
 
     elements.powerWidget:update()
