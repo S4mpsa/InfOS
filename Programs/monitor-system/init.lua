@@ -4,7 +4,7 @@ Page = require("api.gui.page")
 
 -- MultiBlock = require("data.datasource.multi-block")
 -- SingleBlock = require("data.datasource.single-block")
-EnergyProvider = require("data.datasource.energy-provider")
+-- EnergyProvider = require("data.datasource.energy-provider")
 
 -- local cleanroomAddresses = require("config.addresses.cleanroom")
 local multiBlockAddresses = require("config.addresses.multi-blocks")
