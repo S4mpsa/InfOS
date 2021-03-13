@@ -1,4 +1,4 @@
-comp=require("component"); event=require("event"); screen=require("term"); computer = require("computer"); thread = require("thread")
+Component = require("component")
 
 local transport = {}
 
@@ -12,26 +12,37 @@ function transport.empty(transposer)
     transposer.transferItem(1, 0, 64, 2, 9)
 end
 function transport.clear(interface)
-    interface.setInterfaceConfiguration(1, comp.database.address, 1, 0)
+    interface.setInterfaceConfiguration(1, Component.database.address, 1, 0)
 end
 function transport.check(transposer, item, amount)
     local itemstack = transposer.getStackInSlot(0, 1)
-    if itemstack == nil then return false else
-    if itemstack.label == item and itemstack.size >= amount then return true else return false end end
+    if itemstack == nil then
+        return false
+    else
+        if itemstack.label == item and itemstack.size >= amount then
+            return true
+        else
+            return false
+        end
+    end
 end
 function transport.isEmpty(transposer, slot)
-   local itemstack = transposer.getStackInSlot(1, slot)
-   if itemstack == nil then return true else return false end
+    local itemstack = transposer.getStackInSlot(1, slot)
+    if itemstack == nil then
+        return true
+    else
+        return false
+    end
 end
 function transport.clearAll(assemblydata)
     for i = 1, 15, 1 do
-        if assemblydata["input"..i].getInterfaceConfiguration(1) ~= nil then
-            transport.clear(assemblydata["input"..i])
+        if assemblydata["input" .. i].getInterfaceConfiguration(1) ~= nil then
+            transport.clear(assemblydata["input" .. i])
         end
     end
     for i = 1, 4, 1 do
-        if assemblydata["fluid"..i].getInterfaceConfiguration(1) ~= nil then
-            transport.clear(assemblydata["fluid"..i])
+        if assemblydata["fluid" .. i].getInterfaceConfiguration(1) ~= nil then
+            transport.clear(assemblydata["fluid" .. i])
         end
     end
 end

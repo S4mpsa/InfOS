@@ -1,44 +1,47 @@
-comp=require("component"); event=require("event"); screen=require("term"); computer = require("computer"); thread = require("thread")
+Component = require("component")
+Term = require("term")
 
-local GPU = comp.gpu
+GPU = Component.gpu
 GPU.setResolution(54, 26)
-function enableReactors()
-    comp.redstone.setOutput(1, 15)
+local function enableReactors()
+    Component.redstone.setOutput(1, 15)
 end
-function disableReactors()
-    comp.redstone.setOutput(1, 0)
+local function disableReactors()
+    Component.redstone.setOutput(1, 0)
 end
 
-function checkHeatLevels()
-    screen.setCursor(1, 1)
+local function checkHeatLevels()
+    Term.setCursor(1, 1)
     local i = 1
-    for address, type in pairs(comp.list()) do
+    for address, type in pairs(Component.list()) do
         if type == "reactor_chamber" then
-            screen.write("Reactor "..i)
-            if i < 10 then screen.write(" ") end
-            local reactor = comp.proxy(address)
+            Term.write("Reactor " .. i)
+            if i < 10 then
+                Term.write(" ")
+            end
+            local reactor = Component.proxy(address)
             if reactor.getHeat() > 0 then
                 GPU.setForeground(0xFF0000)
-                screen.write(" REACTOR HEATING! SHUTTING DOWN")
+                Term.write(" REACTOR HEATING! SHUTTING DOWN")
                 disableReactors()
                 GPU.setForeground(0xFFFFFF)
                 os.sleep(1)
                 os.exit()
             else
                 if reactor.getReactorEUOutput() > 0 then
-                    screen.write(" status: ")
+                    Term.write(" status: ")
                     GPU.setForeground(0x00FF00)
-                    screen.write("NOMINAL")
+                    Term.write("NOMINAL")
                     GPU.setForeground(0xFFFFFF)
-                    screen.write(" - Producing ")
+                    Term.write(" - Producing ")
                     GPU.setForeground(0xFF00FF)
-                    screen.write(math.floor(reactor.getReactorEUOutput()))
+                    Term.write(math.floor(reactor.getReactorEUOutput()))
                     GPU.setForeground(0xFFFFFF)
-                    screen.write(" EU/t\n")
+                    Term.write(" EU/t\n")
                 else
-                    screen.write(" status: ")
+                    Term.write(" status: ")
                     GPU.setForeground(0xFFFF00)
-                    screen.write("INACTIVE\n")
+                    Term.write("INACTIVE\n")
                 end
             end
             i = i + 1
@@ -47,7 +50,7 @@ function checkHeatLevels()
 end
 
 enableReactors()
-screen.clear()
+Term.clear()
 while true do
     checkHeatLevels()
     os.sleep(1)
