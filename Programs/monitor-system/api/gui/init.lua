@@ -29,12 +29,12 @@ Widget = require("api.gui.widget")
 local page = {}
 
 local pages = {
-    glasses = require("api.gui.page.glasses"),
-    widgets = require("api.gui.page.widgets"),
-    help = require("api.gui.page.help"),
-    stock = require("api.gui.page.stock"),
-    notifications = require("api.gui.page.notifications"),
-    overview = require("api.gui.page.overview")
+    glasses = require("api.gui.glasses"),
+    widgets = require("api.gui.widgets"),
+    help = require("api.gui.help"),
+    stock = require("api.gui.stock"),
+    notifications = require("api.gui.notifications"),
+    overview = require("api.gui.overview")
 }
 pages[1] = pages.glasses
 pages[2] = pages.widgets

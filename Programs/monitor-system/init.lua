@@ -1,6 +1,6 @@
 -- Import section
 
-Page = require("api.gui.page")
+GUI = require("api.gui")
 
 -- MultiBlock = require("data.datasource.multi-block")
 -- SingleBlock = require("data.datasource.single-block")
@@ -62,15 +62,15 @@ end
 
 require("api.sound.zelda-secret")()
 --]]
-Page.setup(energyBufferAddresses.batteryBuffer1, multiBlockAddresses)
+GUI.setup(energyBufferAddresses.batteryBuffer1, multiBlockAddresses)
 
 while true do
-    Page.update()
+    GUI.update()
     os.sleep(0)
 end
 
 --[[
-Page = require("api.gui.page")
+Page = require("api.gui")
 Notifications = {}
 local components = {}
 local function getComponents()
